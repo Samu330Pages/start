@@ -1,35 +1,44 @@
+html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Página con Imágenes en Header Deslizable</title>
+  <title>Página con imágenes deslizantes</title>
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <header>
     <div class="slider">
-      <img src="https://stickerswiki.ams3.cdn.digitaloceanspaces.com/LINE_Mochi_Mochi_Peach_Cat/123001.512.webp" alt="Imagen 1">
-      <img src="https://i.pinimg.com/originals/2e/8a/24/2e8a24e217439d1291334957897de377.png" alt="Imagen 2">
-      <img src="https://i.pinimg.com/736x/36/fb/41/36fb41d8f7ed875794d32b378a8a262e.jpg" alt="Imagen 3">
+      <img src="https://i.pinimg.com/736x/36/fb/41/36fb41d8f7ed875794d32b378a8a262e.jpg" class="slide">
+      <img src="https://i.pinimg.com/originals/2e/8a/24/2e8a24e217439d1291334957897de377.png" class="slide">
+      <img src="https://stickerswiki.ams3.cdn.digitaloceanspaces.com/LINE_Mochi_Mochi_Peach_Cat/123001.512.webp" class="slide">
     </div>
   </header>
-  
-  <div class="content">
-    <div class="row">
-      <div class="info">
-        <h2>Información 1</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at dignissim erat, vel rhoncus elit. Integer sagittis bibendum urna at mollis.</p>
+
+  <main>
+    <div class="info-container">
+      <div class="column">
+        <h2>Columna 1</h2>
+        <p>Información de la columna 1</p>
       </div>
-      <div class="info">
-        <h2>Información 2</h2>
-        <p>Etiam pharetra congue ligula a aliquam. Nullam bibendum imperdiet enim auctor consequat. Nullam posuere ullamcorper sollicitudin.</p>
+      <div class="column">
+        <h2>Columna 2</h2>
+        <p>Información de la columna 2</p>
+      </div>
+      <div class="column">
+        <h2>Columna 3</h2>
+        <p>Información de la columna 3</p>
+      </div>
+      <div class="column">
+        <h2>Columna 4</h2>
+        <p>Información de la columna 4</p>
       </div>
     </div>
-  </div>
-  
+  </main>
+
   <footer>
     <p>Footer estático</p>
   </footer>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
