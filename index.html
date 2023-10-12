@@ -733,6 +733,27 @@
 
     <!-------------- Local Script -------------->
     <script>
+	document.addEventListener('contextmenu', function(e) {
+  		e.preventDefault();
+  		const { value: accept } = await Swal.fire({
+		icon: 'error',
+  		title: 'Terms and conditions',
+  		input: 'checkbox',
+  		inputValue: 0,
+  		inputPlaceholder:
+    		  'Acepto los terminos y condiciones, entre ellos: No Copiar ni descargar Imagenes, No Copiar el codigo fuente de esta pagina! ()',
+  		confirmButtonText:
+  		  'Continue <i class="fa fa-arrow-right"></i>',
+  		inputValidator: (result) => {
+    		return !result && 'You need to agree with T&C'
+  		}
+	})
+
+	if (accept) {
+  		Swal.fire('Gracias Por Aceptar Los T&C :)')
+	}
+	});
+	    
         const boton = document.querySelector("#cv");
             // Agregar listener
             boton.addEventListener("click", function(evento){
