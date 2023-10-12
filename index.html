@@ -735,7 +735,11 @@
     <script>
 	document.addEventListener('contextmenu', function(e) {
   		e.preventDefault();
-  		alert("x");
+  		Swal.fire(
+  		  'ERROR!',
+ 		  'El Click Derecho esta Deshabilitado',
+		  'error'
+		)
 	});
 	    
         const boton = document.querySelector("#cv");
