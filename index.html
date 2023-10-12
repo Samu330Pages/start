@@ -1,96 +1,747 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CodePen - Profile Card UI</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-<link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Portfolio Website</title>
+    <!-------------- Local Stylesheet Link -------------->
+    <link rel="stylesheet" href="style.css">
+    <!-------------- Font Awesome Link -------------->
+    <script src="https://kit.fontawesome.com/de270889e1.js" crossorigin="anonymous"></script>
+    <!-------------- Owl Carousel Links -------------->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+        integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-------------- AOS Link -------------->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
-<body>
-<!-- partial:index.partial.html -->
-<div class="card" data-state="#about">
-  <div class="card-header">
-    <div class="card-cover" style="background-image: url('https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80')"></div>
-    <img class="card-avatar" src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80" alt="avatar" />
-    <h1 class="card-fullname">William Rocheald</h1>
-    <h2 class="card-jobtitle">UI Developer</h2>
-  </div>
-  <div class="card-main">
-    <div class="card-section is-active" id="about">
-      <div class="card-content">
-        <div class="card-subtitle">ABOUT</div>
-        <p class="card-desc">Whatever tattooed stumptown art party sriracha gentrify hashtag intelligentsia readymade schlitz brooklyn disrupt.
-        </p>
-      </div>
-      <div class="card-social">
-        <a href="#"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.997 3.985h2.191V.169C17.81.117 16.51 0 14.996 0c-3.159 0-5.323 1.987-5.323 5.639V9H6.187v4.266h3.486V24h4.274V13.267h3.345l.531-4.266h-3.877V6.062c.001-1.233.333-2.077 2.051-2.077z" /></svg></a>
-        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path d="M512 97.248c-19.04 8.352-39.328 13.888-60.48 16.576 21.76-12.992 38.368-33.408 46.176-58.016-20.288 12.096-42.688 20.64-66.56 25.408C411.872 60.704 384.416 48 354.464 48c-58.112 0-104.896 47.168-104.896 104.992 0 8.32.704 16.32 2.432 23.936-87.264-4.256-164.48-46.08-216.352-109.792-9.056 15.712-14.368 33.696-14.368 53.056 0 36.352 18.72 68.576 46.624 87.232-16.864-.32-33.408-5.216-47.424-12.928v1.152c0 51.008 36.384 93.376 84.096 103.136-8.544 2.336-17.856 3.456-27.52 3.456-6.72 0-13.504-.384-19.872-1.792 13.6 41.568 52.192 72.128 98.08 73.12-35.712 27.936-81.056 44.768-130.144 44.768-8.608 0-16.864-.384-25.12-1.44C46.496 446.88 101.6 464 161.024 464c193.152 0 298.752-160 298.752-298.688 0-4.64-.16-9.12-.384-13.568 20.832-14.784 38.336-33.248 52.608-54.496z" /></svg></a>
-        <a href="#"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <path d="M301 256c0 24.852-20.148 45-45 45s-45-20.148-45-45 20.148-45 45-45 45 20.148 45 45zm0 0" />
-            <path d="M332 120H180c-33.086 0-60 26.914-60 60v152c0 33.086 26.914 60 60 60h152c33.086 0 60-26.914 60-60V180c0-33.086-26.914-60-60-60zm-76 211c-41.355 0-75-33.645-75-75s33.645-75 75-75 75 33.645 75 75-33.645 75-75 75zm86-146c-8.285 0-15-6.715-15-15s6.715-15 15-15 15 6.715 15 15-6.715 15-15 15zm0 0" />
-            <path d="M377 0H135C60.562 0 0 60.563 0 135v242c0 74.438 60.563 135 135 135h242c74.438 0 135-60.563 135-135V135C512 60.562 451.437 0 377 0zm45 332c0 49.625-40.375 90-90 90H180c-49.625 0-90-40.375-90-90V180c0-49.625 40.375-90 90-90h152c49.625 0 90 40.375 90 90zm0 0" /></svg></a>
-        <a href="#"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M23.994 24v-.001H24v-8.802c0-4.306-.927-7.623-5.961-7.623-2.42 0-4.044 1.328-4.707 2.587h-.07V7.976H8.489v16.023h4.97v-7.934c0-2.089.396-4.109 2.983-4.109 2.549 0 2.587 2.384 2.587 4.243V24zM.396 7.977h4.976V24H.396zM2.882 0C1.291 0 0 1.291 0 2.882s1.291 2.909 2.882 2.909 2.882-1.318 2.882-2.909A2.884 2.884 0 002.882 0z" /></svg></a>
-      </div>
-    </div>
-    <div class="card-section" id="experience">
-      <div class="card-content">
-        <div class="card-subtitle">WORK EXPERIENCE</div>
-        <div class="card-timeline">
-          <div class="card-item" data-year="2014">
-            <div class="card-item-title">Front-end Developer at <span>JotForm</span></div>
-            <div class="card-item-desc">Disrupt stumptown retro everyday carry unicorn.</div>
-          </div>
-          <div class="card-item" data-year="2016">
-            <div class="card-item-title">UI Developer at <span>GitHub</span></div>
-            <div class="card-item-desc">Developed new conversion funnels and disrupt.</div>
-          </div>
-          <div class="card-item" data-year="2018">
-            <div class="card-item-title">Illustrator at <span>Google</span></div>
-            <div class="card-item-desc">Onboarding illustrations for App.</div>
-          </div>
-          <div class="card-item" data-year="2020">
-            <div class="card-item-title">Full-Stack Developer at <span>CodePen</span></div>
-            <div class="card-item-desc">Responsible for the encomposing brand expreience.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card-section" id="contact">
-      <div class="card-content">
-        <div class="card-subtitle">CONTACT</div>
-        <div class="card-contact-wrapper">
-          <div class="card-contact">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-              <circle cx="12" cy="10" r="3" /></svg>
-            Algonquin Rd, Three Oaks Vintage, MI, 49128
-          </div>
-          <div class="card-contact">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" /></svg>(269) 756-9809</div>
-          <div class="card-contact">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <path d="M22 6l-10 7L2 6" /></svg>
-            william@rocheald.com
-          </div>
-          <button class="contact-me">WORK TOGETHER</button>
-        </div>
-      </div>
-    </div>
-    <div class="card-buttons">
-      <button data-section="#about" class="is-active">ABOUT</button>
-      <button data-section="#experience">EXPERIENCE</button>
-      <button data-section="#contact">CONTACT</button>
-    </div>
-  </div>
-</div>
-<!-- partial -->
-  <script  src="./script.js"></script>
 
+<body>
+
+
+    <!-------------- Navbar -------------->
+    <header>
+        <nav id="navbar" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1800">
+            <div class="logo">
+                <img src="./Images/Logo.png" alt="">
+            </div>
+            <!-- Hamurger -->
+            <input type="checkbox" class="checkbox">
+            <div class="hamburger-lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
+
+            <ul class="nav-items">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#resume">Resume</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#blogs">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-------------- Home Section -------------->
+    <section id="home">
+        <div class="text-holder">
+            <h1 data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1000">TTB <span>Prince</span></h1>
+            <h3 data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1200"><span>Web DEV</span> Based in China</h3>
+            <div class="button" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1500">
+                <button class="btn">
+                    <a href="#portfolio">View My Works</a>
+                </button>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="./Images//HERO-img.png" alt="">
+        </div>
+        <div class="social-icons" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="2000" 
+        data-aos-anchor-placement="bottom-bottom">
+            <a><i class="fa-brands fa-facebook-f"></i></a>
+            <a><i class="fa-brands fa-instagram"></i></a>
+            <a><i class="fa-brands fa-twitter"></i></a>
+            <a><i class="fa-brands fa-linkedin-in"></i></a>
+            <a><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+        <div class="scroll-txt" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="2000" 
+        data-aos-anchor-placement="bottom-bottom">
+            <a href="#about">Go Down</a>
+        </div>
+    </section>
+
+    <!-------------- About Section -------------->
+    <section id="about">
+        <div class="container">
+            <div class="about-img" data-aos="fade-right" data-aos-duration="1200">
+                <img src="./Images/HERO-ABOUT-IMG.jpg" alt="">
+            </div>
+            <div class="text-wrapper" data-aos="fade-right" data-aos-duration="1200">
+                <h4>TTB Prince</h4>
+                <h5>A Lead <span>Web Dev</span> based in <span>China</span></h5>
+                <p>Web development can range from developing a simple single static page of plain text to complex web applications, electronic businesses, and social network services</p>
+                <div class="about-list">
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Birthday</label>
+                        <p>8th March 1999</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>E-mail</label>
+                        <p>info@domain.com</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Age</label>
+                        <p>29 Yr</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Phone</label>
+                        <p>000-000-0000</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Residence</label>
+                        <p>China</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Skype</label>
+                        <p>skype000</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Address</label>
+                        <p>China</p>
+                    </div>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <div class="list-item">
+                        <label>Freelance</label>
+                        <p>Available</p>
+                    </div>
+                    <!-- List Item End -->
+                </div>
+                <button class="btn"><a href="#">Download CV</a></button>
+            </div>
+        </div>
+    </section>
+
+    <!-------------- Services Section -------------->
+    <section id="services">
+        <div class="heading-wrapper">
+            <div class="heading">
+                <h2>My Services</h2>
+            </div>
+            <div class="animate-bar"></div>
+            <div class="sub-heading">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, egestas. Id fermentum nullam ipsum
+                    massa.</p>
+            </div>
+        </div>
+        <div class="container">
+
+            <!-- Service Card Start -->
+            <div class="service-card" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <h5>Developement</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+
+            <!-- Service Card Start -->
+            <div class="service-card"  data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                    <h5>Graphic</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+
+            <!-- Service Card Start -->
+            <div class="service-card" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-brands fa-pied-piper-square"></i>
+                    <h5>Logo Design</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+
+            <!-- Service Card Start -->
+            <div class="service-card" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <h5>App Design</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+
+            <!-- Service Card Start -->
+            <div class="service-card" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-solid fa-globe"></i>
+                    <h5>Branding</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+
+            <!-- Service Card Start -->
+            <div class="service-card" data-aos="fade-right" data-aos-duration="1200" data-aos-easing="ease-in-out">
+                <div class="card-content">
+                    <i class="fa-solid fa-fill-drip"></i>
+                    <h5>Web Design</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <!-- Service Card End -->
+        </div>
+    </section>
+
+    <!-------------- Resume Section -------------->
+    <section id="resume">
+        <div class="heading-wrapper">
+            <div class="heading">
+                <h2>Resume</h2>
+            </div>
+            <div class="animate-bar"></div>
+            <div class="sub-heading">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, egestas. Id fermentum nullam ipsum
+                    massa.</p>
+            </div>
+        </div>
+        <div class="container">
+
+            <!-------------- Experience Part -------------->
+            <div class="experience"  data-aos="fade-right" data-aos-duration="1200">
+                <div class="title">
+                    <h4>Experience</h4>
+                </div>
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Software Engineer</h5>
+                    <span>Adobe / 2015 - 2017</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Back-End Developer</h5>
+                    <span>Google / 2017 - 2018</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Graphic Designer</h5>
+                    <span>Discord / 2019 - Present</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+            </div>
+
+            <!-------------- Education Part -------------->
+            <div class="education" data-aos="fade-right" data-aos-duration="1200">
+                <div class="title">
+                    <h4>Education</h4>
+                </div>
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Computer Science</h5>
+                    <span>Cambridge University / 2004 - 2007</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Bachelor Degree</h5>
+                    <span>University of Tokyo / 2008 - 2010</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+
+                <!-- Resume Item Start -->
+                <div class="resume-item">
+                    <div class="item-arrow"></div>
+                    <h5>Master Degree</h5>
+                    <span>Harvard University / 2012 - 2015</span>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, Optio quo repudiandae</p>
+                </div>
+                <!-- Resume Item End -->
+            </div>
+        </div>
+
+        <!-------------- Skills Section -------------->
+        <section id="skills">
+            <div class="heading-wrapper">
+                <div class="heading">
+                    <h2>My Skills</h2>
+                </div>
+                <div class="animate-bar"></div>
+            </div>
+
+            <div class="container">
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>Html</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line html"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>React</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line react"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>CSS</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line css"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>Javascript</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line js"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>Python</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line python"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+
+                <!-- Progress Item Start -->
+                <div class="progress-item" data-aos="fade-up" data-aos-duration="1200">
+                    <div class="text">
+                        <h5>Django</h5>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-line django"></div>
+                    </div>
+                </div>
+                <!-- Progress Item End -->
+            </div>
+        </section>
+    </section>
+
+    <!-------------- Portfolio Section -------------->
+    <section id="portfolio">
+        <div class="heading-wrapper">
+            <div class="heading">
+                <h2>Portfolio</h2>
+            </div>
+            <div class="animate-bar"></div>
+            <div class="sub-heading">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, egestas. Id fermentum nullam ipsum
+                    massa.</p>
+            </div>
+        </div>
+
+        <!-------------- Gallery -------------->
+        <div class="gallery-wrapper">
+            <div class="gallery-nav">
+                <div class="gallery-filter">
+                    <span class="filter-item active" data-filter="all">All</span>
+                    <span class="filter-item" data-filter="brand">Brand</span>
+                    <span class="filter-item" data-filter="design">Design</span>
+                    <span class="filter-item" data-filter="photos">Photos</span>
+                </div>
+            </div>
+            <div class="content-wrapper">
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item brand" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-1.jpg" alt="brand">
+                        <div class="overlay">
+                            <h5>Brand #1</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item design" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-2.jpg" alt="design">
+                        <div class="overlay">
+                            <h5>Design #1</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item brand" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-3.jpg" alt="brand">
+                        <div class="overlay">
+                            <h5>Brand #2</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item photos" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-4.jpg" alt="photos">
+                        <div class="overlay">
+                            <h5>Photo #1</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item design" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-5.jpg" alt="design">
+                        <div class="overlay">
+                            <h5>Design #2</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+
+                <!-- Gallery Item Start -->
+                <div class="gallery-item photos" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="gallery-item-inner">
+                        <img src="./Images//portfolio-img-6.jpg" alt="photos">
+                        <div class="overlay">
+                            <h5>Photo #2</h5>
+                            <p>More Info</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Item End -->
+            </div>
+        </div>
+
+    </section>
+    <!-------------- Reviews Section -------------->
+    <section id="reviews">
+
+        <!-------------- Carousel -------------->
+        <div class="owl-carousel owl-theme">
+
+            <!-- Review Item Start -->
+            <div class="item" data-aos="fade-up">
+                <div class="img-box">
+                    <img src="./Images/Review-img-1.jpg" alt="">
+                </div>
+                <div class="text-holder">
+                    <p class="details">
+                        I design and develop services for customers of all sizes, specializing in creating stylish,
+                        modern
+                        websites, web services and online stores.
+                    </p>
+                    <h6 class="name">Nancy Byers</h6>
+                    <div class="rating">
+                        <i class="fa-regular fa-star"></i>
+                        <span>5.0</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Review Item End -->
+
+            <!-- Review Item Start -->
+            <div class="item" data-aos="fade-up">
+                <div class="img-box">
+                    <img src="./Images/Review-img-2.jpg" alt="">
+                </div>
+                <div class="text-holder">
+                    <p class="details">
+                        I design and develop services for customers of all sizes, specializing in creating stylish,
+                        modern
+                        websites, web services and online stores.
+                    </p>
+                    <h6 class="name">John Doe</h6>
+                    <div class="rating">
+                        <i class="fa-regular fa-star"></i>
+                        <span>4.9</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Review Item End -->
+
+            <!-- Review Item Start -->
+            <div class="item" data-aos="fade-up">
+                <div class="img-box">
+                    <img src="./Images/Review-img-3.jpg" alt="">
+                </div>
+                <div class="text-holder">
+                    <p class="details">
+                        I design and develop services for customers of all sizes, specializing in creating stylish,
+                        modern
+                        websites, web services and online stores.
+                    </p>
+                    <h6 class="name">Emma Stone</h6>
+                    <div class="rating">
+                        <i class="fa-regular fa-star"></i>
+                        <span>4.7</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Review Item End -->
+        </div>
+    </section>
+
+    <!-------------- Blogs Section -------------->
+    <section id="blogs">
+        <div class="heading-wrapper">
+            <div class="heading">
+                <h2>Recent News</h2>
+            </div>
+            <div class="animate-bar"></div>
+            <div class="sub-heading">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, egestas. Id fermentum nullam ipsum
+                    massa.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Blog Item Start -->
+            <div class="blog blog-1" data-aos="fade-right" data-aos-duration="1200">
+                <div class="img-box">
+                    <img src="./Images/Blog-img-1.jpg" alt="">
+                </div>
+                <h6>Ten Mind-Blowing Reasons Why Design Is Using This Technique For Exposure.</h6>
+                <p>Integer vitae mi libero. Aliquam consequat dolor libero, nec varius elit</p>
+                <button><a href="#">Read More</a></button>
+            </div>
+            <!-- Blog Item End -->
+            <!-- Blog Item Start -->
+            <div class="blog blog-2" data-aos="fade-right" data-aos-duration="1200">
+                <div class="img-box">
+                    <img src="./Images/Blog-img-2.jpg" alt="">
+                </div>
+                <h6>Ten Mind-Blowing Reasons Why Design Is Using This Technique For Exposure.</h6>
+                <p>Integer vitae mi libero. Aliquam consequat dolor libero, nec varius elit</p>
+                <button><a href="#">Read More</a></button>
+            </div>
+            <!-- Blog Item End -->
+            <!-- Blog Item Start -->
+            <div class="blog blog-3" data-aos="fade-right" data-aos-duration="1200">
+                <div class="img-box">
+                    <img src="./Images/Blog-img-3.jpg" alt="">
+                </div>
+                <h6>Ten Mind-Blowing Reasons Why Design Is Using This Technique For Exposure.</h6>
+                <p>Integer vitae mi libero. Aliquam consequat dolor libero, nec varius elit</p>
+                <button><a href="#">Read More</a></button>
+            </div>
+            <!-- Blog Item End -->
+        </div>
+    </section>
+
+
+    <!-------------- Contact Section -------------->
+    <section id="contact">
+        <div class="heading-wrapper">
+            <div class="heading">
+                <h2>Get in touch</h2>
+            </div>
+            <div class="animate-bar"></div>
+        </div>
+
+        <div class="container">
+            <form action="#" data-aos="fade-right" data-aos-duration="1200">
+                <div class="title">
+                    <h4>Massage Me</h4>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-data">
+                        <input type="text" placeholder="Name" required>
+                    </div>
+                    <div class="input-data">
+                        <input type="text" placeholder="Email" required>
+                    </div>
+                </div>
+                <div class="input-data">
+                    <input type="text" placeholder="Subject" required>
+                </div>
+                <div class="input-data">
+                    <textarea name="Massage" placeholder="Massage" required></textarea>
+                </div>
+                <div class="form-row">
+                    <input type="submit" value="Send Your Massage" class="btn">
+                </div>
+            </form>
+
+            <div class="contact-info" data-aos="fade-right" data-aos-duration="1200">
+                <div class="title">
+                    <h4>Contact-info</h4>
+                </div>
+                <div class="subtitle">
+                    <p>Always available for freelance work if the right project comes along, Feel free
+                        to contact me!</p>
+                </div>
+
+                <ul class="contact-list">
+
+                    <!-- List Item Start -->
+                    <li class="list-item">
+                        <div class="icon">
+                            <i class="fa-brands fa-hive"></i>
+                        </div>
+                        <div class="details">
+                            <label for="#">Name</label>
+                            <p>TTB Prince</p>
+                        </div>
+                    </li>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <li class="list-item">
+                        <div class="icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="details">
+                            <label for="#">Location</label>
+                            <p>China</p>
+                        </div>
+                    </li>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <li class="list-item">
+                        <div class="icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="details">
+                            <label for="#">Call Me</label>
+                            <p>+1 2345 6789</p>
+                        </div>
+                    </li>
+                    <!-- List Item End -->
+
+                    <!-- List Item Start -->
+                    <li class="list-item">
+                        <div class="icon">
+                            <i class="fa-solid fa-at"></i>
+                        </div>
+                        <div class="details">
+                            <label for="#">Email</label>
+                            <p>info@domain.com</p>
+                        </div>
+                    </li>
+                    <!-- List Item End -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-------------- Footer -------------->
+    <footer>
+        <p>TTB &copy All Rights Reserved</p>
+    </footer>
+
+
+
+
+
+
+
+
+
+    <!-------------- Jquery Scripts -------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-------------- Owl Carousel Scripts -------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-------------- AOS Scripts -------------->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
+    <!-------------- Local Script -------------->
+    <script src="script.js"></script>
 </body>
+
 </html>
