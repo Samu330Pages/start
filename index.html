@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 
-<body>
+<body ondragstart='return false'>
 
 
     <!-------------- Navbar -------------->
@@ -741,6 +741,15 @@
 		  'error'
 		)
 	});
+
+	function checkKey(evt) {
+		if (evt.ctrlKey)
+		Swal.fire(
+  		  'ERROR!',
+ 		  'boton control deshabilitado',
+		  'error'
+		)
+	}
 	    
         const boton = document.querySelector("#cv");
             // Agregar listener
