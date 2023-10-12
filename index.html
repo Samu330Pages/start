@@ -734,8 +734,7 @@
     <!-------------- Local Script -------------->
     <script>
 	document.addEventListener('keydown', function(event) {
-  		if (event.ctrlKey) {
-		event.preventDefault();
+  		event.preventDefault();
   		Swal.fire(
   		  'ERROR!',
  		  'El Click Derecho esta Deshabilitado',
@@ -744,13 +743,15 @@
 		}
 	});
 
-	function checkKey(evt) {
-		if (evt.ctrlKey)
+	function checkKey(event) {
+		if (event.ctrlKey) {
+		event.preventDefault();
 		Swal.fire(
   		  'ERROR!',
  		  'boton control deshabilitado',
 		  'error'
 		)
+		}
 	}
 	    
         const boton = document.querySelector("#cv");
