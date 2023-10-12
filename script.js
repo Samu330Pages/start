@@ -1,20 +1,49 @@
-const buttons = document.querySelectorAll(".card-buttons button");
-const sections = document.querySelectorAll(".card-section");
-const card = document.querySelector(".card");
+//---------- Navbar ----------//
 
-const handleButtonClick = e => {
-  const targetSection = e.target.getAttribute("data-section");
-  const section = document.querySelector(targetSection);
-  targetSection !== "#about" ?
-  card.classList.add("is-active") :
-  card.classList.remove("is-active");
-  card.setAttribute("data-state", targetSection);
-  sections.forEach(s => s.classList.remove("is-active"));
-  buttons.forEach(b => b.classList.remove("is-active"));
-  e.target.classList.add("is-active");
-  section.classList.add("is-active");
-};
+window.addEventListener('scroll', function(){
+    let navbar = document.getElementById("navbar");
+    navbar.classList.toggle('fixed', this.window.scrollY > 0)
+})
 
-buttons.forEach(btn => {
-  btn.addEventListener("click", handleButtonClick);
+// Portfolio Gallery
+
+let filterContainer = document.querySelector(".gallery-filter");
+let galleryItems = document.querySelectorAll(".gallery-item");
+
+filterContainer.addEventListener("click", (event) => {
+    if (event.target.classList.contains("filter-item")){
+        // deactivates existing active filter item
+        filterContainer.querySelector(".active").classList.remove("active");
+        // activates new filter item
+        event.target.classList.add("active");
+        let filterValue = event.target.getAttribute("data-filter");
+        galleryItems.forEach((item) => {
+            if (item.classList.contains(filterValue) || filterValue === "all") {
+                item.classList.remove("hide");
+                item.classList.add("show");
+            }
+            else {
+                item.classList.remove("show");
+                item.classList.add("hide");
+            }
+        });
+    }
+
 });
+
+// Review Carousel
+$('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:1
+        },
+        1200:{
+            items:2
+        }
+    }
+})
