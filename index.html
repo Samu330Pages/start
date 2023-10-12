@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="style.css">
     <!-------------- Font Awesome Link -------------->
     <script src="https://kit.fontawesome.com/de270889e1.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <!-------------- Owl Carousel Links -------------->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
         integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
@@ -115,7 +118,7 @@
                     <!-- List Item Start -->
                     <div class="list-item">
                         <label>Phone</label>
-                        <p>0+52 998-490-7794</p>
+                        <p>+52 998-490-7794</p>
                     </div>
                     <!-- List Item End -->
 
@@ -147,7 +150,7 @@
                     </div>
                     <!-- List Item End -->
                 </div>
-                <button class="btn"><a href="#">View CV</a></button>
+                <button class="btn"><a id="cv">...Mas!</a></button>
             </div>
         </div>
     </section>
@@ -741,6 +744,19 @@
     </script>
 
     <!-------------- Local Script -------------->
+    <script>
+        const boton = document.querySelector("#miBoton");
+            // Agregar listener
+            boton.addEventListener("click", function(evento){
+	        // Aquí todo el código que se ejecuta cuando se da click al botón
+	        Swal.fire({
+              icon: 'info',
+              title: 'Mas Sobre mi...',
+              text: 'Te dejo mi FaceBook en el enlace de abajo!',
+              footer: '<a href="https://www.facebook.com/sm330.io">Why do I have this issue?</a>'
+            })
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 
