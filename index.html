@@ -733,8 +733,8 @@
 
     <!-------------- Local Script -------------->
     <script>
-	document.addEventListener('keydown', function(event) {
-  		event.preventDefault();
+	document.addEventListener('contextmenu', function(e) {
+  		e.preventDefault();
   		Swal.fire(
   		  'ERROR!',
  		  'El Click Derecho esta Deshabilitado',
