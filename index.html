@@ -733,6 +733,33 @@
 
     <!-------------- Local Script -------------->
     <script>
+
+	onkeydown = e => {
+  		let tecla = e.which || e.keyCode;
+  
+  		// Evaluar si se ha presionado la tecla Ctrl:
+  		if ( e.ctrlKey ) {
+    		// Evitar el comportamiento por defecto del nevagador:
+    		e.preventDefault();
+    		e.stopPropagation();
+    
+    		// Mostrar el resultado de la combinación de las teclas:
+    		if ( tecla === 85 )
+      			Swal.fire(
+  				'ERROR',
+  				'CTRL+U',
+  				'error'
+			)
+    
+    		if ( tecla === 83 )
+      			Swal.fire(
+  				'ERROR',
+  				'CTRL+S',
+  				'error'
+			)
+  		}
+	}
+	    
 	document.oncontextmenu = function(){return false}
 	    
         const boton = document.querySelector("#cv");
