@@ -133,7 +133,7 @@ function hideSimiTyping() {
 }
 
 function fetchSimiResponse(message) {
-  const apiUrl = `https://api.simsimi.net/v1/?text=${encodeURIComponent(message)}&lang=es`;
+  const apiUrl = `https://api.simsimi.net/v2/?text=${encodeURIComponent(message)}&lc=es`;
 
   return fetch(apiUrl)
     .then(response => response.json())
