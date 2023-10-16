@@ -137,7 +137,7 @@
             `https://api.simsimi.net/v2/?text=${message}&lc=es`
           );
           const data = await response.json();
-          const simiResponse = data.response;
+          const simiResponse = data.success;
 
           setTimeout(() => {
             displayMessage(simiResponse, "simi-message");
@@ -145,7 +145,7 @@
             userInput.focus();
           }, 1000);
         } catch (error) {
-          console.log("Error al obtener la respuesta de Simsimi:", error);
+          alert("Error al obtener la respuesta de Simsimi:", error);
         }
       }
 
