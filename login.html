@@ -193,6 +193,38 @@ form .btn input[type="submit"] {
   font-weight: 500;
   cursor: pointer;
 }
+    /* Estilos para el select */
+    .custom-select {
+      display: inline-block;
+      position: relative;
+      font-family: Arial;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      padding: 5px;
+      min-width: 150px;
+    }
+
+    /* Estilos para las opciones */
+    .custom-select select {
+      width: 100%;
+      border: none;
+      outline: none;
+      background-color: transparent;
+      padding: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .custom-select select:focus {
+      border: 1px solid blue;
+      outline: none;
+    }
+
+    .custom-select select option {
+      padding: 10px;
+    }
   </style>
 
 </head>
@@ -235,6 +267,15 @@ form .btn input[type="submit"] {
         </div>
         <div class="field">
           <input type="password" placeholder="Confirmar contraseña" required>
+        </div>
+        <div class="field">
+        <div class="custom-select">
+          <select>
+      <option value="1">Opción 1</option>
+      <option value="2">Opción 2</option>
+      <option value="3">Opción 3</option>
+      <option value="4">Opción 4</option>
+          </select>
         </div>
         <div class="field btn">
           <div class="btn-layer"></div>
