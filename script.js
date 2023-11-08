@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   var formulario = document.getElementById("formulario");
   var listaEspera = document.getElementById("listaEspera");
+  var btnsTer = document.querySelectorAll(".btn-ter");
   var btnsPuesto = document.querySelectorAll(".btn-puesto");
 
   formulario.addEventListener("submit", function(e) {
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var nombre = document.getElementById("nombre").value;
     var sexo = document.getElementById("sexo").value;
+    var terminal = "";
     var puesto = "";
 
     btnsPuesto.forEach(function(btn) {
@@ -18,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (nombre && sexo && puesto) {
       var nuevoElemento = document.createElement("li");
-      nuevoElemento.innerHTML = nombre + " - " + sexo + " - " + puesto;
+      nuevoElemento.innerHTML = nombre + " - " + terminal + " - " + puesto;
 
       var btnBorrar = document.createElement("button");
       btnBorrar.textContent = "Borrar";
