@@ -1,57 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Página de Tareas</title>
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
 
-    .task-input {
-      margin-bottom: 10px;
-    }
+h1 {
+  text-align: center;
+  color: #333;
+}
 
-    .additional-info-button {
-      margin-right: 5px;
-    }
+form {
+  margin-bottom: 20px;
+}
 
-    .task-list {
-      display: flex;
-      flex-direction: column-reverse;
-    }
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-puesto {
+  background-color: #28a745;
+}
+
+#listaEspera {
+  list-style-type: none;
+  padding: 0;
+}
+
+#listaEspera li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#listaEspera li button {
+  margin-left: 10px;
+  background-color: #dc3545;
+}
   </style>
 </head>
 <body>
-  <h1>Página de Tareas</h1>
-  
-  <input type="text" id="task-input" class="task-input">
-  
-  <button class="additional-info-button">Botón 1</button>
-  <button class="additional-info-button">Botón 2</button>
-  <button class="additional-info-button">Botón 3</button>
-  <button class="additional-info-button">Botón 4</button>
-  <button class="additional-info-button">Botón 5</button>
-  
-  <button id="add-task-button">Agregar Tarea</button>
-  
-  <ul id="task-list" class="task-list">
+  <div class="container">
+    <h1>Lista de espera</h1>
+    <form id="formulario">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Ingrese su nombre" required>
+      
+      <label for="sexo">Sexo:</label>
+      <select id="sexo" required>
+        <option value="">Seleccione</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+      </select>
+      
+      <label for="puesto">Puesto:</label>
+      <button type="button" class="btn-puesto">Puesto 1</button>
+      <button type="button" class="btn-puesto">Puesto 2</button>
+      <button type="button" class="btn-puesto">Puesto 3</button>
+      
+      <button type="submit" id="agregar">Agregar a la lista</button>
+    </form>
     
-  </ul>
-  
-  <script>
-    document.getElementById('add-task-button').addEventListener('click', function() {
-      var taskInput = document.getElementById('task-input');
-      var taskList = document.getElementById('task-list');
-      
-      var newTask = document.createElement('li');
-      newTask.appendChild(document.createTextNode(taskInput.value));
-      taskList.insertBefore(newTask, taskList.childNodes[0]);
-      
-      taskInput.value = '';
-    });
-  </script>
+    <ul id="listaEspera"></ul>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
