@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (nombre && terminal && puesto) {
       var nuevoElemento = document.createElement("li");
-      nuevoElemento.innerHTML = "&#xf017;" + nombre + " - " + terminal + " - " + puesto;
+      nuevoElemento.innerHTML = "<i class="fa-solid fa-plane-arrival"></i>" + nombre + " - " + terminal + " - " + puesto;
 
       var btnBorrar = document.createElement("button");
       btnBorrar.textContent = "Borrar";
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         this.classList.add("active");
-        this.style.backgroundColor = "black";
+        this.style.backgroundColor = "magenta";
         this.style.color = "white";
       }
     });
