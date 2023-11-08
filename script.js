@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   var formulario = document.getElementById("formulario");
   var listaEspera = document.getElementById("listaEspera");
+  var btnsPuesto = document.querySelectorAll(".btn-puesto");
   
   formulario.addEventListener("submit", function(e) {
     e.preventDefault();
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
       btnBorrar.textContent = "Borrar";
       btnBorrar.addEventListener("click", function() {
         this.parentElement.remove();
+        habilitarBotones();
       });
       
       nuevoElemento.appendChild(btnBorrar);
@@ -24,10 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
       listaEspera.appendChild(nuevoElemento);
       
       formulario.reset();
+      
+      deshabilitarBotones();
     }
   });
-  
-  var btnsPuesto = document.querySelectorAll(".btn-puesto");
   
   btnsPuesto.forEach(function(btn) {
     btn.addEventListener("click", function() {
@@ -37,7 +39,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         
         this.classList.add("active");
+        
+        habilitarBotones();
       }
     });
   });
+  
+  function deshabilitarBotones() {
+    btnsPuesto.forEach(function(btn) {
+      if (!btn.classList.contains("active")) {
+        btn.setAttribute("disabled", true);
+      }
+    });
+  }
+  
+  function habilitarBotones() {
+    btnsPuesto.forEach(function(btn) {
+      btn.removeAttribute("disabled");
+    });
+  }
 });
