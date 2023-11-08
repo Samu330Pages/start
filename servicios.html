@@ -3,32 +3,42 @@
 <head>
   <title>Tareas</title>
   <style>
-.task {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-.task .task-info {
+.container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-.task .task-actions {
-  margin-top: 10px;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.task .task-actions button {
-  margin-right: 5px;
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.task {
+  font-size: 18px;
+}
+
+.completed {
+  text-decoration: line-through;
 }
   </style>
 </head>
 <body>
-  <input type="text" id="input-task" placeholder="Ingrese una tarea">
-  <button id="add-task-btn">Agregar tarea</button>
-  
-  <div id="tasks-container"></div>
+  <div class="container">
+    <h1>Tareas</h1>
+    <input type="text" id="taskInput" placeholder="Escribe una tarea">
+    <button id="addTaskButton">Agregar tarea</button>
+    <ul id="taskList"></ul>
+  </div>
 
   <script src="script.js"></script>
 </body>
