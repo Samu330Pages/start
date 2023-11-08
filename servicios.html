@@ -29,6 +29,31 @@ label {
 }
 
 input {
+  padding: var(--padding);
+  border: 2px solid gray;
+  outline: none;
+  border-radius: 6px;
+}
+.placeholder {
+  position: absolute;
+  background-color: white;
+  color: gray;
+  left: var(--padding);
+  padding: 0 4px;
+  transition: all 0.2s ease-in;
+}
+
+input:is(:focus, :valid) {
+  border: 2px solid var(--focus-color);
+}
+
+input:is(:focus, :valid) + .placeholder {
+  transform: translatey(calc(-1 * var(--padding) - 12px));
+  font-size: 14px;
+  color: var(--focus-color);
+}    
+
+input1 {
   width: 100%;
   padding: 8px;
   font-size: 16px;
@@ -53,7 +78,7 @@ input {
         }
 
 .five {
-            background: linear-gradient(to right, #3a47d5, #FCEE21, #00A8C5, #D9E021);
+            background: linear-gradient(to right, #0000ff, #ff00ff, #00fff2, #5312e0);
             background-size: 350% 100%;
 
             transition: all .4s ease-in-out;
@@ -118,9 +143,13 @@ button {
   <div class="container">
     <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i> Lista de espera</h1>
     <form id="formulario">
-      <label for="nombre">Servicio:</label>
+      <!--<label for="nombre">Servicio:</label>-->
       <input type="text" id="nombre" placeholder="Ingrese servicio" required>
-      <br>
+      <label 
+             for='nombre' 
+             class='placeholder'>
+        Servicio:
+      </label><br>
       <label for="terminal">Terminal:</label>
       <button type="button" class="btn-ter">T2 NAC <i class="fa-solid fa-pepper-hot" style="color: #ff0000;"></i></button>
       <button type="button" class="btn-ter">T2 INTER <i class="fa-solid fa-earth-americas" style="color: #00e1ff;"></i></button>
