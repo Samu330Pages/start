@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tareas</title>
+  <title>Página de Tareas</title>
   <style>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+    .task-input {
+      margin-bottom: 10px;
+    }
 
-li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
+    .additional-info-button {
+      margin-right: 5px;
+    }
 
-.task {
-  font-size: 18px;
-}
-
-.completed {
-  text-decoration: line-through;
-}
+    .task-list {
+      display: flex;
+      flex-direction: column-reverse;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Tareas</h1>
-    <input type="text" id="taskInput" placeholder="Escribe una tarea">
-    <button id="addTaskButton">Agregar tarea</button>
-    <ul id="taskList"></ul>
-  </div>
-
-  <script src="script.js"></script>
+  <h1>Página de Tareas</h1>
+  
+  <input type="text" id="task-input" class="task-input">
+  
+  <button class="additional-info-button">Botón 1</button>
+  <button class="additional-info-button">Botón 2</button>
+  <button class="additional-info-button">Botón 3</button>
+  <button class="additional-info-button">Botón 4</button>
+  <button class="additional-info-button">Botón 5</button>
+  
+  <button id="add-task-button">Agregar Tarea</button>
+  
+  <ul id="task-list" class="task-list">
+    
+  </ul>
+  
+  <script>
+    document.getElementById('add-task-button').addEventListener('click', function() {
+      var taskInput = document.getElementById('task-input');
+      var taskList = document.getElementById('task-list');
+      
+      var newTask = document.createElement('li');
+      newTask.appendChild(document.createTextNode(taskInput.value));
+      taskList.insertBefore(newTask, taskList.childNodes[0]);
+      
+      taskInput.value = '';
+    });
+  </script>
 </body>
 </html>
