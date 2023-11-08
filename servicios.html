@@ -38,12 +38,12 @@ select {
 }
 
 .btn1 {
-            width: 20px;
-            height: 8px;
+            width: 50px;
+            height: 12px;
             margin: 10px;
             background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
             background-size: 100%;
-            font-size: 16px;
+            font-size: 4px;
             font-weight: 600;
             border-radius: 100px;
             color: white;
@@ -56,9 +56,15 @@ select {
             box-shadow: 0 4px 6px -1px hsla(0, 0%, 0%, 0.1), 0 2px 4px -2px hsla(0, 0%, 0%, 0.1);
         }
 
-.two{
-            background: linear-gradient(90deg, #fcff9e 0%, #c67700 100%);
-            background-size: 50%;
+.five {
+            background: linear-gradient(to right, #3a47d5, #FCEE21, #00A8C5, #D9E021);
+            background-size: 350% 100%;
+
+            transition: all .4s ease-in-out;
+        }
+
+        .five:hover {
+            background-position: 100% 0;
         }
 
 .btn1:hover {
@@ -135,7 +141,7 @@ button {
       <button type="button" class="btn-puesto">PDC <i class="fa-solid fa-cart-flatbed-suitcase"></i></button>
       <button type="button" class="btn-puesto">CORREDOR <i class="fa-solid fa-skull"></i></button>
       
-      <button class="btn1 two" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
+      <button class="btn1 five" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
     </form>
     
     <ul id="listaEspera"></ul>
