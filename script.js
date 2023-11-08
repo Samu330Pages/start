@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    if (nombre && sexo && puesto) {
+    if (nombre && terminal && puesto) {
       var nuevoElemento = document.createElement("li");
       nuevoElemento.innerHTML = nombre + " - " + terminal + " - " + puesto;
 
