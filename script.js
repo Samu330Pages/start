@@ -5,7 +5,8 @@ function addTask() {
 
   var task = {
     text: taskText,
-    buttons: []
+    buttons: [],
+    createdAt: Date.now()
   };
 
   tasks.push(task);
@@ -28,7 +29,7 @@ function renderTasks() {
     textEl.textContent = task.text;
 
     var timeEl = document.createElement('span');
-    timeEl.textContent = 'Hace ' + index + ' segundos'; // Cambiar esto por la lógica para calcular el tiempo
+    timeEl.textContent = getTimeElapsed(task.createdAt);
 
     taskInfo.appendChild(textEl);
     taskInfo.appendChild(timeEl);
@@ -68,7 +69,7 @@ function renderTasks() {
         if (button === 'delete') {
           tasks.splice(index, 1);
         } else {
-          // Lógica para actualizar la tarea con el botón seleccionado
+          updateTask(task, button);
         }
         renderTasks();
       });
@@ -80,6 +81,27 @@ function renderTasks() {
 
     tasksContainer.appendChild(taskEl);
   });
+}
+
+function updateTask(task, button) {
+  // Lógica para actualizar la tarea con el botón seleccionado
+  // Ejemplo: task.text = 'Tarea actualizada'; task.buttons = [button];
+  console.log('Tarea actualizada');
+}
+
+function getTimeElapsed(createdAt) {
+  var currentTime = Date.now();
+  var elapsedSeconds = Math.floor((currentTime - createdAt) / 1000);
+
+  if (elapsedSeconds < 60) {
+    return 'Hace ' + elapsedSeconds + ' segundos';
+  } else if (elapsedSeconds < 3600) {
+    var minutes = Math.floor(elapsedSeconds / 60);
+    return 'Hace ' + minutes + ' minutos';
+  } else {
+    var hours = Math.floor(elapsedSeconds / 3600);
+    return 'Hace ' + hours + ' horas';
+  }
 }
 
 document.getElementById('add-task-btn').addEventListener('click', addTask);
