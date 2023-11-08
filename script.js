@@ -1,10 +1,3 @@
-function onFocus() {
-  window.focus();
-}
-
-window.onload = function() {
-  document.addEventListener('visibilitychange', onFocus);
-};
 document.addEventListener("DOMContentLoaded", function() {
   var formulario = document.getElementById("formulario");
   var listaEspera = document.getElementById("listaEspera");
