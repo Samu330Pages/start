@@ -70,8 +70,8 @@ button {
   <div class="container">
     <h1>Lista de espera</h1>
     <form id="formulario">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" placeholder="Ingrese su nombre" required>
+      <label for="nombre">Servicio:</label>
+      <input type="text" id="nombre" placeholder="Ingrese servicio" required>
       
       <label for="sexo">Sexo:</label>
       <select id="sexo" required>
@@ -79,11 +79,20 @@ button {
         <option value="Masculino">Masculino</option>
         <option value="Femenino">Femenino</option>
       </select>
+
+      <label for="puesto">Terminal:</label>
+      <button type="button" class="btn-puesto">T2 - NAC</button>
+      <button type="button" class="btn-puesto">T2 - INTER</button>
+      <button type="button" class="btn-puesto">T3</button>
+      <button type="button" class="btn-puesto">T4</button>
       
-      <label for="puesto">Puesto:</label>
-      <button type="button" class="btn-puesto">Puesto 1</button>
-      <button type="button" class="btn-puesto">Puesto 2</button>
-      <button type="button" class="btn-puesto">Puesto 3</button>
+      <label for="puesto">Llegada:</label>
+      <button type="button" class="btn-puesto">Local</button>
+      <button type="button" class="btn-puesto">CUN</button>
+      <button type="button" class="btn-puesto">Ferry</button>
+      <button type="button" class="btn-puesto">PTM</button>
+      <button type="button" class="btn-puesto">PDC</button>
+      <button type="button" class="btn-puesto">CORREDOR</button>
       
       <button type="submit" id="agregar">Agregar a la lista</button>
     </form>
