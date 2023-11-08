@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
       formulario.reset();
 
       restaurarColores();
+      restaurarColores1();
 
       var tiempoInicio = Date.now();
       var temporizador = setInterval(function() {
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  function restaurarColores() {
+  function restaurarColores1() {
     btnsPuesto.forEach(function(btn) {
       btn.style.backgroundColor = "";
       btn.style.color = "";
