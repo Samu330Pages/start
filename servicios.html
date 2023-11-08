@@ -37,7 +37,41 @@ select {
   border-radius: 4px;
 }
 
-button {
+.button {
+  background-color: gold;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.button:before, .button:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  top: 0;
+  background-color: #ffcc00;
+  z-index: -1;
+  transition: width 0.3s ease-in-out;
+}
+.button:hover:before {
+  width: 100%;
+}
+.button:hover::after {
+  left: 0;
+  width: 100%;
+}
+
+button1 {
   display: inline-block;
   margin-right: 10px;
   padding: 8px 16px;
