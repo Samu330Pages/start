@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         this.classList.add("active");
-        this.style.backgroundColor = "blue";
+        this.style.backgroundColor = "yellow";
         this.style.color = "white";
       }
     });
