@@ -76,28 +76,28 @@ button {
 </head>
 <body>
   <div class="container">
-    <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i>Lista de espera</h1>
+    <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i> Lista de espera</h1>
     <form id="formulario">
       <label for="nombre">Servicio:</label>
-      <input type="text" id="nombre" placeholder="Ingrese servicio" required>
+      <input type="text" id="nombre" placeholder="&#xf002 Ingrese servicio" required>
       <br>
       <label for="terminal">Terminal:</label>
-      <button type="button" class="btn-ter">T2 NAC</button>
-      <button type="button" class="btn-ter">T2 INTER</button>
-      <button type="button" class="btn-ter">T3</button>
-      <button type="button" class="btn-ter">T4</button>
+      <button type="button" class="btn-ter"><i class="fa-solid fa-pepper-hot" style="color: #00ff11;"></i> T2 NAC</button>
+      <button type="button" class="btn-ter"><i class="fa-solid fa-earth-americas" style="color: #00ffd5;"></i> T2 INTER</button>
+      <button type="button" class="btn-ter"><i class="fa-regular fa-3" style="color: #fbff00;"></i> T3</button>
+      <button type="button" class="btn-ter"><i class="fa-solid fa-4" style="color: #ff0000;"></i> T4</button>
       <br>
       <label for="puesto">Llegada:</label>
-      <button type="button" class="btn-puesto">Local</button>
-      <button type="button" class="btn-puesto">CUN</button>
-      <button type="button" class="btn-puesto">Ferry</button>
-      <button type="button" class="btn-puesto">PTM</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-hotel" style="color: #000000;"></i> Local</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-umbrella-beach" style="color: #00bfff;"></i> CUN</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-ferry" style="color: #00bfff;"></i> Ferry</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-bridge" style="color: #273f77;"></i> PTM</button>
 
       <label for="puesto"></label>
-      <button type="button" class="btn-puesto">PDC</button>
-      <button type="button" class="btn-puesto">CORREDOR</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-cart-flatbed-suitcase" style="color: #ff932e;"></i> PDC</button>
+      <button type="button" class="btn-puesto"><i class="fa-solid fa-skull" style="color: #990000;"></i> CORREDOR</button>
       
-      <button type="submit" id="agregar">Agregar a la lista</button>
+      <button type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
     </form>
     
     <ul id="listaEspera"></ul>
