@@ -8,7 +8,13 @@ document.addEventListener("DOMContentLoaded", function() {
     
     var nombre = document.getElementById("nombre").value;
     var sexo = document.getElementById("sexo").value;
-    var puesto = document.querySelector(".btn-puesto.active").textContent;
+    var puesto = "";
+    
+    btnsPuesto.forEach(function(btn) {
+      if (btn.classList.contains("active")) {
+        puesto = btn.textContent;
+      }
+    });
     
     if (nombre && sexo && puesto) {
       var nuevoElemento = document.createElement("li");
@@ -27,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
       
       formulario.reset();
       
-      deshabilitarBotones();
+      restaurarColores();
     }
   });
   
@@ -40,16 +46,20 @@ document.addEventListener("DOMContentLoaded", function() {
         
         this.classList.add("active");
         
-        habilitarBotones();
+        cambiarColor(this);
       }
     });
   });
   
-  function deshabilitarBotones() {
+  function cambiarColor(btn) {
+    btn.style.backgroundColor = "green";
+    btn.style.color = "white";
+  }
+  
+  function restaurarColores() {
     btnsPuesto.forEach(function(btn) {
-      if (!btn.classList.contains("active")) {
-        btn.setAttribute("disabled", true);
-      }
+      btn.style.backgroundColor = "";
+      btn.style.color = "";
     });
   }
   
