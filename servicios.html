@@ -37,81 +37,43 @@ select {
   border-radius: 4px;
 }
 
-.button2 {
-  min-width: 300px;
-  min-height: 60px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 1.3px;
-  font-weight: 700;
-  color: #313133;
-  background: #4FD1C5;
-background: linear-gradient(90deg, rgba(129,230,217,1) 0%, rgba(79,209,197,1) 100%);
-  border: none;
-  border-radius: 1000px;
-  box-shadow: 12px 12px 24px rgba(79,209,197,.64);
-  transition: all 0.3s ease-in-out 0s;
-  cursor: pointer;
-  outline: none;
-  position: relative;
-  padding: 10px;
-  }
+.btn1 {
+            width: 250px;
+            height: 80px;
+            margin: 10px;
+            background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
+            background-size: 100%;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 100px;
+            color: white;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 1em 2em;
+            cursor: pointer;
+            transition: all 500ms ease;
+            box-shadow: 0 4px 6px -1px hsla(0, 0%, 0%, 0.1), 0 2px 4px -2px hsla(0, 0%, 0%, 0.1);
+        }
 
-button2::before {
-content: '';
-  border-radius: 1000px;
-  min-width: calc(300px + 12px);
-  min-height: calc(60px + 12px);
-  border: 6px solid #00FFCB;
-  box-shadow: 0 0 60px rgba(0,255,203,.64);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: all .3s ease-in-out 0s;
-}
+.two{
+            background: linear-gradient(90deg, #fcff9e 0%, #c67700 100%);
+            background-size: 50%;
+        }
 
-.button2:hover, .button2:focus {
-  color: #313133;
-  transform: translateY(-6px);
-}
-
-button2:hover::before, button2:focus::before {
-  opacity: 1;
-}
-
-button2::after {
-  content: '';
-  width: 30px; height: 30px;
-  border-radius: 100%;
-  border: 6px solid #00FFCB;
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: ring 1.5s infinite;
-}
-
-button2:hover::after, button2:focus::after {
-  animation: none;
-  display: none;
-}
-
-@keyframes ring {
-  0% {
-    width: 30px;
-    height: 30px;
-    opacity: 1;
+.btn1:hover {
+            animation-name: flow;
+            animation-duration: 500ms;
+            animation-timing-function: linear;
+        }
+@keyframes flow {
+            0% {
+    background-position: 0% 50%;
   }
   100% {
-    width: 300px;
-    height: 300px;
-    opacity: 0;
+    background-position: 100%;
   }
-}
+        }
     
 button {
   display: inline-block;
@@ -173,7 +135,7 @@ button {
       <button type="button" class="btn-puesto">PDC <i class="fa-solid fa-cart-flatbed-suitcase"></i></button>
       <button type="button" class="btn-puesto">CORREDOR <i class="fa-solid fa-skull"></i></button>
       
-      <button class="button2" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
+      <button class="btn1 two" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
     </form>
     
     <ul id="listaEspera"></ul>
