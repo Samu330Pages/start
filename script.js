@@ -1,29 +1,43 @@
-const taskInput = document.getElementById('taskInput');
-const addTaskButton = document.getElementById('addTaskButton');
-const taskList = document.getElementById('taskList');
-
-let taskNumber = 1;
-
-addTaskButton.addEventListener('click', function() {
-  const taskText = taskInput.value;
-  if (taskText !== '') {
-    const taskItem = document.createElement('li');
-    const taskButton = document.createElement('button');
-    taskButton.innerText = 'Finalizada';
-    taskButton.addEventListener('click', function() {
-      taskItem.classList.toggle('completed');
-      taskButton.disabled = true;
+document.addEventListener("DOMContentLoaded", function() {
+  var formulario = document.getElementById("formulario");
+  var listaEspera = document.getElementById("listaEspera");
+  
+  formulario.addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    var nombre = document.getElementById("nombre").value;
+    var sexo = document.getElementById("sexo").value;
+    var puesto = document.querySelector(".btn-puesto.active").textContent;
+    
+    if (nombre && sexo && puesto) {
+      var nuevoElemento = document.createElement("li");
+      nuevoElemento.innerHTML = nombre + " - " + sexo + " - " + puesto;
+      
+      var btnBorrar = document.createElement("button");
+      btnBorrar.textContent = "Borrar";
+      btnBorrar.addEventListener("click", function() {
+        this.parentElement.remove();
+      });
+      
+      nuevoElemento.appendChild(btnBorrar);
+      
+      listaEspera.appendChild(nuevoElemento);
+      
+      formulario.reset();
+    }
+  });
+  
+  var btnsPuesto = document.querySelectorAll(".btn-puesto");
+  
+  btnsPuesto.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      if (!this.classList.contains("active")) {
+        btnsPuesto.forEach(function(btn) {
+          btn.classList.remove("active");
+        });
+        
+        this.classList.add("active");
+      }
     });
-
-    const taskTextElement = document.createElement('span');
-    taskTextElement.innerText = `${taskNumber}. ${taskText}`;
-
-    taskItem.appendChild(taskTextElement);
-    taskItem.appendChild(taskButton);
-
-    taskList.insertBefore(taskItem, taskList.firstChild);
-
-    taskInput.value = '';
-    taskNumber++;
-  }
+  });
 });
