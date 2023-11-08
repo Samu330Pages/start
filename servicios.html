@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tareas</title>
+  <style>
+.task {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.task .task-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task .task-actions {
+  margin-top: 10px;
+}
+
+.task .task-actions button {
+  margin-right: 5px;
+}
+  </style>
+</head>
+<body>
+  <input type="text" id="input-task" placeholder="Ingrese una tarea">
+  <button id="add-task-btn">Agregar tarea</button>
+  
+  <div id="tasks-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
