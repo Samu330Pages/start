@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         this.classList.add("active");
         this.style.backgroundColor = "yellow";
-        this.style.color = "white";
+        this.style.color = "black";
       }
     });
   });
