@@ -81,4 +81,33 @@ document.addEventListener("DOMContentLoaded", function() {
       btn.removeAttribute("disabled");
     });
   }
+
+  btnsTer.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      if (!this.classList.contains("active")) {
+        btnsTer.forEach(function(btn) {
+          btn.classList.remove("active");
+          btn.style.backgroundColor = "";
+          btn.style.color = "";
+        });
+
+        this.classList.add("active");
+        this.style.backgroundColor = "blue";
+        this.style.color = "white";
+      }
+    });
+  });
+
+  function restaurarColores() {
+    btnsTer.forEach(function(btn) {
+      btn.style.backgroundColor = "";
+      btn.style.color = "";
+    });
+  }
+
+  function habilitarBotones() {
+    btnsTer.forEach(function(btn) {
+      btn.removeAttribute("disabled");
+    });
+  }
 });
