@@ -28,6 +28,14 @@ label {
   color: #666;
 }
 
+.input-wrapper {
+  --padding: 16px;
+  --focus-color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 input {
   padding: var(--padding);
   border: 2px solid gray;
@@ -143,13 +151,15 @@ button {
   <div class="container">
     <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i> Lista de espera</h1>
     <form id="formulario">
+      <div class="input-wrapper">
       <!--<label for="nombre">Servicio:</label>-->
       <input type="text" id="nombre" placeholder="Ingrese servicio" required>
       <label 
              for='nombre' 
              class='placeholder'>
         Servicio:
-      </label><br>
+      </label>
+      </div>
       <label for="terminal">Terminal:</label>
       <button type="button" class="btn-ter">T2 NAC <i class="fa-solid fa-pepper-hot" style="color: #ff0000;"></i></button>
       <button type="button" class="btn-ter">T2 INTER <i class="fa-solid fa-earth-americas" style="color: #00e1ff;"></i></button>
