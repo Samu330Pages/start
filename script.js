@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (nombre && terminal && puesto) {
       var nuevoElemento = document.createElement("li");
-      nuevoElemento.innerHTML = "<i class="fa-solid fa-plane-arrival"></i>" + nombre + " - " + terminal + " - " + puesto;
+      var html = "<i class="fa-solid fa-plane-arrival"></i>"
+      nuevoElemento.innerHTML = html + nombre + " - " + terminal + " - " + puesto;
 
       var btnBorrar = document.createElement("button");
       btnBorrar.textContent = "Borrar";
