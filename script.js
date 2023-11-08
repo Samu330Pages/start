@@ -8,13 +8,18 @@ document.addEventListener("DOMContentLoaded", function() {
     e.preventDefault();
 
     var nombre = document.getElementById("nombre").value;
-    var sexo = document.getElementById("sexo").value;
     var terminal = "";
     var puesto = "";
 
     btnsPuesto.forEach(function(btn) {
       if (btn.classList.contains("active")) {
         puesto = btn.textContent;
+      }
+    });
+
+    btnsTer.forEach(function(btn) {
+      if (btn.classList.contains("active")) {
+        terminal = btn.textContent;
       }
     });
 
