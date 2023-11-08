@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         this.classList.add("active");
-        this.style.backgroundColor = "blue";
+        this.style.backgroundColor = "black";
         this.style.color = "white";
       }
     });
