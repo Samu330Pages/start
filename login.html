@@ -121,6 +121,16 @@ alert("Error durante el registro");
 return false; // Detiene el envío del formulario
 });
 }
+
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // El usuario ha iniciado sesión, redirigir a gz330.html
+    window.location.href = "index.html";
+  } else {
+    // El usuario no ha iniciado sesión
+  }
+});
 </script>
 </body>
 <script src="./login/script.js"></script>
