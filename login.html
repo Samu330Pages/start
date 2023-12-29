@@ -1,67 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login & Signup Form</title>
-  <link rel="stylesheet" href="./login/style.css">
-
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
+<meta charset="UTF-8">
+<title>Login & Signup Form</title>
+<link rel="stylesheet" href="./login/style.css">
+<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div class="wrapper">
-  <div class="title-text">
-    <div class="title login">Login Form</div>
-    <div class="title signup">Signup Form</div>
-  </div>
-  <div class="form-container">
-    <div class="slide-controls">
-      <input type="radio" name="slide" id="login" checked>
-      <input type="radio" name="slide" id="signup">
-      <label for="login" class="slide login">Login</label>
-      <label for="signup" class="slide signup">Signup</label>
-      <div class="slider-tab"></div>
-    </div>
-    <div class="form-inner">
-      <form action="#" class="login">
-        <div class="field">
-          <input type="text" id="login-email" placeholder="Email Address" required>
-        </div>
-        <div class="field">
-          <input type="password" id="login-password" placeholder="Password" required>
-        </div>
-        <div class="pass-link"><a href="#">Forgot password?</a></div>
-        <div class="field btn">
-          <div class="btn-layer"></div>
-          <button type="button" onclick="login()">Login</button>
-        </div>
-        <div class="signup-link">Not a member? <a href="#">Signup now</a></div>
-      </form>
-      <form action="#" class="signup">
-        <div class="field">
-          <input type="text" id="signup-email" placeholder="Email Address" required>
-        </div>
-        <div class="field">
-          <input type="password" id="signup-password" placeholder="Password" required>
-        </div>
-        <div class="field">
-          <input type="password" id="signup-confirm-password" placeholder="Confirm password" required>
-        </div>
-        <div class="field btn">
-          <div class="btn-layer"></div>
-          <button type="button" onclick="signup()">Signup</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<div class="title-text">
+<div class="title login">Login Form</div>
+<div class="title signup">Signup Form</div>
+</div>
+<div class="form-container">
+<div class="slide-controls">
+<input type="radio" name="slide" id="login" checked>
+<input type="radio" name="slide" id="signup">
+<label for="login" class="slide login">Login</label>
+<label for="signup" class="slide signup">Signup</label>
+<div class="slider-tab"></div>
+</div>
+<div class="form-inner">
+<form action="#" class="login" onsubmit="return login()">
+<div class="field">
+<input type="text" id="login-email" placeholder="Email Address" required>
+</div>
+<div class="field">
+<input type="password" id="login-password" placeholder="Password" required>
+</div>
+<div class="pass-link"><a href="#">Forgot password?</a></div>
+<div class="field btn">
+<div class="btn-layer"></div>
+<input type="submit" value="Login">
+</div>
+<div class="signup-link">Not a member? <a href="#">Signup now</a></div>
+</form>
+<form action="#" class="signup" onsubmit="return signup()">
+<div class="field">
+<input type="text" id="signup-email" placeholder="Email Address" required>
+</div>
+<div class="field">
+<input type="password" id="signup-password" placeholder="Password" required>
+</div>
+<div class="field">
+<input type="password" id="signup-confirm-password" placeholder="Confirm password" required>
+</div>
+<div class="field btn">
+<div class="btn-layer"></div>
+<input type="submit" value="Signup">
+</div>
+</form>
+</div>
+</div>
 </div>
 <!-- partial -->
 <script>
-  // Archivo: script.js
+// Archivo: script.js
 
-  // Initialize Firebase
-  var config = {
+// Initialize Firebase
+var config = {
   apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
   authDomain: "number-ac729.firebaseapp.com",
   projectId: "number-ac729",
@@ -69,59 +68,60 @@
   messagingSenderId: "36610055964",
   appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
   measurementId: "G-0BTNK7VNM3"
-  };
+};
 
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
-  // Función para iniciar sesión
-  function login() {
-    var email = document.getElementById("login-email").value;
-    var password = document.getElementById("login-password").value;
+// Función para iniciar sesión
+function login() {
+var email = document.getElementById("login-email").value;
+var password = document.getElementById("login-password").value;
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(function() {
-        alert("Inicio de sesión exitoso");
-        // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if (errorCode === "auth/wrong-password") {
-          alert("Contraseña incorrecta");
-        } else {
-          alert("Error durante el inicio de sesión");
-        }
-      });
-  }
+firebase.auth().signInWithEmailAndPassword(email, password)
+.then(function() {
+alert("Inicio de sesión exitoso");
+return false; // Detiene el envío del formulario
+})
+.catch(function(error) {
+var errorCode = error.code;
+var errorMessage = error.message;
+if (errorCode === "auth/wrong-password") {
+alert("Contraseña incorrecta");
+} else {
+alert("Error durante el inicio de sesión");
+}
+return false; // Detiene el envío del formulario
+});
+}
 
-  // Función para registrarse
-  function signup() {
-    var email = document.getElementById("signup-email").value;
-    var password = document.getElementById("signup-password").value;
-    var confirmPassword = document.getElementById("signup-confirm-password").value;
-    
-    if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
-      return;
-    }
+// Función para registrarse
+function signup() {
+var email = document.getElementById("signup-email").value;
+var password = document.getElementById("signup-password").value;
+var confirmPassword = document.getElementById("signup-confirm-password").value;
 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(function() {
-        alert("Registro exitoso");
-        // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if (errorCode === "auth/weak-password") {
-          alert("La contraseña es débil");
-        } else {
-          alert("Error durante el registro");
-        }
-      });
-  }
+if (password !== confirmPassword) {
+alert("Las contraseñas no coinciden");
+return false; // Detiene el envío del formulario
+}
+
+firebase.auth().createUserWithEmailAndPassword(email, password)
+.then(function() {
+alert("Registro exitoso");
+return false; // Detiene el envío del formulario
+})
+.catch(function(error) {
+var errorCode = error.code;
+var errorMessage = error.message;
+if (errorCode === "auth/weak-password") {
+alert("La contraseña es débil");
+} else {
+alert("Error durante el registro");
+}
+return false; // Detiene el envío del formulario
+});
+}
 </script>
-
 </body>
 <script src="./login/script.js"></script>
 </html>
