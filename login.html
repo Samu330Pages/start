@@ -1,38 +1,68 @@
-<html lang="en">
+<html>
 <head>
-
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS MD</title>
-  <meta property="og:image" content="https://i.imgur.com/dm0ChgC.jpeg">
-  <meta property="og:title" content="Jarvis-md">
-  <link rel="stylesheet" href="./css/style.css">
+  <title>Login Page</title>
 </head>
 <body>
+  <h1>Login</h1>
+  <!-- Tu formulario de login se añadirá aquí -->
+  <form id="login-form">
+  <input type="email" id="email" placeholder="Correo electrónico" required>
+  <input type="password" id="password" placeholder="Contraseña" required>
+  <button type="submit">Iniciar sesión</button>
+</form>
+  
+  <!-- Scripts de Firebase -->
+  <!-- Scripts de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script>
+// Configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
+  authDomain: "number-ac729.firebaseapp.com",
+  projectId: "number-ac729",
+  storageBucket: "number-ac729.appspot.com",
+  messagingSenderId: "36610055964",
+  appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
+  measurementId: "G-0BTNK7VNM3"
+};
 
-<div id="main">
-  <br><br>
-  <h1 class="h">
-    <span>Select the method</span>
-  </h1>
-  <h3 class="h">
-    <span>Tap the button to continue</span>
-  </h3>
-  <div class="button-container">
-    <a href="./qr.html" class="button">
-      Via Qr
-    </a>
-    <a href="./code.html" class="button">
-      Via Code
-    </a>
-  </div>
-</div>
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
 
-<footer>
-  <p>© 2023 Loki Xer. All rights reserved.</p>
-</footer>
-
-
-
-</body></html>
+// Controlar el evento de inicio de sesión
+document.getElementById("login-form").addEventListener("submit", function(event) {
+  event.preventDefault(); // Evitar el envío del formulario
+  
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function(user) {
+      // Iniciar sesión exitosa, redirigir a la página principal
+      window.location.href = "main.html";
+    })
+    .catch(function(error) {
+      // Mostrar el error en caso de fallo en inicio de sesión
+      alert(error.message);
+    });
+});
+</script>
+<style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  input {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+</style>
+</body>
+</html>
