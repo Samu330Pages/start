@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>GZ330</title>
+</head>
+
+<body>
+  <h1>Bienvenido a GZ330</h1>
+
+  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
+  <script>
+    // Configuración de Firebase
+    var config = {
+  apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
+  authDomain: "number-ac729.firebaseapp.com",
+  projectId: "number-ac729",
+  storageBucket: "number-ac729.appspot.com",
+  messagingSenderId: "36610055964",
+  appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
+  measurementId: "G-0BTNK7VNM3"
+    };
+
+    firebase.initializeApp(config);
+
+    // Verificar el estado de autenticación del usuario
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // El usuario no ha iniciado sesión, redirigir al login
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+
+</html>
