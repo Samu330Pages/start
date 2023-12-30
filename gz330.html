@@ -1,38 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>GZ330</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GZ330-BOT By Samu330</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+  /* Bloquear click derecho */
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  </style>
 </head>
-
 <body>
-  <h1>Bienvenido a GZ330</h1>
 
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
-  <script>
-    // Configuración de Firebase
-    var config = {
-  apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
-  authDomain: "number-ac729.firebaseapp.com",
-  projectId: "number-ac729",
-  storageBucket: "number-ac729.appspot.com",
-  messagingSenderId: "36610055964",
-  appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
-  measurementId: "G-0BTNK7VNM3"
-    };
+    <div class="container__background-triangle">
+        <div class="triangle triangle1"></div>
+        <div class="triangle triangle2"></div>
+        <div class="triangle triangle3"></div>
+    </div>
 
-    firebase.initializeApp(config);
+    <div class="container__cards">
+        <div class="card">
+            <div class="cover__card">
+                <img src="images/img-3.jpg" alt="">
+            </div>
+            <h2>Sabemos cómo aumentar los beneficios</h2>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui sunt eius dolore pariatur. Error, provident et similique sunt voluptate odit eos facere expedita, culpa at officia magnam quia vel eius!</p>
+            <hr>
+            <div class="footer__card">
+                <h3 class="user__name">Mamie Barnett</h3>
+                <i>08 Marzo</i>
+            </div>
+        </div>
+    </div>
+    <script>
+      document.oncontextmenu = function () { return false }
+    document.addEventListener("dragstart", function (event) {
+      event.preventDefault();
+    });
 
-    // Verificar el estado de autenticación del usuario
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (!user) {
-        // El usuario no ha iniciado sesión, redirigir al login
-        window.location.href = "login.html";
+    document.addEventListener('keydown', function (event) {
+      if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
+        event.preventDefault();
+        Swal.fire(
+          'Sin acceso?',
+          'Lo Siento pero no tienes permiso',
+          'question'
+        )
       }
     });
-  </script>
+    </script>
 </body>
-
 </html>
