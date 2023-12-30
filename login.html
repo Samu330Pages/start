@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <title>Login & Signup Form GZBOT</title>
 <link rel="stylesheet" href="./login/style.css">
+<link rel="shortcut icon" href="https://i.etsystatic.com/7716972/r/il/610096/3257029619/il_340x270.3257029619_9baj.jpg" />
+<meta name="description" content= "Register For WhatsApp Bot By Samu330" >
+<meta name="author" content="Samu330" />
+<meta name="copyright" content="GZ330-BOT" />
+<meta name="keywords" content="whatsapp bot, bot whatsapp, github bot, samu330 bot"/>
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
 <!-- Agregar SweetAlert -->
@@ -154,7 +159,7 @@ return false; // Detiene el envío del formulario
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // El usuario ha iniciado sesión, redirigir a gz330.html
-    window.location.href = "gz330.html";
+    window.location.href = "gz330";
   } else {
     // El usuario no ha iniciado sesión
   }
