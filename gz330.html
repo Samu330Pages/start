@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Glass con efecto Hover - MagtimusPro</title>
+    <title>GZ330-BOT By Samu330</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,9 +19,9 @@
     <div class="container__cards">
         <div class="card">
             <div class="cover__card">
-                <img src="https://e1.pxfuel.com/desktop-wallpaper/0/230/desktop-wallpaper-shin-godzilla-concept-art-shin-godzilla.jpg" alt="">
+                <img src="https://wallpapers.com/images/hd/shin-godzilla-lnzgudvqtmrdsf4w.jpg" alt="">
             </div>
-            <h2>Sabemos cómo aumentar los beneficios</h2>
+            <h2 id="welcome-message"></h2>
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui sunt eius dolore pariatur. Error, provident et similique sunt voluptate odit eos facere expedita, culpa at officia magnam quia vel eius!</p>
             <hr>
             <div class="footer__card">
@@ -29,6 +30,54 @@
             </div>
         </div>
     </div>
-    
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
+  <script>
+    // Configuración de Firebase
+    var config = {
+  apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
+  authDomain: "number-ac729.firebaseapp.com",
+  projectId: "number-ac729",
+  storageBucket: "number-ac729.appspot.com",
+  messagingSenderId: "36610055964",
+  appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
+  measurementId: "G-0BTNK7VNM3"
+    };
+
+    firebase.initializeApp(config);
+
+    // Verificar el estado de autenticación del usuario
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // El usuario no ha iniciado sesión, redirigir al login
+        window.location.href = "login.html";
+      } else {
+          var username = user.email;
+
+        // Actualizar el contenido del elemento "h2" con el mensaje de bienvenida
+        var welcomeMessage = document.getElementById("welcome-message");
+        welcomeMessage.innerText = "Bienvenido " + username;
+      }
+    });
+  </script>
+    <script>
+        document.oncontextmenu = function () { return false }
+    document.addEventListener("dragstart", function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
+        event.preventDefault();
+        Swal.fire(
+          'Sin acceso?',
+          'Lo Siento pero no tienes permiso',
+          'question'
+        )
+      }
+    });
+
+    </script>
 </body>
 </html>
