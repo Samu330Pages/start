@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Login & Signup Form</title>
+<title>Login & Signup Form GZBOT</title>
 <link rel="stylesheet" href="./login/style.css">
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
@@ -26,15 +26,15 @@
 <!-- partial:index.partial.html -->
 <div class="wrapper">
 <div class="title-text">
-<div class="title login">Login Form</div>
-<div class="title signup">Signup Form</div>
+<div class="title login"><i class="fa-brands fa-bots fa-bounce"></i> Login GZ330-BOT</div>
+<div class="title signup"><i class="fa-brands fa-bots fa-bounce"></i> Signup GZ330-BOT</div>
 </div>
 <div class="form-container">
 <div class="slide-controls">
 <input type="radio" name="slide" id="login" checked>
 <input type="radio" name="slide" id="signup">
-<label for="login" class="slide login">Login</label>
-<label for="signup" class="slide signup">Signup</label>
+<label for="login" class="slide login">Iniciar sesión</label>
+<label for="signup" class="slide signup">Registrarse</label>
 <div class="slider-tab"></div>
 </div>
 <div class="form-inner">
@@ -45,12 +45,12 @@
 <div class="field">
 <input type="password" id="login-password" placeholder="Password" required>
 </div>
-<div class="pass-link"><a href="#">Forgot password?</a></div>
+<div class="pass-link"><a href="wa.link/9gfv07">Olvidaste tu contraseña?</a></div>
 <div class="field btn">
 <div class="btn-layer"></div>
 <input type="submit" value="Login">
 </div>
-<div class="signup-link">Not a member? <a href="#">Signup now</a></div>
+<div class="signup-link">Aún no eres miembro?? <a href="#">registrate ahora</a></div>
 </form>
 <form action="#" class="signup" onsubmit="return signup()">
 <div class="field">
@@ -133,14 +133,14 @@ return false; // Detiene el envío del formulario
 
 firebase.auth().createUserWithEmailAndPassword(email, password)
 .then(function() {
-alert("Registro exitoso");
+alert("Registro exitoso, ahora puedes iniciar sesión");
 return false; // Detiene el envío del formulario
 })
 .catch(function(error) {
 var errorCode = error.code;
 var errorMessage = error.message;
 if (errorCode === "auth/weak-password") {
-Swal.fire("La contraseña es débil");
+Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
 } else {
 Swal.fire("Error durante el registro");
 }
@@ -157,6 +157,22 @@ firebase.auth().onAuthStateChanged(function(user) {
     // El usuario no ha iniciado sesión
   }
 });
+
+document.oncontextmenu = function () { return false }
+    document.addEventListener("dragstart", function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
+        event.preventDefault();
+        Swal.fire(
+          'Sin acceso?',
+          'Lo Siento pero no tienes permiso',
+          'question'
+        )
+      }
+    });
 </script>
 </body>
 <script src="./login/script.js"></script>
