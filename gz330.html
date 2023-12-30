@@ -22,11 +22,11 @@
                 <img src="https://wallpapers.com/images/hd/shin-godzilla-lnzgudvqtmrdsf4w.jpg" alt="">
             </div>
             <h2 id="welcome-message"></h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui sunt eius dolore pariatur. Error, provident et similique sunt voluptate odit eos facere expedita, culpa at officia magnam quia vel eius!</p>
+            <p>Gracias por el prerregistro, el bot aún no está disponible. ¡Tan pronto lo este, la página se actualizará!. Puedes igual recibir la notificación en el canal, comunicate con samu para que te comparta los links.</p>
             <hr>
             <div class="footer__card">
-                <h3 class="user__name">Mamie Barnett</h3>
-                <i>08 Marzo</i>
+                <h3 class="user__name">Samu330</h3>
+                <i>29 Dec</i>
             </div>
         </div>
     </div>
@@ -53,11 +53,12 @@
         // El usuario no ha iniciado sesión, redirigir al login
         window.location.href = "login.html";
       } else {
-          var username = user.email;
+    // Obtener el nombre de usuario actual del objeto "user"
+    var username = user.displayName || user.email; // Si el nombre de usuario no está disponible, mostrar el correo electrónico
 
-        // Actualizar el contenido del elemento "h2" con el mensaje de bienvenida
-        var welcomeMessage = document.getElementById("welcome-message");
-        welcomeMessage.innerText = "Bienvenido " + username;
+    // Actualizar el contenido del elemento "h2" con el mensaje de bienvenida
+    var welcomeMessage = document.getElementById("welcome-message");
+    welcomeMessage.innerText = "Bienvenido " + username;
       }
     });
   </script>
