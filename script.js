@@ -15,7 +15,7 @@ firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
     if (!user) {
         // El usuario no ha iniciado sesión, redirigir al login
-        window.location.href = "login";
+        window.location.href = "index";
     } else {
         // Obtener el nombre de usuario actual del objeto "user"
         var username = user.displayName || user.email; // Si el nombre de usuario no está disponible, mostrar el correo electrónico
@@ -68,21 +68,22 @@ resetPassBtn.addEventListener('click', function() {
    var email = prompt("Por favor, ingresa tu dirección de correo electrónico para restablecer la contraseña:");
 
    if (email != null) {
-      // Verificar si el correo electrónico existe en la base de datos
-      firebase.auth().fetchSignInMethodsForEmail(email).then(function(signInMethods) {
-         if (signInMethods.length === 0) {
-            // El correo electrónico no existe en la base de datos
-            alert("El correo electrónico ingresado no se encuentra registrado. Por favor, verifica tu dirección de correo electrónico.");
-         } else {
-            // El correo electrónico existe, enviar correo de restablecimiento de contraseña
-            firebase.auth().sendPasswordResetEmail(email).then(function() {
-               alert("Se ha enviado un correo electrónico para restablecer la contraseña. ¡Por favor, revisa tu bandeja de entrada!");
-            }).catch(function(error) {
-               console.log(error.message);
+      firebase.auth().sendPasswordResetEmail(email)
+         .then(function() {
+            // Correo de restablecimiento de contraseña enviado con éxito
+            Swal.fire({
+               icon: 'success',
+               title: 'Correo enviado',
+               text: 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada para obtener instrucciones adicionales.'
             });
-         }
-      }).catch(function(error) {
-         console.log(error.message);
-      });
+         })
+         .catch(function(error) {
+            // Error al enviar el correo de restablecimiento de contraseña
+            Swal.fire({
+               icon: 'error',
+               title: 'Error',
+               text: 'Ocurrió un error al enviar el correo de restablecimiento de contraseña. Por favor, verifica que la dirección de correo electrónico sea correcta e inténtalo de nuevo.'
+            });
+         });
    }
 });
