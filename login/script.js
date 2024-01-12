@@ -1,112 +1,117 @@
-const loginText = document.querySelector(".title-text .login");
-const loginForm = document.querySelector("form.login");
-const loginBtn = document.querySelector("label.login");
-const signupBtn = document.querySelector("label.signup");
-const signupLink = document.querySelector("form .signup-link a");
-signupBtn.onclick = () => {
-  loginForm.style.marginLeft = "-50%";
-  loginText.style.marginLeft = "-50%";
-};
-loginBtn.onclick = () => {
-  loginForm.style.marginLeft = "0%";
-  loginText.style.marginLeft = "0%";
-};
-signupLink.onclick = () => {
-  signupBtn.click();
-  return false;
-};
-
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
-    authDomain: "number-ac729.firebaseapp.com",
-    projectId: "number-ac729",
-    storageBucket: "number-ac729.appspot.com",
-    messagingSenderId: "36610055964",
-    appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
-    measurementId: "G-0BTNK7VNM3"
-};
-
-firebase.initializeApp(config);
-
-// Función para iniciar sesión
-function login() {
+window.onload = function() {
+  // Función para iniciar sesión
+  function login() {
     var email = document.getElementById("login-email").value;
     var password = document.getElementById("login-password").value;
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(function() {
-            Swal.fire("Inicio de sesión exitoso");
-        })
-        .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            if (errorCode === "auth/wrong-password") {
-                Swal.fire("Contraseña incorrecta");
-            } else {
-                Swal.fire("Error durante el inicio de sesión, asegurate de poner bien tus datos");
-            }
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(function() {
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          text: 'Has iniciado sesión correctamente'
         });
-}
+      })
+      .catch(function(error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Inicio de sesión fallido',
+          text: error.message
+        });
+      });
 
-// Función para registrarse
-function signup() {
+    return false;
+  }
+
+  // Función para registrarse
+  function signup() {
     var email = document.getElementById("signup-email").value;
     var password = document.getElementById("signup-password").value;
     var confirmPassword = document.getElementById("signup-confirm-password").value;
     var username = document.getElementById("username").value;
 
+    // Verificar que las contraseñas coincidan
     if (password !== confirmPassword) {
-        Swal.fire("Las contraseñas no coinciden");
-        return false; // Detiene el envío del formulario
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al registrarse',
+        text: 'Las contraseñas no coinciden'
+      });
+      return false;
     }
 
-    // Verificar si el nombre de usuario tiene más de 8 caracteres
-    if (username.length < 5) {
-        Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
-        return false; // Detiene el envío del formulario
-    }
-
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(function() {
-            Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-            return false; // Detiene el envío del formulario
-        })
-        .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            if (errorCode === "auth/weak-password") {
-                Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
-            } else {
-                Swal.fire("Error durante el registro");
-            }
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(function() {
+        // Actualizar el nombre de usuario
+        firebase.auth().currentUser.updateProfile({
+          displayName: username
         });
-}
 
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: 'Se ha creado tu cuenta correctamente'
+        });
+      })
+      .catch(function(error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al registrarse',
+          text: error.message
+        });
+      });
 
-firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-        // El usuario ha iniciado sesión, redirigir a gz330.html
-        window.location.href = "gz330";
-    } else {
-        // El usuario no ha iniciado sesión
-    }
-});
+    return false;
+  }
 
-document.oncontextmenu = function() {
-    return false
-}
-document.addEventListener("dragstart", function(event) {
+  // Agregar evento submit a los formularios de inicio de sesión y registro
+  document.getElementById("login-form").addEventListener("submit", function(event) {
     event.preventDefault();
-});
+    login();
+  });
 
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-        event.preventDefault();
-        Swal.fire(
-            'Sin acceso?',
-            'Lo Siento pero no tienes permiso',
-            'question'
-        )
-    }
-});
+  document.getElementById("signup-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    signup();
+  });
+
+  // Agregar evento click al enlace "Olvidaste tu contraseña?"
+  document.getElementById("reset-pass-link").addEventListener("click", function(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: 'Restablecer contraseña',
+      input: 'text',
+      inputLabel: 'Ingresa tu dirección de correo electrónico',
+      inputPlaceholder: 'Correo electrónico',
+      showCancelButton: true,
+      confirmButtonText: 'Restablecer',
+      cancelButtonText: 'Cancelar',
+      showLoaderOnConfirm: true,
+      preConfirm: function(email) {
+        return new Promise(function(resolve, reject) {
+          firebase.auth().sendPasswordResetEmail(email)
+            .then(function() {
+              resolve();
+            })
+            .catch(function(error) {
+              reject('Ha ocurrido un error al enviar el correo de restablecimiento de contraseña. Por favor, verifica que la dirección de correo electrónico sea correcta e inténtalo de nuevo.');
+            });
+        });
+      },
+      allowOutsideClick: false
+    }).then(function(result) {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Correo enviado',
+          text: 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada para obtener instrucciones adicionales.'
+        });
+      }
+    });
+  });
+             }
