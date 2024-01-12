@@ -62,8 +62,8 @@ function signup() {
     }
 
     // Verificar si el nombre de usuario tiene más de 8 caracteres
-    if (username.length < 8) {
-        Swal.fire("El nombre de usuario debe tener al menos 8 caracteres");
+    if (username.length < 5) {
+        Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
         return false; // Detiene el envío del formulario
     }
 
