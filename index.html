@@ -1,90 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Login & Signup Form GZBOT</title>
-<link rel="stylesheet" href="./login/style.css">
-<link rel="shortcut icon" href="https://i.etsystatic.com/7716972/r/il/610096/3257029619/il_340x270.3257029619_9baj.jpg" />
-<meta property="og:image" content="https://i.postimg.cc/vT5GrsHQ/20231229-220548.jpg" />
-<meta name="description" content= "Register For WhatsApp Bot By Samu330" >
-<meta name="author" content="Samu330" />
-<meta name="copyright" content="GZ330-BOT" />
-<meta name="keywords" content="whatsapp bot, bot whatsapp, github bot, samu330 bot"/>
-<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
-<!-- Agregar SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Agregar FontAwesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-  /* Bloquear click derecho */
-  body {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login y Registro</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<div class="wrapper">
-<div class="title-text">
-<div class="title login"><i class="fa-brands fa-bots fa-bounce"></i> GZ330-BOT</div>
-<div class="title signup"><i class="fa-regular fa-address-card fa-beat-fade"></i> Signup</div>
-</div>
-<div class="form-container">
-<div class="slide-controls">
-<input type="radio" name="slide" id="login" checked>
-<input type="radio" name="slide" id="signup">
-<label for="login" class="slide login">Iniciar sesión</label>
-<label for="signup" class="slide signup">Registrarse</label>
-<div class="slider-tab"></div>
-</div>
-<div class="form-inner">
-<form action="#" class="login" onsubmit="return login()">
-<div class="field">
-<input type="text" id="login-email" placeholder="Email Address" required>
-</div>
-<div class="field">
-<input type="password" id="login-password" placeholder="Password" required>
-</div>
-<div class="pass-link">
-    <a href="#" id="reset-pass-btn">Olvidaste tu contraseña?</a>
-</div>
-<div class="field btn">
-<div class="btn-layer"></div>
-<input type="submit" value="Login">
-</div>
-<div class="signup-link">Aún no eres miembro? <a href="#">registrate ahora</a></div>
-</form>
-<form action="#" class="signup" onsubmit="return signup()">
-<div class="field">
-<input type="text" id="signup-email" placeholder="Email Address" required>
-</div>
-<div class="field">
-<input type="password" id="signup-password" placeholder="Password" required>
-</div>
-<div class="field">
-<input type="password" id="signup-confirm-password" placeholder="Confirm password" required>
-</div>
-<!-- Agregar input para el nombre de usuario -->
-<div class="field">
-<input type="text" id="username" placeholder="Username" required>
-</div>
-<div class="field btn">
-<div class="btn-layer"></div>
-<input type="submit" value="Signup">
-</div>
-</form>
-</div>
-</div>
-</div>
-<!-- partial -->
+  <div id="login">
+    <h1>Iniciar sesión</h1>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Correo electrónico" required>
+      <input type="password" id="login-password" placeholder="Contraseña" required>
+      <button type="submit">Iniciar sesión</button>
+    </form>
+    <a href="#" id="reset-pass-link">¿Olvidaste tu contraseña?</a>
+  </div>
+
+  <div id="signup">
+    <h1>Crear cuenta</h1>
+    <form id="signup-form">
+      <input type="text" id="username" placeholder="Nombre de usuario" required>
+      <input type="email" id="signup-email" placeholder="Correo electrónico" required>
+      <input type="password" id="signup-password" placeholder="Contraseña" required>
+      <input type="password" id="signup-confirm-password" placeholder="Confirmar contraseña" required>
+      <button type="submit">Registrarse</button>
+    </form>
+    <a href="#" id="login-link">¿Aún no eres miembro? ¡Regístrate ahora!</a>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="script.js"></script>
 </body>
-<script src="./login/script.js"></script>
 </html>
