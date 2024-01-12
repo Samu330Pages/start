@@ -46,7 +46,6 @@ function login() {
             } else {
                 Swal.fire("Error durante el inicio de sesión, asegurate de poner bien tus datos");
             }
-            return false; // Detiene el envío del formulario
         });
 }
 
