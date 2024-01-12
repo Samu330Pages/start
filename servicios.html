@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.input-wrapper {
+  --padding: 16px;
+  --focus-color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+input {
+  padding: var(--padding);
+  border: 2px solid gray;
+  outline: none;
+  border-radius: 6px;
+}
+.placeholder {
+  position: absolute;
+  background-color: white;
+  color: gray;
+  left: var(--padding);
+  padding: 0 4px;
+  transition: all 0.2s ease-in;
+}
+
+input:is(:focus, :valid) {
+  border: 2px solid var(--focus-color);
+}
+
+input:is(:focus, :valid) + .placeholder {
+  transform: translatey(calc(-1 * var(--padding) - 14px));
+  font-size: 16px;
+  color: var(--focus-color);
+}    
+
+input1 {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn1 {
+            margin: 10px;
+            background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
+            background-size: 100%;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 100px;
+            color: white;
+            border: none;
+            text-transform: uppercase;
+            padding: 1em 2em;
+            cursor: pointer;
+            transition: all 500ms ease;
+            box-shadow: 0 4px 6px -1px hsla(0, 0%, 0%, 0.1), 0 2px 4px -2px hsla(0, 0%, 0%, 0.1);
+        }
+
+.five {
+            background: linear-gradient(to right, #0000ff, #ff00ff, #00fff2, #5312e0);
+            background-size: 350% 100%;
+
+            transition: all .4s ease-in-out;
+        }
+
+        .five:hover {
+            background-position: 100% 0;
+        }
+
+.btn1:hover {
+            animation-name: flow;
+            animation-duration: 500ms;
+            animation-timing-function: linear;
+        }
+@keyframes flow {
+            0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100%;
+  }
+        }
+
+button {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-puesto {
+  background-color: #000;
+}
+
+.btn-ter {
+  background-color: blue;
+}
+
+#listaEspera {
+  list-style-type: none;
+  padding: 0;
+}
+
+#listaEspera li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#listaEspera li button {
+  margin-left: 10px;
+  background-color: #dc3545;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i> Lista de espera</h1>
+    <form id="formulario">
+      <div class="input-wrapper">
+      <!--<label for="nombre">Servicio:</label>-->
+      <input type="text" id="nombre" required>
+      <label 
+             for='nombre' 
+             class='placeholder'>
+        Servicio:
+      </label>
+      </div>
+      <label for="terminal">Terminal:</label>
+      <button type="button" class="btn-ter">T2 NAC <i class="fa-solid fa-pepper-hot" style="color: #ff0000;"></i></button>
+      <button type="button" class="btn-ter">T2 INTER <i class="fa-solid fa-earth-americas" style="color: #00e1ff;"></i></button>
+      <button type="button" class="btn-ter">T3 <i class="fa-regular fa-3" style="color: #ffff00;"></i></button>
+      <button type="button" class="btn-ter">T4 <i class="fa-solid fa-4" style="color: #00ff00;"></i></button>
+      <br>
+      <label for="puesto">Llegada:</label>
+      <button type="button" class="btn-puesto">Local <i class="fa-solid fa-hotel"></i></button>
+      <button type="button" class="btn-puesto">CUN <i class="fa-solid fa-umbrella-beach""></i></button>
+      <button type="button" class="btn-puesto">Ferry <i class="fa-solid fa-ferry"></i></button>
+      <button type="button" class="btn-puesto">PTM <i class="fa-solid fa-bridge"></i></button>
+
+      <label for="puesto"></label>
+      <button type="button" class="btn-puesto">PDC <i class="fa-solid fa-cart-flatbed-suitcase"></i></button>
+      <button type="button" class="btn-puesto">CORREDOR <i class="fa-solid fa-skull"></i></button>
+
+      <button class="btn1 five" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
+    </form>
+
+    <ul id="listaEspera"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
