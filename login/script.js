@@ -37,7 +37,6 @@ function login() {
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then(function() {
             Swal.fire("Inicio de sesión exitoso");
-            return false; // Detiene el envío del formulario
         })
         .catch(function(error) {
             var errorCode = error.code;
