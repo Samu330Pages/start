@@ -1,4 +1,23 @@
 window.onload = function() {
+  const loginDiv = document.getElementById("login");
+  const signupDiv = document.getElementById("signup");
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const resetPassLink = document.getElementById("reset-pass-link");
+  const loginLink = document.getElementById("login-link");
+
+  // Función para mostrar la vista de inicio de sesión
+  function showLoginView() {
+    loginDiv.style.display = "block";
+    signupDiv.style.display = "none";
+  }
+
+  // Función para mostrar la vista de registro
+  function showSignupView() {
+    loginDiv.style.display = "none";
+    signupDiv.style.display = "block";
+  }
+
   // Función para iniciar sesión
   function login() {
     var email = document.getElementById("login-email").value;
@@ -69,18 +88,18 @@ window.onload = function() {
   }
 
   // Agregar evento submit a los formularios de inicio de sesión y registro
-  document.getElementById("login-form").addEventListener("submit", function(event) {
+  loginForm.addEventListener("submit", function(event) {
     event.preventDefault();
     login();
   });
 
-  document.getElementById("signup-form").addEventListener("submit", function(event) {
+  signupForm.addEventListener("submit", function(event) {
     event.preventDefault();
     signup();
   });
 
   // Agregar evento click al enlace "Olvidaste tu contraseña?"
-  document.getElementById("reset-pass-btn").addEventListener("click", function(event) {
+  resetPassLink.addEventListener("click", function(event) {
     event.preventDefault();
 
     Swal.fire({
@@ -114,4 +133,13 @@ window.onload = function() {
       }
     });
   });
+
+  // Agregar evento click al enlace "¿Aún no eres miembro? ¡Regístrate ahora!"
+  loginLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    showSignupView();
+  });
+
+  // Mostrar la vista de inicio de sesión inicialmente
+  showLoginView();
 };
