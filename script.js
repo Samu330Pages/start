@@ -43,3 +43,46 @@ document.addEventListener('keydown', function(event) {
         )
     }
 });
+
+/////////////////////////////////////////////////////////////////////
+
+var header = document.querySelector('header');
+var containerCards = document.querySelector('.container__cards');
+
+header.addEventListener('click', function() {
+   containerCards.classList.toggle('show');
+});
+
+var logoutBtn = document.getElementById('logout-btn');
+var resetPassBtn = document.getElementById('reset-pass-btn');
+
+logoutBtn.addEventListener('click', function() {
+   firebase.auth().signOut().then(function() {
+      // Acción después de cerrar sesión, como redirigir a una página de inicio de sesión
+   }).catch(function(error) {
+      console.log(error.message);
+   });
+});
+
+resetPassBtn.addEventListener('click', function() {
+   var email = prompt("Por favor, ingresa tu dirección de correo electrónico para restablecer la contraseña:");
+
+   if (email != null) {
+      // Verificar si el correo electrónico existe en la base de datos
+      firebase.auth().fetchSignInMethodsForEmail(email).then(function(signInMethods) {
+         if (signInMethods.length === 0) {
+            // El correo electrónico no existe en la base de datos
+            alert("El correo electrónico ingresado no se encuentra registrado. Por favor, verifica tu dirección de correo electrónico.");
+         } else {
+            // El correo electrónico existe, enviar correo de restablecimiento de contraseña
+            firebase.auth().sendPasswordResetEmail(email).then(function() {
+               alert("Se ha enviado un correo electrónico para restablecer la contraseña. ¡Por favor, revisa tu bandeja de entrada!");
+            }).catch(function(error) {
+               console.log(error.message);
+            });
+         }
+      }).catch(function(error) {
+         console.log(error.message);
+      });
+   }
+});
