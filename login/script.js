@@ -80,7 +80,7 @@ window.onload = function() {
   });
 
   // Agregar evento click al enlace "Olvidaste tu contraseña?"
-  document.getElementById("reset-pass-link").addEventListener("click", function(event) {
+  document.getElementById("reset-pass-btn").addEventListener("click", function(event) {
     event.preventDefault();
 
     Swal.fire({
@@ -99,7 +99,7 @@ window.onload = function() {
               resolve();
             })
             .catch(function(error) {
-              reject('Ha ocurrido un error al enviar el correo de restablecimiento de contraseña. Por favor, verifica que la dirección de correo electrónico sea correcta e inténtalo de nuevo.');
+              reject(Error(error.message));
             });
         });
       },
@@ -114,4 +114,4 @@ window.onload = function() {
       }
     });
   });
-             }
+};
