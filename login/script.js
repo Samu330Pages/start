@@ -31,18 +31,21 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
+// Función para verificar si el correo está registrado en Firebase
 function checkIfEmailExists(email) {
-  firebase.auth().fetchSignInMethodsForEmail(email)
-    .then(function(signInMethods) {
-      if (signInMethods.length > 0) {
-        alert('El correo está vinculado a un usuario registrado');
-      } else {
-        alert('El correo no está vinculado a ningún usuario registrado');
-      }
-    })
-    .catch(function(error) {
-      console.error('Error al verificar el correo:', error);
-    });
+  return new Promise((resolve, reject) => {
+    firebase.auth().fetchSignInMethodsForEmail(email)
+      .then((signInMethods) => {
+        if (signInMethods.length === 0) {
+          reject(new Error('El correo ingresado no está registrado'));
+        } else {
+          resolve();
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 // Función para mostrar el input de restablecimiento de contraseña
@@ -54,27 +57,27 @@ function showResetPasswordInput() {
     showCancelButton: true,
     confirmButtonText: 'Enviar',
     cancelButtonText: 'Cancelar',
+    allowOutsideClick: false,
     preConfirm: (email) => {
       return checkIfEmailExists(email);
-    },
-    allowOutsideClick: () => !Swal.isLoading()
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       const email = result.value;
 
       // Enviar correo de restablecimiento de contraseña
-      /*firebase.auth().sendPasswordResetEmail(email)
+      firebase.auth().sendPasswordResetEmail(email)
         .then(() => {
           Swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña', 'success');
         })
         .catch((error) => {
-          console.log(error);
           Swal.fire('Error', 'Ocurrió un error al enviar el correo de restablecimiento de contraseña', 'error');
         });
     }
+  }).catch((error) => {
+    Swal.fire('Error', error.message, 'error');
   });
 }
-*/
 //////////////////////////
 
 // Función para iniciar sesión
