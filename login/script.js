@@ -86,8 +86,8 @@ function signup() {
 
 // ...
 
-// Función para restablecer la contraseña
-function resetPassword() {
+// Función para comprobar la existencia del correo electrónico y enviar el correo de restablecimiento de contraseña
+function sendResetPasswordEmail() {
     var email = document.getElementById("reset-email").value;
 
     firebase.auth().fetchSignInMethodsForEmail(email)
@@ -95,7 +95,7 @@ function resetPassword() {
             // Verificar si el correo está registrado en Firebase
             if (signInMethods.length === 0) {
                 Swal.fire("El correo electrónico no está registrado");
-                return; // Detiene la ejecución del resto del código
+                return;
             }
 
             // El correo está registrado, enviar correo de restablecimiento de contraseña
@@ -112,7 +112,7 @@ function resetPassword() {
         });
 }
 
-// Función para mostrar el input de restablecer contraseña
+// Función para mostrar el cuadro de diálogo de restablecimiento de contraseña
 function showResetPasswordInput() {
     Swal.fire({
         title: 'Restablecer contraseña',
@@ -120,7 +120,7 @@ function showResetPasswordInput() {
         confirmButtonText: 'Restablecer',
         showLoaderOnConfirm: true,
         preConfirm: function() {
-            resetPassword();
+            sendResetPasswordEmail();
         }
     });
     return false; // Detiene el envío del formulario
@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ...
 });
-
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
