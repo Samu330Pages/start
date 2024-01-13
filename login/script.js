@@ -85,49 +85,63 @@ function signup() {
 
 //////////////////////////
 
-// Función para mostrar el input de SweetAlert al hacer clic en "Olvidaste tu contraseña"
 function showResetPasswordInput() {
   Swal.fire({
-    title: "Restablecer contraseña",
-    html: '<input id="reset-email" class="swal2-input" placeholder="Correo electrónico" type="email">',
+    title: 'Restablecer contraseña',
+    html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico" required>',
     showCancelButton: true,
-    confirmButtonText: "Enviar",
-    cancelButtonText: "Cancelar",
-    preConfirm: function () {
-      const resetEmail = Swal.getPopup().querySelector("#reset-email").value;
-      if (!resetEmail) {
-        Swal.showValidationMessage("Por favor, ingresa un correo electrónico válido");
-      }
-      return resetEmail;
-    },
-  }).then(function (result) {
+    confirmButtonText: 'Enviar',
+  }).then((result) => {
     if (result.isConfirmed) {
-      const resetEmail = result.value;
-
-      // Verificar si el correo electrónico está en la base de datos de Firebase
-      const auth = firebase.auth();
-      auth.fetchSignInMethodsForEmail(resetEmail)
-      .then(function (methods) {
-        if (methods.length === 0 || (methods.length === 1 && methods[0] === "password")) {
-          Swal.fire("Correo electrónico no registrado", "El correo electrónico ingresado no está registrado en la base de datos de Firebase", "error");
-        } else {
-          // El correo electrónico está registrado, se puede enviar el correo de restablecimiento de contraseña
-          auth.sendPasswordResetEmail(resetEmail)
-          .then(function() {
-            Swal.fire("Correo electrónico enviado", "Se ha enviado un correo electrónico para restablecer tu contraseña", "success");
+      const email = document.getElementById('reset-email').value;
+      // Verificar si el correo está en Firebase
+      // Aquí debes agregar el código para verificar el correo en Firebase
+      if (emailExistsInFirebase(email)) {
+        // Enviar correo restablecimiento de contraseña
+        firebase.auth().sendPasswordResetEmail(email)
+          .then(() => {
+            Swal.fire(
+              'Correo enviado',
+              'Se ha enviado un correo de restablecimiento de contraseña',
+              'success'
+            );
           })
-          .catch(function(error) {
-            Swal.fire("No se pudo enviar el correo electrónico", "Hubo un error al intentar enviar el correo de restablecimiento de contraseña", "error");
-            console.log(error);
+          .catch((error) => {
+            Swal.fire(
+              'Error',
+              'No se pudo enviar el correo de restablecimiento de contraseña',
+              'error'
+            );
           });
-        }
-      })
-      .catch(function(error) {
-        Swal.fire("Error de autenticación", "Hubo un error al intentar verificar el correo electrónico en la base de datos de Firebase", "error");
-        console.log(error);
-      });
+      } else {
+        Swal.fire(
+          'Correo no encontrado',
+          'El correo ingresado no está registrado en Firebase',
+          'error'
+        );
+      }
     }
   });
+}
+
+function emailExistsInFirebase(email) {
+  // Obtener todos los usuarios de Firebase
+  firebase.auth().listUsers()
+    .then((result) => {
+      const users = result.users;
+      // Verificar si el correo existe en la lista de usuarios
+      const exists = users.some((user) => {
+        return user.email === email;
+      });
+      if (exists) {
+        console.log('El correo existe en Firebase');
+      } else {
+        console.log('El correo no existe en Firebase');
+      }
+    })
+    .catch((error) => {
+      console.error('Error al obtener los usuarios de Firebase:', error);
+    });
 }
 
 //////////////////////////
