@@ -90,19 +90,25 @@ function signup() {
 function resetPassword() {
     var email = document.getElementById("reset-email").value;
 
-    firebase.auth().sendPasswordResetEmail(email)
-        .then(function() {
-            Swal.fire("Correo de restablecimiento de contraseña enviado");
-            return false; // Detiene el envío del formulario
+    firebase.auth().fetchSignInMethodsForEmail(email)
+        .then(function(signInMethods) {
+            // Verificar si el correo está registrado en Firebase
+            if (signInMethods.length === 0) {
+                Swal.fire("El correo electrónico no está registrado");
+                return; // Detiene la ejecución del resto del código
+            }
+
+            // El correo está registrado, enviar correo de restablecimiento de contraseña
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(function() {
+                    Swal.fire("Correo de restablecimiento de contraseña enviado");
+                })
+                .catch(function(error) {
+                    Swal.fire("Error durante el restablecimiento de contraseña");
+                });
         })
         .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            if (errorCode === "auth/user-not-found") {
-                Swal.fire("El correo electrónico no está registrado");
-            } else {
-                Swal.fire("Error durante el restablecimiento de contraseña");
-            }
+            Swal.fire("Error al verificar el correo electrónico");
         });
 }
 
