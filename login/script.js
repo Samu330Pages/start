@@ -126,8 +126,6 @@ function showResetPasswordInput() {
     return false; // Detiene el envío del formulario
 }
 
-// ...
-
 document.addEventListener("DOMContentLoaded", function() {
     // ...
 
