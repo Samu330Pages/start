@@ -61,7 +61,7 @@ function showResetPasswordInput() {
             // El correo pertenece a un usuario registrado, enviar correo de restablecimiento de contraseña
             firebase.auth().sendPasswordResetEmail(email)
               .then(function() {
-                Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada, y asegúrate de que el correo ingresado este vinculado a una cuenta!', 'success');
+                Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada', 'success');
               })
               .catch(function(error) {
                 Swal.fire('Error', error.message, 'error');
