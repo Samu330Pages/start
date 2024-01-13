@@ -33,32 +33,47 @@ firebase.initializeApp(config);
 //////////////////////////
 function showResetPasswordInput() {
   Swal.fire({
-    title: 'Restablecimiento de Contraseña',
-    html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Ingrese su correo electrónico">',
+    title: 'Restablecer contraseña',
+    html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico">',
     showCancelButton: true,
-    confirmButtonText: 'Enviar',
-    showLoaderOnConfirm: true,
-    preConfirm: () => {
-      const email = document.getElementById("reset-email").value;
-      return firebase.auth().fetchSignInMethodsForEmail(email)
-      .then((signInMethods) => {
-        if (signInMethods.length === 0) {
-          Swal.fire('El correo electrónico no está asociado a ninguna cuenta');
-        } else {
-          return firebase.auth().sendPasswordResetEmail(email)
-          .then(() => {
-            Swal.fire('Correo de restablecimiento de contraseña enviado correctamente');
-          })
-          .catch((error) => {
-            console.log(error);
-            Swal.fire('Error al enviar el correo de restablecimiento de contraseña');
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire('Error al verificar el correo electrónico');
+    confirmButtonText: 'Restablecer',
+    cancelButtonText: 'Cancelar',
+    preConfirm: function() {
+      return new Promise(function(resolve) {
+        resolve({
+          email: document.getElementById('reset-email').value
+        });
       });
+    },
+    onClose: function() {
+      // Limpiar el valor del input cuando se cierre el SweetAlert
+      document.getElementById('reset-email').value = '';
+    }
+  }).then(function(result) {
+    // Obtener el correo electrónico ingresado por el usuario
+    var email = result.value.email;
+
+    if (email) {
+      // Verificar si el correo está registrado en la base de datos
+      firebase.auth().fetchSignInMethodsForEmail(email)
+        .then(function(methods) {
+          if (methods.length > 0) {
+            // El correo pertenece a un usuario registrado, enviar correo de restablecimiento de contraseña
+            firebase.auth().sendPasswordResetEmail(email)
+              .then(function() {
+                Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada, y asegúrate de que el correo ingresado este vinculado a una cuenta!', 'success');
+              })
+              .catch(function(error) {
+                Swal.fire('Error', error.message, 'error');
+              });
+          } else {
+            // El correo no está registrado en la base de datos
+            Swal.fire('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
+          }
+        })
+        .catch(function(error) {
+          Swal.fire('Error', error.message, 'error');
+        });
     }
   });
 }
