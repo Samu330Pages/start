@@ -84,6 +84,55 @@ function signup() {
 }
 
 
+// ...
+
+// Función para restablecer la contraseña
+function resetPassword() {
+    var email = document.getElementById("reset-email").value;
+
+    firebase.auth().sendPasswordResetEmail(email)
+        .then(function() {
+            Swal.fire("Correo de restablecimiento de contraseña enviado");
+            return false; // Detiene el envío del formulario
+        })
+        .catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            if (errorCode === "auth/user-not-found") {
+                Swal.fire("El correo electrónico no está registrado");
+            } else {
+                Swal.fire("Error durante el restablecimiento de contraseña");
+            }
+        });
+}
+
+// Función para mostrar el input de restablecer contraseña
+function showResetPasswordInput() {
+    Swal.fire({
+        title: 'Restablecer contraseña',
+        html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico" required>',
+        confirmButtonText: 'Restablecer',
+        showLoaderOnConfirm: true,
+        preConfirm: function() {
+            resetPassword();
+        }
+    });
+    return false; // Detiene el envío del formulario
+}
+
+// ...
+
+document.addEventListener("DOMContentLoaded", function() {
+    // ...
+
+    // Agregar evento al enlace de restablecer contraseña
+    var resetPasswordLink = document.querySelector("form .pass-link a");
+    resetPasswordLink.onclick = showResetPasswordInput;
+
+    // ...
+});
+
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
