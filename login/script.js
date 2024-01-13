@@ -32,6 +32,23 @@ firebase.initializeApp(config);
 
 //////////////////////////
 
+// Función para verificar si el correo está registrado en Firebase
+function checkIfEmailExists(email) {
+  return new Promise((resolve, reject) => {
+    firebase.auth().fetchSignInMethodsForEmail(email)
+      .then((signInMethods) => {
+        if (signInMethods.length === 0) {
+          reject(new Error('El correo ingresado no está registrado'));
+        } else {
+          resolve();
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 // Función para mostrar el input de restablecimiento de contraseña
 function showResetPasswordInput() {
   Swal.fire({
@@ -42,27 +59,13 @@ function showResetPasswordInput() {
     confirmButtonText: 'Enviar',
     cancelButtonText: 'Cancelar',
     preConfirm: (email) => {
-      return new Promise((resolve) => {
-        // Verificar si el correo está en Firebase
-        firebase.auth().fetchSignInMethodsForEmail(email)
-          .then((signInMethods) => {
-            if (signInMethods.length === 0) {
-              Swal.showValidationMessage('El correo ingresado no está registrado');
-            } else {
-              resolve();
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            Swal.showValidationMessage('Ocurrió un error al verificar el correo');
-          });
-      });
+      return checkIfEmailExists(email);
     },
     allowOutsideClick: () => !Swal.isLoading()
   }).then((result) => {
     if (result.isConfirmed) {
       const email = result.value;
-      
+
       // Enviar correo de restablecimiento de contraseña
       firebase.auth().sendPasswordResetEmail(email)
         .then(() => {
