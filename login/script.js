@@ -59,20 +59,15 @@ function showResetPasswordInput() {
     cancelButtonText: 'Cancelar',
     allowOutsideClick: false,
     preConfirm: (email) => {
-      return checkIfEmailExists(email);
+      return checkIfEmailExists(email)
+        .then(() => {
+          // Enviar correo de restablecimiento de contraseña
+          return firebase.auth().sendPasswordResetEmail(email);
+        });
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      const email = result.value;
-
-      // Enviar correo de restablecimiento de contraseña
-      firebase.auth().sendPasswordResetEmail(email)
-        .then(() => {
-          Swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña', 'success');
-        })
-        .catch((error) => {
-          Swal.fire('Error', 'Ocurrió un error al enviar el correo de restablecimiento de contraseña', 'error');
-        });
+      Swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña', 'success');
     }
   }).catch((error) => {
     Swal.fire('Error', error.message, 'error');
