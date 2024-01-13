@@ -84,53 +84,6 @@ function signup() {
 }
 
 
-// ...
-
-// Función para mostrar el input de SweetAlert al hacer clic en "Olvidaste tu contraseña"
-function showResetPasswordInput() {
-  Swal.fire({
-    title: "Restablecer contraseña",
-    html: '<input id="reset-email" class="swal2-input" placeholder="Correo electrónico" type="email">',
-    showCancelButton: true,
-    confirmButtonText: "Enviar",
-    cancelButtonText: "Cancelar",
-    preConfirm: function () {
-      const resetEmail = Swal.getPopup().querySelector("#reset-email").value;
-      if (!resetEmail) {
-        Swal.showValidationMessage("Por favor, ingresa un correo electrónico válido");
-      }
-      return resetEmail;
-    },
-  }).then(function (result) {
-    if (result.isConfirmed) {
-      const resetEmail = result.value;
-
-      // Verificar si el correo electrónico está en la base de datos de Firebase
-      const auth = firebase.auth();
-      auth.fetchSignInMethodsForEmail(resetEmail)
-      .then(function (signInMethods) {
-        if (signInMethods.length === 0) {
-          Swal.fire("Correo electrónico no registrado", "El correo electrónico ingresado no está registrado en la base de datos", "error");
-        } else {
-          // El correo electrónico está registrado, se puede enviar el correo de restablecimiento de contraseña
-          auth.sendPasswordResetEmail(resetEmail)
-          .then(function() {
-            Swal.fire("Correo electrónico enviado", "Se ha enviado un correo electrónico para restablecer tu contraseña", "success");
-          })
-          .catch(function(error) {
-            Swal.fire("No se pudo enviar el correo electrónico", "Hubo un error al intentar enviar el correo de restablecimiento de contraseña", "error");
-            console.log(error);
-          });
-        }
-      })
-      .catch(function(error) {
-        Swal.fire("Error de autenticación", "Hubo un error al intentar verificar el correo electrónico en la base de datos", "error");
-        console.log(error);
-      });
-    }
-  });
-}
-
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
