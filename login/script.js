@@ -40,14 +40,25 @@ function showResetPasswordInput() {
     showLoaderOnConfirm: true,
     preConfirm: () => {
       const email = document.getElementById("reset-email").value;
-      return firebase.auth().sendPasswordResetEmail(email)
-        .then(() => {
-          Swal.fire('Correo de restablecimiento de contraseña enviado correctamente');
-        })
-        .catch((error) => {
-          console.log(error);
-          Swal.fire('Error al enviar el correo de restablecimiento de contraseña');
-        });
+      return firebase.auth().fetchSignInMethodsForEmail(email)
+      .then((signInMethods) => {
+        if (signInMethods.length === 0) {
+          Swal.fire('El correo electrónico no está asociado a ninguna cuenta');
+        } else {
+          return firebase.auth().sendPasswordResetEmail(email)
+          .then(() => {
+            Swal.fire('Correo de restablecimiento de contraseña enviado correctamente');
+          })
+          .catch((error) => {
+            console.log(error);
+            Swal.fire('Error al enviar el correo de restablecimiento de contraseña');
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire('Error al verificar el correo electrónico');
+      });
     }
   });
 }
