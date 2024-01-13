@@ -104,14 +104,29 @@ function showResetPasswordInput() {
   }).then(function (result) {
     if (result.isConfirmed) {
       const resetEmail = result.value;
-      
+
       // Verificar si el correo electrónico está en la base de datos de Firebase
-      // Puedes implementar esta lógica utilizando los métodos de Firebase Auth
-      
-      // Enviar correo electrónico de restablecimiento de contraseña
-      // Puedes usar el método sendPasswordResetEmail de Firebase Auth para enviar el correo
-      
-      Swal.fire("Correo electrónico enviado", "Se ha enviado un correo electrónico para restablecer tu contraseña", "success");
+      const auth = firebase.auth();
+      auth.fetchSignInMethodsForEmail(resetEmail)
+      .then(function (signInMethods) {
+        if (signInMethods.length === 0) {
+          Swal.fire("Correo electrónico no registrado", "El correo electrónico ingresado no está registrado en la base de datos", "error");
+        } else {
+          // El correo electrónico está registrado, se puede enviar el correo de restablecimiento de contraseña
+          auth.sendPasswordResetEmail(resetEmail)
+          .then(function() {
+            Swal.fire("Correo electrónico enviado", "Se ha enviado un correo electrónico para restablecer tu contraseña", "success");
+          })
+          .catch(function(error) {
+            Swal.fire("No se pudo enviar el correo electrónico", "Hubo un error al intentar enviar el correo de restablecimiento de contraseña", "error");
+            console.log(error);
+          });
+        }
+      })
+      .catch(function(error) {
+        Swal.fire("Error de autenticación", "Hubo un error al intentar verificar el correo electrónico en la base de datos", "error");
+        console.log(error);
+      });
     }
   });
 }
