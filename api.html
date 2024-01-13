@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API de Firebase</title>
+</head>
+<body>
+  <h1>API de Firebase</h1>
+
+  <script>
+    const apiUrl = 'https://us-central1-tu-proyecto.cloudfunctions.net/getUserData';
+
+// Función para realizar la solicitud HTTP a la API
+function getUserData(emailOrUid) {
+  fetch(`${apiUrl}?email=${emailOrUid}`)
+    .then(response => response.json())
+    .then(data => {
+      // Maneja los datos de la respuesta
+      alert(data);
+    })
+    .catch(error => {
+      // Maneja cualquier error
+      alert(error);
+    });
+}
+
+// Llama a la función para obtener los datos del usuario
+getUserData('usuario@ejemplo.com');
+  </script></script>
+</body>
+</html>
