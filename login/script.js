@@ -135,7 +135,7 @@ function signup() {
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
-      apiUrl = 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail';
+      let apiUrl = 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail';
 
       fetch(apiUrl + '?email=' + email)
         .then(response => response.json())
@@ -143,7 +143,7 @@ firebase.auth().onAuthStateChanged(function(user) {
           alert(`El correo está vinculado a un usuario.`);
         })
         .catch(error => {
-          alert('No se encontró ningún usuario con ese correo.');
+          alert(error);
         });
       window.location.href = "gz330";
     } else {
