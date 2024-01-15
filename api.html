@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API de Firebase</title>
+  <title>Verificar Correo</title>
 </head>
 <body>
-  <h1>API de Firebase</h1>
-
+  <h1>Verificar Correo</h1>
+  
+  <form id="verificarForm">
+    <label for="email">Correo Electrónico:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <button type="submit">Verificar</button>
+  </form>
+  
+  <div id="resultado"></div>
+  
   <script>
-    const apiUrl = 'https://us-central1-tu-proyecto.cloudfunctions.net/getUserData';
+    document.getElementById('verificarForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const correo = document.getElementById('email').value;
+      const apiUrl = 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail';
 
-// Función para realizar la solicitud HTTP a la API
-function getUserData(emailOrUid) {
-  fetch(`${apiUrl}?email=${emailOrUid}`)
-    .then(response => response.json())
-    .then(data => {
-      // Maneja los datos de la respuesta
-      alert(data);
-    })
-    .catch(error => {
-      // Maneja cualquier error
-      alert(error);
+      fetch(apiUrl + '?email=' + encodeURIComponent(correo))
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('resultado').innerText = `El correo ${correo} está vinculado a un usuario.`;
+        })
+        .catch(error => {
+          document.getElementById('resultado').innerText = 'No se encontró ningún usuario con ese correo.';
+        });
     });
-}
-
-// Llama a la función para obtener los datos del usuario
-getUserData('usuario@ejemplo.com');
-  </script></script>
+  </script>
 </body>
 </html>
