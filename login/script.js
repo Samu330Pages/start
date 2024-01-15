@@ -13,7 +13,6 @@ loginBtn.onclick = () => {
 };
 signupLink.onclick = () => {
   signupBtn.click();
-  return false;
 };
 
 // Initialize Firebase
@@ -120,7 +119,6 @@ function signup() {
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function() {
             Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-            return false; // Detiene el envío del formulario
         })
         .catch(function(error) {
             var errorCode = error.code;
