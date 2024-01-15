@@ -110,11 +110,35 @@ function signup() {
     return false; // Detiene el envío del formulario
   }
 
-    // Verificar si el nombre de usuario tiene más de 8 caracteres
-    if (username.length < 5) {
-        Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
-        return false; // Detiene el envío del formulario
-    }
+  // Verificar si el nombre de usuario tiene más de 8 caracteres
+  if (username.length < 5) {
+    Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
+    return false; // Detiene el envío del formulario
+  }
+
+  // Realizar una solicitud a tu API para verificar el correo electrónico
+  fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email))
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Error al verificar el correo.");
+      }
+    })
+    .then(function(data) {
+      if (data.IsEmailRegistered) {
+        // El correo ya está registrado
+        Swal.fire("El correo ya está registrado. UID: " + data.UID);
+      } else {
+        // El correo no está registrado, continuar con el registro
+        createAccount(email, password); // Llamar a la función para crear una cuenta de Firebase
+      }
+    })
+    .catch(function(error) {
+      Swal.fire(error.message);
+    });
+
+  // Resto de tu código...
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function() {
