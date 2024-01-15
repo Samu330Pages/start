@@ -100,15 +100,15 @@ function login() {
 
 // Función para registrarse
 function signup() {
-    var email = document.getElementById("signup-email").value;
-    var password = document.getElementById("signup-password").value;
-    var confirmPassword = document.getElementById("signup-confirm-password").value;
-    var username = document.getElementById("username").value;
+  var email = document.getElementById("signup-email").value;
+  var password = document.getElementById("signup-password").value;
+  var confirmPassword = document.getElementById("signup-confirm-password").value;
+  var username = document.getElementById("username").value;
 
-    if (password !== confirmPassword) {
-        Swal.fire("Las contraseñas no coinciden");
-        return false; // Detiene el envío del formulario
-    }
+  if (password !== confirmPassword) {
+    Swal.fire("Las contraseñas no coinciden");
+    return false; // Detiene el envío del formulario
+  }
 
     // Verificar si el nombre de usuario tiene más de 8 caracteres
     if (username.length < 5) {
@@ -129,12 +129,24 @@ function signup() {
                 Swal.fire("Error durante el registro");
             }
         });
+
+// Realizar una solicitud a tu API para guardar el correo electrónico en Firestore
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
+      // La solicitud se realizó correctamente
+      alert("Correo electrónico registrado en Firestore");
+    }
+  };
+  
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
         window.location.href = "gz330";
+        xhttp.open("POST", "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email), true);
+        xhttp.send();
     } else {
         // El usuario no ha iniciado sesión
     }
