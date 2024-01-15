@@ -129,24 +129,23 @@ function signup() {
                 Swal.fire("Error durante el registro");
             }
         });
-
-// Realizar una solicitud a tu API para guardar el correo electrónico en Firestore
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState === 4 && this.status === 200) {
-      // La solicitud se realizó correctamente
-      alert("Correo electrónico registrado en Firestore");
-    }
-  };
   
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
-        window.location.href = "gz330";
-        xhttp.open("POST", "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email), true);
-        xhttp.send();
+      apiUrl = 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail';
+
+      fetch(apiUrl + '?email=' + email)
+        .then(response => response.json())
+        .then(data => {
+          alert(`El correo está vinculado a un usuario.`);
+        })
+        .catch(error => {
+          alert('No se encontró ningún usuario con ese correo.');
+        });
+      window.location.href = "gz330";
     } else {
         // El usuario no ha iniciado sesión
     }
