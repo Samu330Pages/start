@@ -117,6 +117,10 @@ function signup() {
         return false; // Detiene el envío del formulario
     }
 
+    // Deshabilitar botón de registro y mostrar animación de carga
+    signupButton.disabled = true;
+    signupButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando...';
+
     // Verificar existencia del correo en la API
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=' + email, true);
@@ -129,7 +133,7 @@ function signup() {
                 firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then(function() {
                         Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-                        window.location.href = "gz330.html";
+                        window.location.href = "gz330";
                     })
                     .catch(function(error) {
                         var errorCode = error.code;
@@ -144,6 +148,10 @@ function signup() {
         } else {
             Swal.fire("Error al verificar la existencia del correo");
         }
+
+        // Habilitar botón de registro y restaurar texto
+        signupButton.disabled = false;
+        signupButton.innerHTML = 'Registrarse';
     };
     xhr.send();
 }
