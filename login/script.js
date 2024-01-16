@@ -105,7 +105,7 @@ function checkEmailExists(email) {
     fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email)
         .then(response => response.json())
         .then(data => {
-            if (data.IsRegisteredEmail) {
+            if (data.IsRegisteredEmail == true) {
                 // Mostrar el mensaje de error con el UID de la cuenta existente
                 Swal.fire("Ya existe un usuario con ese correo. UID de la cuenta existente: " + data.UID);
             } else {
