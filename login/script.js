@@ -99,25 +99,6 @@ function login() {
         });
 }
 ////
-// Función para verificar si el correo ya está registrado antes de registrarse
-function checkEmailExists(email) {
-    // Realizar una solicitud GET a la API para verificar si el correo ya está registrado
-    fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email)
-        .then(response => response.json())
-        .then(data => {
-            if (data.IsEmailRegistered) {
-                // Mostrar el mensaje de error con el UID de la cuenta existente
-                Swal.fire("Ya existe un usuario con ese correo. UID de la cuenta existente: " + data.UID);
-            } else {
-                // Continuar con el registro
-                signup();
-            }
-        })
-        .catch(error => {
-            Swal.fire("Hubo un error al verificar el correo");
-        });
-}
-
 // Función para registrarse
 function signup() {
     var email = document.getElementById("signup-email").value;
@@ -136,14 +117,41 @@ function signup() {
         return false; // Detiene el envío del formulario
     }
 
-    // Verificar si el correo ya está registrado antes de registrarse
-    checkEmailExists(email);
+    // Verificar existencia del correo en la API
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=' + email, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.IsEmailRegistered) {
+                Swal.fire("Ya existe un usuario registrado con ese correo. UID: " + response.UID);
+            } else {
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(function() {
+                        Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
+                        window.location.href = "gz330.html";
+                    })
+                    .catch(function(error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        if (errorCode === "auth/weak-password") {
+                            Swal.fire("La contraseña es débil, asegúrate de ingresar una contraseña lo suficientemente fuerte");
+                        } else {
+                            Swal.fire("Error durante el registro");
+                        }
+                    });
+            }
+        } else {
+            Swal.fire("Error al verificar la existencia del correo");
+        }
+    };
+    xhr.send();
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
-        window.location.href = "gz330";
+        window.location.href = "gz330.html";
     } else {
         // El usuario no ha iniciado sesión
     }
