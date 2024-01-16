@@ -86,6 +86,17 @@ input[type="radio"] {
 #signup:checked ~ label.login {
   color: #000;
 }
+/* Agregar esta animación en tu archivo CSS */
+@keyframes buttonAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Añadir esta clase al botón de registro */
+.animating {
+    animation: buttonAnimation 0.5s linear;
+}
 #login:checked ~ label.signup {
   color: #000;
 }
