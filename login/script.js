@@ -128,20 +128,17 @@ function login() {
                 Swal.fire("Error durante el registro");
             }
         });
-  
 }
-
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
-        // Realizar una solicitud a tu API para verificar el correo electrónico
-      fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email);
+          // Realizar una solicitud a tu API para verificar el correo electrónico
+      fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email))
       window.location.href = "gz330";
     } else {
         // El usuario no ha iniciado sesión
     }
 });
-
 document.oncontextmenu = function() {
     return false
 }
