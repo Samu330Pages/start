@@ -47,7 +47,7 @@
 <div class="slider-tab"></div>
 </div>
 <div class="form-inner">
-<form action="#" class="login" onsubmit="return login()">
+<form class="login" onsubmit="login(); return false;">
 <div class="field">
 <input type="text" id="login-email" placeholder="Email Address" required>
 </div>
@@ -61,7 +61,7 @@
 </div>
 <div class="signup-link">Aún no eres miembro? <a href="#">registrate ahora</a></div>
 </form>
-<form action="#" class="signup" onsubmit="return signup()">
+<form class="signup" onsubmit="signup(); return false;">
 <div class="field">
 <input type="text" id="signup-email" placeholder="Email Address" required>
 </div>
