@@ -148,7 +148,7 @@ function signup() {
             });
         }
     }).catch(function(error) {
-        Swal.fire("Error durante la verificación del correo");
+        Swal.fire(`Error durante la verificación del correo ${error}`);
     });
 }
 firebase.auth().onAuthStateChanged(function(user) {
