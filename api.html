@@ -6,35 +6,16 @@
 <body>
   <h1>Verificar Correo</h1>
   
-  <form id="verificarForm">
-    <label for="email">Correo Electrónico:</label>
-    <input type="email" id="email" name="email" required>
-    
-    <button type="submit">Verificar</button>
-  </form>
-  
-  <div id="resultado"></div>
-  
   <script>
-    document.getElementById('verificarForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const correo = document.getElementById('email').value;
-      const apiUrl = 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail';
-
-      fetch(${apiUrl}?email=${encodeURIComponent(correo)})
-        .then(response => response.json())
-        .then(data => {
-          if (data.IsEmailRegistered) {
-            document.getElementById('resultado').innerText = `El correo ${correo} está vinculado a un usuario.`;
-          } else {
-            document.getElementById('resultado').innerText = 'No se encontró ningún usuario con ese correo.';
-          }
-        })
-        .catch(error => {
-          document.getElementById('resultado').innerText = `Error al verificar el correo. ${error}`;
-        });
-    });
+  fetch('https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=samu330wabot@gmail.com')
+  .then(response => response.json())
+  .then(data => {
+    // Aquí puedes manipular los datos JSON recibidos
+    alert(data);
+  })
+  .catch(error => {
+    alert('Error:', error);
+  });
   </script>
 </body>
 </html>
