@@ -97,48 +97,23 @@ function login() {
             }
         });
 }
-
 // Función para registrarse
-function signup() {
-  var email = document.getElementById("signup-email").value;
-  var password = document.getElementById("signup-password").value;
-  var confirmPassword = document.getElementById("signup-confirm-password").value;
-  var username = document.getElementById("username").value;
+    function signup() {
+    var email = document.getElementById("signup-email").value;
+    var password = document.getElementById("signup-password").value;
+    var confirmPassword = document.getElementById("signup-confirm-password").value;
+    var username = document.getElementById("username").value;
 
-  if (password !== confirmPassword) {
-    Swal.fire("Las contraseñas no coinciden");
-    return false; // Detiene el envío del formulario
-  }
+    if (password !== confirmPassword) {
+        Swal.fire("Las contraseñas no coinciden");
+        return false; // Detiene el envío del formulario
+    }
 
-  // Verificar si el nombre de usuario tiene más de 8 caracteres
-  if (username.length < 5) {
-    Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
-    return false; // Detiene el envío del formulario
-  }
-
-  // Realizar una solicitud a tu API para verificar el correo electrónico
-  fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email))
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error al verificar el correo.");
-      }
-    })
-    .then(function(data) {
-      if (data.IsEmailRegistered) {
-        // El correo ya está registrado
-        Swal.fire("El correo ya está registrado. UID: " + data.UID);
-      } else {
-        // El correo no está registrado, continuar con el registro
-        createAccount(email, password); // Llamar a la función para crear una cuenta de Firebase
-      }
-    })
-    .catch(function(error) {
-      Swal.fire(error.message);
-    });
-
-  // Resto de tu código...
+    // Verificar si el nombre de usuario tiene más de 8 caracteres
+    if (username.length < 5) {
+        Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
+        return false; // Detiene el envío del formulario
+    }
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function() {
@@ -159,6 +134,8 @@ function signup() {
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
+        // Realizar una solicitud a tu API para verificar el correo electrónico
+      fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + encodeURIComponent(email);
       window.location.href = "gz330";
     } else {
         // El usuario no ha iniciado sesión
