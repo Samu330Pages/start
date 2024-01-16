@@ -117,52 +117,56 @@ function signup() {
         return false; // Detiene el envío del formulario
     }
 
-    // Deshabilitar botón de registro y mostrar animación de carga
-    signupButton.disabled = true;
-    signupButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando...';
-
-    // Verificar existencia del correo en la API
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=' + email, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-            if (response.IsEmailRegistered) {
-                Swal.fire("Ya existe un usuario registrado con ese correo. UID: " + response.UID);
-            } else {
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(function() {
-                        Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-                        window.location.href = "gz330";
-                    })
-                    .catch(function(error) {
-                        var errorCode = error.code;
-                        var errorMessage = error.message;
-                        if (errorCode === "auth/weak-password") {
-                            Swal.fire("La contraseña es débil, asegúrate de ingresar una contraseña lo suficientemente fuerte");
-                        } else {
-                            Swal.fire("Error durante el registro");
-                        }
-                    });
-            }
-        } else {
-            Swal.fire("Error al verificar la existencia del correo");
+    // Realizar la verificación del correo existente utilizando la API
+    fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail", {
+        method: "POST",
+        body: JSON.stringify({ email: email }),
+        headers: {
+            "Content-Type": "application/json"
         }
-
-        // Habilitar botón de registro y restaurar texto
-        signupButton.disabled = false;
-        signupButton.innerHTML = 'Registrarse';
-    };
-    xhr.send();
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.IsEmailRegistered) {
+            Swal.fire(`Ya existe un usuario registrado con el correo ${data.Result}, el UID de la cuenta es ${data.UID}`);
+        } else {
+            // Continuar con el registro
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(function() {
+                    Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
+                })
+                .catch(function(error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    if (errorCode === "auth/weak-password") {
+                        Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
+                    } else {
+                        Swal.fire("Error durante el registro");
+                    }
+                });
+        }
+    })
+    .catch(error => {
+        console.error("Error al verificar el correo existente:", error);
+        Swal.fire("Error al verificar el correo existente");
+    });
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
-        window.location.href = "gz330.html";
+        window.location.href = "gz330";
     } else {
         // El usuario no ha iniciado sesión
     }
+});
+
+// Agregar animación al botón de registro al hacer click
+signupBtn.addEventListener("click", function() {
+    signupBtn.classList.add("animating");
+});
+signupBtn.addEventListener("animationend", function() {
+    signupBtn.classList.remove("animating");
 });
 ////
 document.oncontextmenu = function() {
