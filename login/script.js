@@ -80,6 +80,7 @@ function showResetPasswordInput() {
 
 // Función para iniciar sesión
 function login() {
+    event.preventDefault(); // Evita la recarga de la página por defecto
     var email = document.getElementById("login-email").value;
     var password = document.getElementById("login-password").value;
 
@@ -99,6 +100,7 @@ function login() {
 }
 // Función para registrarse
     function signup() {
+    event.preventDefault(); // Evita la recarga de la página por defecto
     var email = document.getElementById("signup-email").value;
     var password = document.getElementById("signup-password").value;
     var confirmPassword = document.getElementById("signup-confirm-password").value;
