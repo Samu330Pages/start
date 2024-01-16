@@ -105,51 +105,46 @@ function signup() {
     var password = document.getElementById("signup-password").value;
     var confirmPassword = document.getElementById("signup-confirm-password").value;
     var username = document.getElementById("username").value;
+    var apiUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
 
     if (password !== confirmPassword) {
         Swal.fire("Las contraseñas no coinciden");
         return false; // Detiene el envío del formulario
     }
 
-    // Verificar si el nombre de usuario tiene más de 8 caracteres
+    // Verificar si el nombre de usuario tiene más de 5 caracteres
     if (username.length < 5) {
         Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
         return false; // Detiene el envío del formulario
     }
 
-    // Verificar si el correo ya está registrado
-    fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail", {
-        method: "POST",
-        body: JSON.stringify({ email: email }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        if (data.IsEmailRegistered === "true") {
-            Swal.fire("Ya existe un usuario con ese correo. UID: " + data.UID);
-        } else {
-            // Continuar con el registro
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(function() {
-                Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-            })
-            .catch(function(error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                if (errorCode === "auth/weak-password") {
-                    Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
-                } else {
-                    Swal.fire("Error durante el registro");
-                }
-            });
-        }
-    }).catch(function(error) {
-        Swal.fire(`Error durante la verificación del correo ${error}`);
-    });
+    fetch(apiUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.IsEmailRegistered) {
+                Swal.fire("Ya existe un usuario con ese correo. UID: " + data.UID);
+            } else {
+                // Continuar con el registro
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(function() {
+                        Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
+                    })
+                    .catch(function(error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        if (errorCode === "auth/weak-password") {
+                            Swal.fire("La contraseña es débil, asegúrate de ingresar una contraseña lo suficientemente fuerte");
+                        } else {
+                            Swal.fire("Error durante el registro");
+                        }
+                    });
+            }
+        })
+        .catch(function(error) {
+            Swal.fire(`Error durante la verificación del correo ${error}`);
+        });
 }
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
