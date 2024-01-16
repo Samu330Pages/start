@@ -54,9 +54,15 @@ function showResetPasswordInput() {
 
     if (email) {
       // Verificar si el correo está registrado en la base de datos
-      firebase.auth().fetchSignInMethodsForEmail(email)
-        .then(function(methods) {
-          if (methods.length > 0) {
+      fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          // Obtener el resultado de la respuesta JSON
+          var isEmailRegistered = data.IsEmailRegistered;
+
+          if (isEmailRegistered) {
             // El correo pertenece a un usuario registrado, enviar correo de restablecimiento de contraseña
             firebase.auth().sendPasswordResetEmail(email)
               .then(function() {
