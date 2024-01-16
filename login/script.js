@@ -117,7 +117,7 @@ function signup() {
         return false; // Detiene el envío del formulario
     }
 
-    // Realizar la verificación del correo existente utilizando la API
+    // Verificar si el correo ya está registrado
     fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail", {
         method: "POST",
         body: JSON.stringify({ email: email }),
@@ -125,33 +125,32 @@ function signup() {
             "Content-Type": "application/json"
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.IsEmailRegistered) {
-            Swal.fire(`Ya existe un usuario registrado con el correo ${data.Result}, el UID de la cuenta es ${data.UID}`);
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        if (data.IsEmailRegistered === "true") {
+            Swal.fire("Ya existe un usuario con ese correo. UID: " + data.UID);
         } else {
             // Continuar con el registro
             firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(function() {
-                    Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-                })
-                .catch(function(error) {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    if (errorCode === "auth/weak-password") {
-                        Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
-                    } else {
-                        Swal.fire("Error durante el registro");
-                    }
-                });
+            .then(function() {
+                Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
+            })
+            .catch(function(error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                if (errorCode === "auth/weak-password") {
+                    Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
+                } else {
+                    Swal.fire("Error durante el registro");
+                }
+            });
         }
-    })
-    .catch(error => {
-        console.error("Error al verificar el correo existente:", error);
-        Swal.fire("Error al verificar el correo existente");
+    }).catch(function(error) {
+        Swal.fire("Error durante la verificación del correo");
     });
 }
-
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
@@ -159,14 +158,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     } else {
         // El usuario no ha iniciado sesión
     }
-});
-
-// Agregar animación al botón de registro al hacer click
-signupBtn.addEventListener("click", function() {
-    signupBtn.classList.add("animating");
-});
-signupBtn.addEventListener("animationend", function() {
-    signupBtn.classList.remove("animating");
 });
 ////
 document.oncontextmenu = function() {
