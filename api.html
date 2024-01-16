@@ -10,11 +10,11 @@
   fetch('https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=samu330wabot@gmail.com')
   .then(response => response.json())
   .then(data => {
-    // Aquí puedes manipular los datos JSON recibidos
+    // Aquí puedes trabajar con los datos recibidos en formato JSON
     alert(data);
   })
   .catch(error => {
-    alert('Error:', error);
+    alert(error);
   });
   </script>
 </body>
