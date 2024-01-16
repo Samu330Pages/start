@@ -98,9 +98,28 @@ function login() {
             }
         });
 }
+////
+// Función para verificar si el correo ya está registrado antes de registrarse
+function checkEmailExists(email) {
+    // Realizar una solicitud GET a la API para verificar si el correo ya está registrado
+    fetch("https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email)
+        .then(response => response.json())
+        .then(data => {
+            if (data.IsRegisteredEmail) {
+                // Mostrar el mensaje de error con el UID de la cuenta existente
+                Swal.fire("Ya existe un usuario con ese correo. UID de la cuenta existente: " + data.UID);
+            } else {
+                // Continuar con el registro
+                signup();
+            }
+        })
+        .catch(error => {
+            Swal.fire("Hubo un error al verificar el correo");
+        });
+}
+
 // Función para registrarse
-    function signup() {
-    event.preventDefault(); // Evita la recarga de la página por defecto
+function signup() {
     var email = document.getElementById("signup-email").value;
     var password = document.getElementById("signup-password").value;
     var confirmPassword = document.getElementById("signup-confirm-password").value;
@@ -117,20 +136,10 @@ function login() {
         return false; // Detiene el envío del formulario
     }
 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(function() {
-            Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-        })
-        .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            if (errorCode === "auth/weak-password") {
-                Swal.fire("La contraseña es débil, asegurate de ingresar una contraseña lo suficientemente fuerte");
-            } else {
-                Swal.fire("Error durante el registro");
-            }
-        });
+    // Verificar si el correo ya está registrado antes de registrarse
+    checkEmailExists(email);
 }
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // El usuario ha iniciado sesión, redirigir a gz330.html
@@ -139,6 +148,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         // El usuario no ha iniciado sesión
     }
 });
+////
 document.oncontextmenu = function() {
     return false
 }
