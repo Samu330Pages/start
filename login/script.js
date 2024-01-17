@@ -30,51 +30,50 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
-function showresetpasswordinput() {
+function showResetPasswordInput() {
   swal.fire({
-    title: "Restablecer contraseña",
-    html: '<input type="email" id="email-input" class="swal2-input" placeholder="Correo electrónico">',
+    title: 'Restablecimiento de Contraseña',
+    html: '<input type="email" id="emailInput" class="swal2-input" placeholder="Correo electrónico"><div id="message" style="color: red; margin-top: 10px;"></div>',
     showCancelButton: true,
-    confirmButtonText: "Restablecer",
-    cancelButtonText: "Cancelar",
-    reverseButtons: true
-  }).then((result) => {
-    if (result.value) {
-      const email = document.getElementById('email-input').value;
-
-      fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.IsEmailRegistered) {
-            // Enviar correo para restablecer contraseña usando Firebase
-            firebase.auth().sendPasswordResetEmail(email)
-              .then(() => {
-                swal.fire("Correo enviado", "Se ha enviado un correo para restablecer la contraseña", "success");
-              })
-              .catch(error => {
-                swal.fire("Error", "Ha ocurrido un error al enviar el correo", "error");
-              });
-          } else {
-            // Eliminar el documento usando la función deleteDocument de la API
-            fetch(`https://us-central1-number-ac729.cloudfunctions.net/deleteDocument?email=${email}`)
-              .then(response => response.json())
-              .then(data => {
-                if (data.Result === "Document deleted") {
-                  swal.fire("Error", `El correo ${email} no está registrado`, "error");
-                } else {
-                  swal.fire("Error", "Ha ocurrido un error al eliminar el documento", "error");
-                }
-              })
-              .catch(error => {
-                swal.fire("Error", "Ha ocurrido un error al eliminar el documento", "error");
-              });
-          }
-        })
-        .catch(error => {
-          swal.fire("Error", "Ha ocurrido un error al verificar el correo", "error");
-        });
+    confirmButtonText: 'Enviar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const email = document.getElementById('emailInput').value;
+      if (!email) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.innerText = 'Por favor, ingresa un correo electrónico válido.';
+        return false;
+      }
+      checkEmail(email);
     }
   });
+}
+
+function checkEmail(email) {
+  fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.IsEmailRegistered) {
+        sendResetPasswordEmail(email);
+      } else {
+        const messageDiv = document.getElementById('message');
+        messageDiv.innerText = 'El correo electrónico no está registrado.';
+      }
+    })
+    .catch(error => {
+      console.error('Ha ocurrido un error:', error);
+    });
+}
+
+function sendResetPasswordEmail(email) {
+  firebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
+      swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success');
+    })
+    .catch(error => {
+      console.error('Ha ocurrido un error:', error);
+      swal.fire('Error', 'No se pudo enviar el correo de restablecimiento de contraseña. Por favor, intenta nuevamente más tarde.', 'error');
+    });
 }
 //////////////////////////
 
