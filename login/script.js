@@ -35,6 +35,7 @@ function showResetPasswordInput() {
     title: 'Restablecer contraseña',
     html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico">',
     showCancelButton: true,
+    showLoaderOnConfirm: true,
     confirmButtonText: 'Restablecer',
     cancelButtonText: 'Cancelar',
     preConfirm: function() {
