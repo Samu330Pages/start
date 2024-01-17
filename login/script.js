@@ -37,82 +37,50 @@ function showResetPasswordInput() {
     showCancelButton: true,
     confirmButtonText: 'Restablecer',
     cancelButtonText: 'Cancelar',
-    preConfirm: function () {
-      return new Promise(function (resolve) {
+    preConfirm: function() {
+      return new Promise(function(resolve) {
         resolve({
           email: document.getElementById('reset-email').value
         });
       });
+    },
+    onClose: function() {
+      // Limpiar el valor del input cuando se cierre el SweetAlert
+      document.getElementById('reset-email').value = '';
     }
-  }).then(function (result) {
+  }).then(function(result) {
     // Obtener el correo electrónico ingresado por el usuario
     var email = result.value.email;
 
     if (email) {
       // Verificar si el correo está registrado en la base de datos
-      fetch(https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email})
-        .then(function (response) {
+      fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+        .then(function(response) {
           return response.json();
         })
-        .then(function (data) {
+        .then(function(data) {
           // Obtener el resultado de la respuesta JSON
           var isEmailRegistered = data.IsEmailRegistered;
 
           if (isEmailRegistered) {
             // El correo pertenece a un usuario registrado, enviar correo de restablecimiento de contraseña
-            firebase
-              .auth()
-              .sendPasswordResetEmail(email)
-              .then(function () {
+            firebase.auth().sendPasswordResetEmail(email)
+              .then(function() {
                 Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada', 'success');
               })
-              .catch(function (error) {
-                Swal.fire('Error', error.message, 'error');
+              .catch(function(error) {
+                Swal.showValidationMessage('Error', error.message, 'error');
               });
           } else {
             // El correo no está registrado en la base de datos
-            Swal.fire('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
+            Swal.showValidationMessage('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
           }
         })
-        .catch(function (error) {
-          Swal.fire('Error', error.message, 'error');
+        .catch(function(error) {
+          Swal.showValidationMessage('Error', error.message, 'error');
         });
     }
   });
-}
-
-function deleteDocument(email) {
-  fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      // Obtener el resultado de la respuesta JSON
-      var isEmailRegistered = data.IsEmailRegistered;
-
-      if (isEmailRegistered) {
-        fetch(`https://us-central1-number-ac729.cloudfunctions.net/deleteDocument?email=${email}`)
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (data) {
-            var result = data.Result;
-
-            if (result === 'Document deleted') {
-              console.log('Documento eliminado exitosamente');
-            }
-          })
-          .catch(function (error) {
-            console.error('Error al eliminar el documento:', error);
-          });
-      } else {
-        // El correo no está registrado en la base de datos
-        console.log('El documento no está registrado');
-      }
-    })
-    .catch(function (error) {
-      console.error('Error al verificar el correo:', error);
-    });
 }
 //////////////////////////
 
