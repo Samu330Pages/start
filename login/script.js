@@ -35,8 +35,8 @@ function showResetPasswordInput() {
     title: 'Restablecer contraseña',
     html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico">',
     showCancelButton: true,
-    showLoaderOnConfirm: true,
     confirmButtonText: 'Restablecer',
+    showLoaderOnConfirm: true,
     cancelButtonText: 'Cancelar',
     preConfirm: function() {
       return new Promise(function(resolve) {
@@ -70,15 +70,15 @@ function showResetPasswordInput() {
                 Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada', 'success');
               })
               .catch(function(error) {
-                Swal.fire('Error', error.message, 'error');
+                Swal.showValidationMessage('Error', error.message, 'error');
               });
           } else {
             // El correo no está registrado en la base de datos
-            Swal.fire('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
+            Swal.showValidationMessage('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
           }
         })
         .catch(function(error) {
-          Swal.fire('Error', error.message, 'error');
+          Swal.showValidationMessage('Error', error.message, 'error');
         });
     }
   });
