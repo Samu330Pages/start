@@ -30,6 +30,11 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
+function generateUserCode() {
+  const randomDigits = Math.floor(100000 + Math.random() * 900000);
+  return samu330-${randomDigits};
+}
+
 function showResetPasswordInput() {
   Swal.fire({
     title: 'Restablecer contraseña',
@@ -51,7 +56,7 @@ function showResetPasswordInput() {
   }).then(function(result) {
     // Obtener el correo electrónico ingresado por el usuario
     var email = result.value.email;
-
+    
     if (email) {
       // Verificar si el correo está registrado en la base de datos
       fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
@@ -81,6 +86,22 @@ function showResetPasswordInput() {
         });
     }
   });
+}
+
+function deleteDocument(email) {
+  fetch(`https://us-central1-number-ac729.cloudfunctions.net/deleteDocument?email=${email})`
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      var result = data.Result;
+      if (result === 'Document deleted') {
+        console.log('Documento eliminado exitosamente');
+      }
+    })
+    .catch(function(error) {
+      console.error('Error al eliminar el documento:', error);
+    });
 }
 //////////////////////////
 
