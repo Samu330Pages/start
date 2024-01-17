@@ -44,29 +44,23 @@ function showResetPasswordInput() {
         messageDiv.innerText = 'Por favor, ingresa un correo electrónico válido.';
         return false;
       }
-      checkEmail(email);
-    }
+      sendResetPasswordEmail(email); // Llamamos directamente a la función sendResetPasswordEmail()
+    },
+    allowOutsideClick: false, // Mantenemos el sweet alert en pantalla
+    showLoaderOnConfirm: true // Muestra un botón de carga en lugar del botón de enviar
   });
 }
 
-function checkEmail(email) {
-  fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.IsEmailRegistered) {
-        sendResetPasswordEmail(email);
-      } else {
-        const messageDiv = document.getElementById('message');
-        messageDiv.innerText = 'El correo electrónico no está registrado.';
-      }
-    })
-    .catch(error => {
-      console.error('Ha ocurrido un error:', error);
-    });
-}
-
 function sendResetPasswordEmail(email) {
-  firebase.auth().sendPasswordResetEmail(email)
+  return new Promise((resolve, reject) => {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        resolve();
+      })
+      .catch(error => {
+        reject(error);
+      });
+  })
     .then(() => {
       swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success');
     })
