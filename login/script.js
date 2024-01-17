@@ -30,54 +30,48 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
-function showResetPasswordInput() {
-  Swal.fire({
-    title: 'Restablecer contraseña',
-    html: '<input type="email" id="reset-email" class="swal2-input" placeholder="Correo electrónico">',
+function showresetpasswordinput() {
+  swal.fire({
+    title: "Restablecer contraseña",
+    html: '<input type="email" id="email-input" class="swal2-input" placeholder="Correo electrónico">',
     showCancelButton: true,
-    confirmButtonText: 'Restablecer',
-    cancelButtonText: 'Cancelar',
-    preConfirm: function() {
-      return new Promise(function(resolve) {
-        resolve({
-          email: document.getElementById('reset-email').value
-        });
-      });
-    },
-    onClose: function() {
-      // Limpiar el valor del input cuando se cierre el SweetAlert
-      document.getElementById('reset-email').value = '';
-    }
-  }).then(function(result) {
-    // Obtener el correo electrónico ingresado por el usuario
-    var email = result.value.email;
+    confirmButtonText: "Restablecer",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.value) {
+      const email = document.getElementById('email-input').value;
 
-    if (email) {
-      // Verificar si el correo está registrado en la base de datos
       fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(data) {
-          // Obtener el resultado de la respuesta JSON
-          var isEmailRegistered = data.IsEmailRegistered;
-
-          if (isEmailRegistered) {
-            // El correo pertenece a un usuario registrado, enviar correo de restablecimiento de contraseña
+        .then(response => response.json())
+        .then(data => {
+          if (data.IsEmailRegistered) {
+            // Enviar correo para restablecer contraseña usando Firebase
             firebase.auth().sendPasswordResetEmail(email)
-              .then(function() {
-                Swal.fire('Correo de restablecimiento enviado', 'Por favor, revisa tu bandeja de entrada', 'success');
+              .then(() => {
+                swal.fire("Correo enviado", "Se ha enviado un correo para restablecer la contraseña", "success");
               })
-              .catch(function(error) {
-                Swal.showValidationMessage('Error', error.message, 'error');
+              .catch(error => {
+                swal.fire("Error", "Ha ocurrido un error al enviar el correo", "error");
               });
           } else {
-            // El correo no está registrado en la base de datos
-            Swal.showValidationMessage('Error', 'El correo electrónico ingresado no pertenece a ninguna cuenta', 'error');
+            // Eliminar el documento usando la función deleteDocument de la API
+            fetch(`https://us-central1-number-ac729.cloudfunctions.net/deleteDocument?email=${email}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.Result === "Document deleted") {
+                  swal.fire("Error", `El correo ${email} no está registrado`, "error");
+                } else {
+                  swal.fire("Error", "Ha ocurrido un error al eliminar el documento", "error");
+                }
+              })
+              .catch(error => {
+                swal.fire("Error", "Ha ocurrido un error al eliminar el documento", "error");
+              });
           }
         })
-        .catch(function(error) {
-          Swal.showValidationMessage('Error', error.message, 'error');
+        .catch(error => {
+          swal.fire("Error", "Ha ocurrido un error al verificar el correo", "error");
         });
     }
   });
