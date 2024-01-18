@@ -118,7 +118,7 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.IsEmailRegistered === "true") {
+      if (data.IsEmailRegistered === true) {
         Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.user}`, "error");
       } else {
         // Registrar usuario y mostrar mensaje de éxito
