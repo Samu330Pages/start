@@ -44,37 +44,11 @@ function showResetPasswordInput() {
         messageDiv.innerText = 'Por favor, ingresa un correo electrónico válido.';
         return false;
       }
-      return checkEmail(email); // Devolvemos la promesa de checkEmail para detener la ejecución hasta que se resuelva
+      sendResetPasswordEmail(email); // Llamamos directamente a la función sendResetPasswordEmail()
     },
-    allowOutsideClick: false,
-    showLoaderOnConfirm: true
+    allowOutsideClick: false, // Mantenemos el sweet alert en pantalla
+    showLoaderOnConfirm: true // Muestra un botón de carga en lugar del botón de enviar
   });
-}
-
-function checkEmail(email) {
-  return new Promise((resolve, reject) => {
-    fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.IsEmailRegistered) {
-          resolve();
-        } else {
-          const messageDiv = document.getElementById('message');
-          messageDiv.innerText = 'El correo electrónico no está registrado.';
-          reject();
-        }
-      })
-      .catch(error => {
-        swal.fire('Ha ocurrido un error:', error "error");
-        reject();
-      });
-  })
-    .then(() => {
-      return sendResetPasswordEmail(email); // Si el correo está registrado, llamamos a sendResetPasswordEmail
-    })
-    .catch(() => {
-      //swal.fire("El correo no le pertenece a ninguna cuenta", "Regístrate si aún no tienes una cuenta", "error");// No hacemos nada aquí, ya que se mostrará un mensaje de error en el sweet alert
-    });
 }
 
 function sendResetPasswordEmail(email) {
