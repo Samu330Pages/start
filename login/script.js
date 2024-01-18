@@ -118,37 +118,28 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.Result !== email) {
-        // Registrar usuario y mostrar mensaje de éxito
-        fetch(createUserUrl)
-          .then(function(response) {
-            return response.json();
-          })
-          .then(function(data) {
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-              .then(function() {
-                Swal.fire({
-                  title: "Registro exitoso",
-                  text: `Usuario: ${username}\nCorreo: ${email}\nUID: ${data.UID}`,
-                  icon: "success",
-                  timer: 8000, // Cerrar automáticamente después de 8 segundos
-                  timerProgressBar: true,
-                  allowEscapeKey: false,
-                  allowOutsideClick: false
-                }).then(function() {
-                  window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
-                });
-              })
-              .catch(function(error) {
-                Swal.fire(`Error durante la creación del usuario ${error}`);
-              });
-          })
-          .catch(function(error) {
-            Swal.fire(`Error durante la creación del usuario ${error}`);
-          });
-      } else {
-        // Mostrar mensaje de usuario existente
+      if (data.Result === email) {
         Swal.fire("Ya existe un usuario con ese correo", "", "error");
+      } else {
+        // Registrar usuario y mostrar mensaje de éxito
+        Swal.fire({
+          title: "Registro exitoso",
+          text: `Usuario: ${username}`,
+          icon: "success",
+          timer: 8000, // Cerrar automáticamente después de 8 segundos
+          timerProgressBar: true,
+          allowEscapeKey: false,
+          allowOutsideClick: false
+        }).then(function() {
+          // Registrar usuario en Firebase y redirigir a gz330 después de 8 segundos
+          firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(function() {
+              window.location.href = "gz330";
+            })
+            .catch(function(error) {
+              Swal.fire(`Error durante la creación del usuario ${error}`);
+            });
+        });
       }
     })
     .catch(function(error) {
