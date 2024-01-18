@@ -94,58 +94,76 @@ function login() {
 ////
 // Función para registrarse
 function signup() {
-    var email = document.getElementById("signup-email").value;
-    var password = document.getElementById("signup-password").value;
-    var confirmPassword = document.getElementById("signup-confirm-password").value;
-    var username = document.getElementById("username").value;
-    var apiUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
+  var email = document.getElementById("signup-email").value;
+  var password = document.getElementById("signup-password").value;
+  var confirmPassword = document.getElementById("signup-confirm-password").value;
+  var username = document.getElementById("username").value;
+  var checkEmailUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
+  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUser";
 
-    if (password !== confirmPassword) {
-        Swal.fire("Las contraseñas no coinciden");
-        return false; // Detiene el envío del formulario
-    }
+  if (password !== confirmPassword) {
+    Swal.fire("Las contraseñas no coinciden");
+    return false; // Detiene el envío del formulario
+  }
 
-    // Verificar si el nombre de usuario tiene más de 5 caracteres
-    if (username.length < 5) {
-        Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
-        return false; // Detiene el envío del formulario
-    }
+  // Verificar si el nombre de usuario tiene más de 5 caracteres
+  if (username.length < 5) {
+    Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
+    return false; // Detiene el envío del formulario
+  }
 
-    fetch(apiUrl)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            if (data.IsEmailRegistered) {
-                Swal.fire("Ya existe un usuario con ese correo. UID: " + data.UID);
-            } else {
-                // Continuar con el registro
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(function() {
-                        Swal.fire("Registro exitoso, ahora puedes iniciar sesión");
-                    })
-                    .catch(function(error) {
-                        var errorCode = error.code;
-                        var errorMessage = error.message;
-                        if (errorCode === "auth/weak-password") {
-                            Swal.fire("La contraseña es débil, asegúrate de ingresar una contraseña lo suficientemente fuerte");
-                        } else {
-                            Swal.fire("Error durante el registro");
-                        }
-                    });
+  // Verificar si el correo ya está registrado
+  fetch(checkEmailUrl)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      if (data.IsEmailRegistered) {
+        Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.User}\nUID: ${data.UID}`, "error");
+      } else {
+        // Continuar con el registro
+        var user = {
+          email: email,
+          username: username
+        };
+
+        fetch(createUserUrl, {
+            method: 'POST',
+            body: JSON.stringify(user),
+            headers: {
+              'Content-Type': 'application/json'
             }
-        })
-        .catch(function(error) {
-            Swal.fire(`Error durante la verificación del correo ${error}`);
-        });
+          })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            if (data.UID) {
+              Swal.fire("Registro exitoso", `Usuario: ${data.User}\nUID: ${data.UID}`, "success");
+              setTimeout(function() {
+                window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
+              }, 8000);
+            } else {
+              Swal.fire("Error durante la creación del usuario");
+            }
+          })
+          .catch(function(error) {
+            Swal.fire(`Error durante la creación del usuario ${error}`);
+          });
+      }
+    })
+    .catch(function(error) {
+      Swal.fire(`Error durante la verificación del correo ${error}`);
+    });
 }
+
 firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-        // El usuario ha iniciado sesión, redirigir a gz330.html
-        window.location.href = "gz330";
-    } else {
-        // El usuario no ha iniciado sesión
-    }
+  if (user) {
+    // El usuario ha iniciado sesión, redirigir a gz330.html
+    window.location.href = "gz330";
+  } else {
+    // El usuario no ha iniciado sesión
+  }
 });
 ////
 document.oncontextmenu = function() {
