@@ -118,15 +118,15 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.IsRegisteeEmail) {
-        Swal.fire("Ya existe un usuario con ese correo", "", "error");
+      if (data.IsRegisteeEmail === "true") {
+        Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.user}`, "error");
       } else {
         // Registrar usuario y mostrar mensaje de éxito
         Swal.fire({
           title: "Registro exitoso",
           text: `Usuario: ${username}`,
           icon: "success",
-          timer: 8000, // Cerrar automáticamente después de 8 segundos
+          timer: 4000, // Cerrar automáticamente después de 4 segundos
           timerProgressBar: true,
           allowEscapeKey: false,
           allowOutsideClick: false
