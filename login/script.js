@@ -118,33 +118,37 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.result === email) {
-        Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.UID}`, "error");
-      } else {
-        // Registrar usuario
+      if (data.Result !== email) {
+        // Registrar usuario y mostrar mensaje de éxito
         fetch(createUserUrl)
           .then(function(response) {
             return response.json();
           })
           .then(function(data) {
-            if (data.result) {
-              firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(function() {
-                  Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
-                  setTimeout(function() {
-                    window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
-                  }, 8000);
-                })
-                .catch(function(error) {
-                  Swal.fire(`Error durante la creación del usuario ${error}`);
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+              .then(function() {
+                Swal.fire({
+                  title: "Registro exitoso",
+                  text: `Usuario: ${username}\nCorreo: ${email}\nUID: ${data.UID}`,
+                  icon: "success",
+                  timer: 8000, // Cerrar automáticamente después de 8 segundos
+                  timerProgressBar: true,
+                  allowEscapeKey: false,
+                  allowOutsideClick: false
+                }).then(function() {
+                  window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
                 });
-            } else {
-              Swal.fire("Error durante la creación del usuario");
-            }
+              })
+              .catch(function(error) {
+                Swal.fire(`Error durante la creación del usuario ${error}`);
+              });
           })
           .catch(function(error) {
             Swal.fire(`Error durante la creación del usuario ${error}`);
           });
+      } else {
+        // Mostrar mensaje de usuario existente
+        Swal.fire("Ya existe un usuario con ese correo", "", "error");
       }
     })
     .catch(function(error) {
