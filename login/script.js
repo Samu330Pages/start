@@ -133,8 +133,6 @@ function signup() {
               setTimeout(function() {
                 window.location.href = "gz330"; // Redirigir a gz330 después de 3 segundos
               }, 3000);
-            } else {
-              Swal.fire("Error durante la creación del usuario");
             }
           })
           .catch(function(error) {
