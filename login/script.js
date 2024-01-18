@@ -99,7 +99,7 @@ function signup() {
   var confirmPassword = document.getElementById("signup-confirm-password").value;
   var username = document.getElementById("username").value;
   var checkEmailUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
-  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUser?email=" + email + "&username=" + username;
+  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUser?email=" + email + "&user=" + username;
 
   if (password !== confirmPassword) {
     Swal.fire("Las contraseñas no coinciden");
@@ -127,7 +127,7 @@ function signup() {
             return response.json();
           })
           .then(function(data) {
-            if (data.result) {
+            if (data.success) {
               Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
               setTimeout(function() {
                 window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
