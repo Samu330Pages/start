@@ -118,8 +118,8 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.IsEmailRegistered) {
-        Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.User}\nUID: ${data.UID}`, "error");
+      if (data.Result === email) {
+        Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.UID}`, "error");
       } else {
         // Registrar usuario
         fetch(createUserUrl)
@@ -127,13 +127,17 @@ function signup() {
             return response.json();
           })
           .then(function(data) {
-            if (data.result) {
-              // Continuar con el registro
+            if (data.UID) {
               firebase.auth().createUserWithEmailAndPassword(email, password)
-              Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
-              setTimeout(function() {
-                window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
-              }, 8000);
+                .then(function() {
+                  Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
+                  setTimeout(function() {
+                    window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
+                  }, 8000);
+                })
+                .catch(function(error) {
+                  Swal.fire(`Error durante la creación del usuario ${error}`);
+                });
             } else {
               Swal.fire("Error durante la creación del usuario");
             }
