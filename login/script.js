@@ -138,11 +138,11 @@ function signup() {
             return response.json();
           })
           .then(function(data) {
-            if (data.UID) {
-              Swal.fire("Registro exitoso", `Usuario: ${data.User}\nUID: ${data.UID}`, "success");
+            if (data.success) {
+              Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
               setTimeout(function() {
-                window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
-              }, 8000);
+                window.location.href = "gz330"; // Redirigir a gz330 después de 3 segundos
+              }, 3000);
             } else {
               Swal.fire("Error durante la creación del usuario");
             }
