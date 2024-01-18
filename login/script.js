@@ -127,7 +127,9 @@ function signup() {
             return response.json();
           })
           .then(function(data) {
-            if (data.success) {
+            if (data.result) {
+              // Continuar con el registro
+              firebase.auth().createUserWithEmailAndPassword(email, password)
               Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
               setTimeout(function() {
                 window.location.href = "gz330"; // Redirigir a gz330 después de 8 segundos
