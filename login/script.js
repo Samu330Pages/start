@@ -118,7 +118,7 @@ function signup() {
       return response.json();
     })
     .then(function(data) {
-      if (data.Result === email) {
+      if (data.result === email) {
         Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.UID}`, "error");
       } else {
         // Registrar usuario
@@ -127,7 +127,7 @@ function signup() {
             return response.json();
           })
           .then(function(data) {
-            if (data.UID) {
+            if (data.result) {
               firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(function() {
                   Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
