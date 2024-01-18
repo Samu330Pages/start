@@ -99,7 +99,7 @@ function signup() {
   var confirmPassword = document.getElementById("signup-confirm-password").value;
   var username = document.getElementById("username").value;
   var checkEmailUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
-  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUser";
+  var createUserUrl = `https://us-central1-number-ac729.cloudfunctions.net/createUser?email=${email}&user=${username}`;
 
   if (password !== confirmPassword) {
     Swal.fire("Las contraseñas no coinciden");
@@ -122,23 +122,13 @@ function signup() {
         Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.User}\nUID: ${data.UID}`, "error");
       } else {
         // Continuar con el registro
-        var user = {
-          email: email,
-          username: username
-        };
-
-        fetch(createUserUrl, {
-            method: 'POST',
-            body: JSON.stringify(user),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+        fetch(createUserUrl)
           .then(function(response) {
             return response.json();
           })
           .then(function(data) {
-            if (data.success) {
+            if (data.IsEmailRegistered) {
+              firebase.auth().createUserWithEmailAndPassword(email, password)
               Swal.fire("Registro exitoso", `Usuario: ${username}`, "success");
               setTimeout(function() {
                 window.location.href = "gz330"; // Redirigir a gz330 después de 3 segundos
