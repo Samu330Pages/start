@@ -73,7 +73,7 @@ function checkEmail(email) {
       return sendResetPasswordEmail(email); // Si el correo está registrado, llamamos a sendResetPasswordEmail
     })
     .catch(() => {
-      swal.fire("El correo no le pertenece a ninguna cuenta", "Regístrate si aún no tienes una cuenta", "error");// No hacemos nada aquí, ya que se mostrará un mensaje de error en el sweet alert
+      //swal.fire("El correo no le pertenece a ninguna cuenta", "Regístrate si aún no tienes una cuenta", "error");// No hacemos nada aquí, ya que se mostrará un mensaje de error en el sweet alert
     });
 }
 
