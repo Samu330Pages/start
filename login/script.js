@@ -128,7 +128,7 @@ function signup() {
   }
 
   // Verificar si el correo ya está registrado
-  fetch(checkEmailUrl)
+  fetch(createUserUrl)
     .then(function(response) {
       return response.json();
     })
@@ -137,6 +137,7 @@ function signup() {
         Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.User}`, "error");
       } else {
         // Registrar usuario y mostrar mensaje de éxito
+        fetch(checkEmailUrl)
         Swal.fire({
           title: "Registro exitoso",
           text: `Usuario: ${username}\nIniciando sesion...`,
