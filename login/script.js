@@ -30,10 +30,6 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
-// Importar el módulo 'auth' de Firebase
-import { auth } from 'firebase/app';
-import 'firebase/auth';
-
 // Función para mostrar el input de restablecimiento de contraseña
 function showResetPasswordInput() {
   Swal.fire({
@@ -50,9 +46,7 @@ function showResetPasswordInput() {
         })
         .then(function (data) {
           if (data.IsEmailRegistered) {
-            const emailAddress = data.Result;
-
-            return auth().sendPasswordResetEmail(emailAddress)
+            return auth().sendPasswordResetEmail(email)
               .then(function () {
                 Swal.fire({
                   title: 'Correo enviado',
