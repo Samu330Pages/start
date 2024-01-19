@@ -40,15 +40,29 @@ function showResetPasswordInput() {
     cancelButtonText: 'Cancelar',
     showLoaderOnConfirm: true,
     preConfirm: function () {
-      var emaililto = Swal.getPopup().querySelector('#emailInput').value;
+      const email = Swal.getPopup().querySelector('#emailInput').value;
 
-      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${emaililto}`)
+      if (!email || !validateEmail(email)) {
+        Swal.showValidationMessage('Por favor, ingresa un correo electrónico válido');
+        return false;
+      }
+
+      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
         .then(function (response) {
           return response.json();
         })
         .then(function (data) {
           if (data.IsEmailRegistered) {
-            return auth().sendPasswordResetEmail(emaililto);
+            const emailAddress = data.Result;
+
+            return auth().sendPasswordResetEmail(emailAddress)
+              .then(function () {
+                Swal.fire({
+                  title: 'Correo enviado',
+                  text: 'Se ha enviado un correo de restablecimiento de contraseña',
+                  icon: 'success'
+                });
+              });
           } else {
             throw new Error('Correo no registrado');
           }
@@ -65,8 +79,12 @@ function showResetPasswordInput() {
     }
   });
 }
-//////////////////////////
 
+// Validación de formato de correo electrónico
+function validateEmail(email) {
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+  return emailRegex.test(email);
+}
 // Función para iniciar sesión
 function login() {
     event.preventDefault(); // Evita la recarga de la página por defecto
