@@ -55,7 +55,7 @@ function showResetPasswordInput() {
           if (data.IsEmailRegistered) {
             const emailAddress = data.Result;
 
-            return auth().sendPasswordResetEmail(emailAddress)
+            return firebase.auth().sendPasswordResetEmail(emailAddress)
               .then(function() {
                 Swal.fire({
                   title: 'Correo enviado',
