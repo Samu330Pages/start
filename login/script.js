@@ -1,3 +1,7 @@
+Swal.setDefaults({
+  theme: 'bootstrap', // Cambia aquí al tema que deseas utilizar
+  // Otras opciones por defecto que deseas configurar
+});
 const loginText = document.querySelector(".title-text .login");
 const loginForm = document.querySelector("form.login");
 const loginBtn = document.querySelector("label.login");
@@ -59,7 +63,7 @@ function showResetPasswordInput() {
               .then(function() {
                 Swal.fire({
                   title: 'Correo enviado',
-                  text: 'Se ha enviado un correo de restablecimiento de contraseña',
+                  text: `Se ha enviado un correo de restablecimiento de contraseña\nUsuario: ${data.User}`,
                   icon: 'success'
                 });
               })
