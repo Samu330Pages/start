@@ -40,29 +40,24 @@ function showResetPasswordInput() {
     cancelButtonText: 'Cancelar',
     showLoaderOnConfirm: true,
     preConfirm: function () {
-      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+      var emaililto = Swal.getPopup().querySelector('#emailInput').value;
+
+      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${emaililto}`)
         .then(function (response) {
           return response.json();
         })
         .then(function (data) {
           if (data.IsEmailRegistered) {
-            return auth().sendPasswordResetEmail(email)
-              .then(function () {
-                Swal.fire({
-                  title: 'Correo enviado',
-                  text: 'Se ha enviado un correo con instrucciones para restablecer tu contraseña',
-                  icon: 'success'
-                });
-              })
-              .catch(function (error) {
-                throw new Error('Error al enviar el correo de restablecimiento');
-              });
+            return auth().sendPasswordResetEmail(emaililto);
           } else {
             throw new Error('Correo no registrado');
           }
         })
         .catch(function (error) {
           Swal.showValidationMessage(error.message);
+        })
+        .finally(function () {
+          Swal.resetValidationMessage();
         });
     },
     allowOutsideClick: function () {
