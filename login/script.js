@@ -30,6 +30,10 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
+// Importar el módulo 'auth' de Firebase
+import { auth } from 'firebase/app';
+import 'firebase/auth';
+
 // Función para mostrar el input de restablecimiento de contraseña
 function showResetPasswordInput() {
   Swal.fire({
@@ -48,33 +52,33 @@ function showResetPasswordInput() {
       }
 
       return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
-        .then(function (response) {
+        .then(function(response) {
           return response.json();
         })
-        .then(function (data) {
+        .then(function(data) {
           if (data.IsEmailRegistered) {
             const emailAddress = data.Result;
 
             return auth().sendPasswordResetEmail(emailAddress)
-              .then(function () {
+              .then(function() {
                 Swal.fire({
                   title: 'Correo enviado',
                   text: 'Se ha enviado un correo de restablecimiento de contraseña',
                   icon: 'success'
                 });
+              })
+              .catch(function(error) {
+                Swal.showValidationMessage(error.message);
               });
           } else {
             throw new Error('Correo no registrado');
           }
         })
-        .catch(function (error) {
+        .catch(function(error) {
           Swal.showValidationMessage(error.message);
-        })
-        .finally(function () {
-          Swal.resetValidationMessage();
         });
     },
-    allowOutsideClick: function () {
+    allowOutsideClick: function() {
       return !Swal.isLoading();
     }
   });
@@ -85,6 +89,7 @@ function validateEmail(email) {
   const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
   return emailRegex.test(email);
 }
+//////////////////////////
 // Función para iniciar sesión
 function login() {
     event.preventDefault(); // Evita la recarga de la página por defecto
