@@ -30,44 +30,51 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
+// Importar el módulo 'auth' de Firebase
+import { auth } from 'firebase/app';
+import 'firebase/auth';
+
+// Función para mostrar el input de restablecimiento de contraseña
 function showResetPasswordInput() {
-  swal.fire({
-    title: 'Restablecimiento de Contraseña',
-    html: '<input type="email" id="emailInput" class="swal2-input" placeholder="Correo electrónico"><div id="message" style="color: red; margin-top: 10px;"></div>',
+  Swal.fire({
+    title: 'Restablecer contraseña',
+    html: '<input type="email" id="emailInput" class="swal2-input" placeholder="Correo electrónico">',
     showCancelButton: true,
     confirmButtonText: 'Enviar',
     cancelButtonText: 'Cancelar',
-    preConfirm: () => {
-      const email = document.getElementById('emailInput').value;
-      if (!email) {
-        const messageDiv = document.getElementById('message');
-        messageDiv.innerText = 'Por favor, ingresa un correo electrónico válido.';
-        return false;
-      }
-      sendResetPasswordEmail(email); // Llamamos directamente a la función sendResetPasswordEmail()
-    },
-    allowOutsideClick: false, // Mantenemos el sweet alert en pantalla
-    showLoaderOnConfirm: true // Muestra un botón de carga en lugar del botón de enviar
-  });
-}
+    showLoaderOnConfirm: true,
+    preConfirm: function () {
+      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          if (data.IsEmailRegistered) {
+            const emailAddress = data.Result;
 
-function sendResetPasswordEmail(email) {
-  return new Promise((resolve, reject) => {
-    firebase.auth().sendPasswordResetEmail(email)
-      .then(() => {
-        resolve();
-      })
-      .catch(error => {
-        reject(error);
-      });
-  })
-    .then(() => {
-      swal.fire('Correo enviado', 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success');
-    })
-    .catch(error => {
-      console.error('Ha ocurrido un error:', error);
-      swal.fire('Error', 'No se pudo enviar el correo de restablecimiento de contraseña. Por favor, intenta nuevamente más tarde.', 'error');
-    });
+            return auth().sendPasswordResetEmail(emailAddress)
+              .then(function () {
+                Swal.fire({
+                  title: 'Correo enviado',
+                  text: 'Se ha enviado un correo con instrucciones para restablecer tu contraseña',
+                  icon: 'success'
+                });
+              })
+              .catch(function (error) {
+                throw new Error('Error al enviar el correo de restablecimiento');
+              });
+          } else {
+            throw new Error('Correo no registrado');
+          }
+        })
+        .catch(function (error) {
+          Swal.showValidationMessage(error.message);
+        });
+    },
+    allowOutsideClick: function () {
+      return !Swal.isLoading();
+    }
+  });
 }
 //////////////////////////
 
@@ -124,8 +131,9 @@ function signup() {
         // Registrar usuario y mostrar mensaje de éxito
         Swal.fire({
           title: "Registro exitoso",
-          text: `Usuario: ${username}`,
+          text: `Usuario: ${username}\nIniciando sesion...`,
           icon: "success",
+          showLoaderOnConfirm: true,
           timer: 4000, // Cerrar automáticamente después de 4 segundos
           timerProgressBar: true,
           allowEscapeKey: false,
