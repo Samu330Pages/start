@@ -1,50 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="samu/style.css">
+    <script src="samu/script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GZ330-BOT By Samu330</title>
-    <!-- Agregar SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Agregar FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="css/style.css">
+    <meta property="og:site_name" content="View Vinayak Patil's Portfolio Website">
+    <meta property="og:title" content="Developer | Tech Enthusiast" />
+    <meta property="og:description"
+        content="Hello there 👋🏻,My name is Vinayak Ramchandra Patil.I am a Computer Engineering student at Ch. Shivaji University 👨🏻‍💻📚I am eager to hear about potential career opportunities, so I would be pleased to chat about job openings in the engineering sphere.Send 'help' to know more about me." />
+    <meta property="og:image" itemprop="image" content="https://vinayak-portfolio-09.herokuapp.com/images/dp.jpg">
+    <meta property="og:type" content="website" />
+
+    <link itemprop="thumbnailUrl" href="https://vinayak-portfolio-09.herokuapp.com/images/dp.jpg">
+    <!-- No need to change anything here -->
+    <meta property="og:type" content="website" />
+    <meta property="og:image:type" content="image/jpeg">
+
+    <!-- Size of image. Any size up to 300. Anything above 300px will not work in WhatsApp -->
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+    <meta property="og:updated_time" content="1440432930" />
+
+    <title>Developer | Tech Enthusiast | </title>
 </head>
-<body>
 
-    <header>
-   <!-- Contenido del encabezado -->
-    <button id="logout-btn">Cerrar sesión</button>
-    <button id="reset-pass-btn">Restablecer contraseña</button>
-   <!-- Otro contenido del encabezado -->
-    </header>
+<body onload="startFunction()">
 
-    <div class="container__background-triangle">
-        <div class="triangle triangle1"></div>
-        <div class="triangle triangle2"></div>
-        <div class="triangle triangle3"></div>
-    </div>
+    <link itemprop="thumbnailUrl" href="https://vinayak-portfolio-09.herokuapp.com/images/dp.jpg">
+    <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+        <link itemprop="url" href="https://vinayak-portfolio-09.herokuapp.com/images/dp.jpg">
+    </span>
 
-    <div class="container__cards">
-        <div class="card">
-            <div class="cover__card">
-                <img src="https://wallpapers.com/images/hd/shin-godzilla-lnzgudvqtmrdsf4w.jpg" alt="">
+    <nav>
+
+        <div class="navbar">
+            <img class="dpimg" onclick="openFullScreenDP()" src="samu/images/squareDp.jpg" alt="">
+            <div class="personalInfo">
+                <label id="name">Vinayak Patil</label>
+                <label id="lastseen">last seen today at 3:24 pms</label>
             </div>
-            <h2 id="welcome-message"></h2>
-            <p>Gracias por el prerregistro, el bot aún no está disponible. ¡Tan pronto lo este, la página se actualizará!. Puedes igual recibir la notificación en el canal, comunicate con samu para que te comparta los links.</p>
-            <hr>
-            <div class="footer__card">
-                <h3 class="user__name">Samu330</h3>
-                <i>29 Dec</i>
+        </div>
+
+    </nav>
+
+
+    <div class="scrollable" id="myScrollable">
+
+        <div class="fullScreenDP" id="fullScreenDP">
+            <div class="insideDP">
+                <img class="dp" src="samu/images/squareDp.jpg" alt="">
+                <svg class="closeBTN" onclick="closeFullDP()" xmlns="http://www.w3.org/2000/svg" width="64px"
+                    viewBox="0 0 512 512" height="64px">
+                    <path class="btnColor" fill="#E04F5F"
+                        d="M504.1,256C504.1,119,393,7.9,256,7.9C119,7.9,7.9,119,7.9,256C7.9,393,119,504.1,256,504.1C393,504.1,504.1,393,504.1,256z" />
+                    <path fill="#FFF"
+                        d="M285,256l72.5-84.2c7.9-9.2,6.9-23-2.3-31c-9.2-7.9-23-6.9-30.9,2.3L256,222.4l-68.2-79.2c-7.9-9.2-21.8-10.2-31-2.3c-9.2,7.9-10.2,21.8-2.3,31L227,256l-72.5,84.2c-7.9,9.2-6.9,23,2.3,31c4.1,3.6,9.2,5.3,14.3,5.3c6.2,0,12.3-2.6,16.6-7.6l68.2-79.2l68.2,79.2c4.3,5,10.5,7.6,16.6,7.6c5.1,0,10.2-1.7,14.3-5.3c9.2-7.9,10.2-21.8,2.3-31L285,256z" />
+                </svg>
             </div>
+        </div>
+
+        <div id="chatting" class="chatting">
+            <ul id="listUL">
+            </ul>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
-  <script src="script.js"></script>
+
+    <footer>
+        <div class="sendBar">
+            <input id="inputMSG" onkeypress="isEnter(event)" type="text" placeholder="Type a message" autofocus>
+            <svg onclick="sendMsg()" viewBox="0 0 24 24" width="24" height="24" class="">
+                <path fill="currentColor"
+                    d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path>
+            </svg>
+        </div>
+    </footer>
+
 </body>
+
 </html>
