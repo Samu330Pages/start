@@ -6,177 +6,161 @@
 		<link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style type="text/css">
-			* {
-				font-family: sans-serif;
-				max-width: 10000px;
-			}
-			h1 {
-				text-align: center;
-			}
-			#shop-head {
-				font-size: 20px;
-				background-color: #d4d4d4;
-				border: solid 2px gray;
-				border-radius: 30px;
-				width: 100%;
-				padding: 4px;
-				/*height: 100%;*/
-			}
-			.item-type-switch {
-				background-color: #d4d4d4;
-				border: solid 2px gray;
-				border-radius: 30px;
-				padding: 4px;
-			}
-			.item-type-switch:hover {
-				background-color: #aaa9a9;
-			}
-			#products-container {
-				text-align: left;
-				width: 100%;
-				border-radius: 20px;
-				border: 3px #003953 solid;
-				background-color: #00aeff;	
-			}
-			#brick-container {
-				text-align: center;
-			}
-			#brick-to-click {
-				text-align: center;
-			}
-			.product {
-				border-radius: 20px;
-				margin: 14px;
-				border: 2.5px solid black;
-				background-color: white;
-			}
-			#mario_block_easter_egg_button {
-				width: 32px;
-				height: 32px;
-			}
-			#item_type_switch_container {
-				text-align: center;
-			}
-
-			#bricks_per_second {
-				text-align: center;
-				font-size: 13px;
-			}
-			#buttons button {	
-				background-color: #d4d4d4;
-				border: solid 2px gray;
-				border-radius: 30px;
-				padding: 8px;
-				padding-left: 32px;
-				padding-right: 32px;
-			}
-			#buttons button:hover {
-				background-color: #aaa9a9;
-			}
-			#buttons {
-				position: fixed;
-			}
-			#statistics_and_options {
-				align-self: flex-end;
-				background-color: lightgrey;
-				border: grey 2px solid;
-				border-radius: 20px;
-				width: 400px;
-				padding: 16px;
-			}
-			.bold {
-				font-weight: bold;
-			}
-			.hidden {
-				display: none;
-			}
-		</style>
+		* {
+			font-family: sans-serif;
+			max-width: 10000px;
+		}
+		h1 {
+			text-align: center;
+		}
+		#shop-head {
+			font-size: 20px;
+			background-color: #d4d4d4;
+			border: solid 2px gray;
+			border-radius: 30px;
+			width: 100%;
+			padding: 4px;
+		}
+		.item-type-switch {
+			background-color: #d4d4d4;
+			border: solid 2px gray;
+			border-radius: 30px;
+			padding: 4px;
+		}
+		.item-type-switch:hover {
+			background-color: #aaa9a9;
+		}
+		#products-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			text-align: left;
+			width: 100%;
+			border-radius: 20px;
+			border: 3px #003953 solid;
+			background-color: #00aeff;
+		}
+		.product {
+			border-radius: 20px;
+			margin: 14px;
+			border: 2.5px solid black;
+			background-color: white;
+		}
+		#buttons button {
+			background-color: #d4d4d4;
+			border: solid 2px gray;
+			border-radius: 30px;
+			padding: 8px;
+			padding-left: 24px;
+			padding-right: 24px;
+		}
+		#buttons button:hover {
+			background-color: #aaa9a9;
+		}
+		#buttons {
+			position: fixed;
+		}
+		#statistics_and_options {
+			align-self: flex-end;
+			background-color: lightgrey;
+			border: grey 2px solid;
+			border-radius: 20px;
+			width: 400px;
+			padding: 16px;
+		}
+		.bold {
+			font-weight: bold;
+		}
+		.hidden {
+			display: none;
+		}
+	</style>
 		<style id="cursor"></style>
 		<script type="text/javascript">
-			var game = {
-				frame: 0,
-				fps: 30,
-				bricks: 0,
-				bricks_per_click: 1,
-				cursor: "none",
-				bricks_per_second: 0
+		var game = {
+			frame: 0,
+			fps: 30,
+			bricks: 0,
+			bricks_per_click: 1,
+			cursor: "none",
+			bricks_per_second: 0
+		}
+		var next_frame = setInterval(function() {
+			game.frame += 1;
+			if (game.frame >= game.fps) {
+				game.frame = 0;
+				game.bricks += game.bricks_per_second;
 			}
-			var next_frame = setInterval(function() {
-				game.frame += 1;
-				if(game.frame >= game.fps) {
-					game.frame = 0;
-					game.bricks += game.bricks_per_second;
-				}
-				document.getElementById("bricks").innerHTML = game.bricks;
-				document.getElementById("bricks_per_second").innerHTML = "<img src='img/brick.png' alt='Bricks' width='26' height='18'> per second: "+game.bricks_per_second;
-				
-			},1000/game.fps);
-			document.addEventListener("click", function(command) {
-				if (command.target.id == "normal_cursor") {
-					alert("You can't buy this cursor because this cursor it's your starter cursor.");
-				}
-			});
-			function brick_click() {
-				game.bricks += game.bricks_per_click;
+			document.getElementById("bricks").innerHTML = game.bricks;
+			document.getElementById("bricks_per_second").innerHTML = "<img src='img/brick.png' alt='Bricks' width='26' height='18'> per second: " + game.bricks_per_second;
+
+		}, 1000 / game.fps);
+		document.addEventListener("click", function(command) {
+			if (command.target.id == "normal_cursor") {
+				alert("You can't buy this cursor because this cursor it's your starter cursor.");
 			}
-			function brick_hover() {
-				document.getElementById("brick-to-click-img").setAttribute("src","img/brick-hover.png");
-			}
-			function brick_not_hover() {
-				document.getElementById("brick-to-click-img").setAttribute("src","img/brick.png");
-			}
-			function buy(itemtype,item,power,price) {
-				const itemtypes = {
-					cursor: function() {
-						if (game.bricks >= price) {
-							let buycursorconfirm = confirm("Are you sure you want to buy this cursor? You will lose your previous cursor.");
-							if (buycursorconfirm == true) {
-								game.bricks -= price;
-								cursor = item;
-								document.getElementById("cursor").innerHTML = "*{cursor: url(img/cursors/"+cursor+".png) 0 0, auto;}";
-								game.bricks_per_click = power;
-							}
-						}else{
-							alert("You don't have enough bricks to buy this item.");
-						}						
-					},
-					building: function() {
-						if (game.bricks >= price) {
+		});
+		function brick_click() {
+			game.bricks += game.bricks_per_click;
+		}
+		function brick_hover() {
+			document.getElementById("brick-to-click-img").setAttribute("src", "img/brick-hover.png");
+		}
+		function brick_not_hover() {
+			document.getElementById("brick-to-click-img").setAttribute("src", "img/brick.png");
+		}
+		function buy(itemtype, item, power, price) {
+			const itemtypes = {
+				cursor: function() {
+					if (game.bricks >= price) {
+						let buycursorconfirm = confirm("Are you sure you want to buy this cursor? You will lose your previous cursor.");
+						if (buycursorconfirm == true) {
 							game.bricks -= price;
-							game.bricks_per_second += power;
-							document.getElementById("buildings_container").innerHTML += "<img src='img/buildings/"+item+".png' alt='"+item+"' width='32' height='32'>";
-						}else{
-							alert("You don't have enough bricks to buy this item.");
-						}						
+							cursor = item;
+							document.getElementById("cursor").innerHTML = "*{cursor: url(img/cursors/" + cursor + ".png) 0 0, auto;}";
+							game.bricks_per_click = power;
+						}
+					} else {
+						alert("You don't have enough bricks to buy this item.");
+					}
+				},
+				building: function() {
+					if (game.bricks >= price) {
+						game.bricks -= price;
+						game.bricks_per_second += power;
+						document.getElementById("buildings_container").innerHTML += "<img src='img/buildings/" + item + ".png' alt='" + item + "' width='32' height='32'>";
+					} else {
+						alert("You don't have enough bricks to buy this item.");
 					}
 				}
-				itemtypes[itemtype]();
 			}
-			function mario_block_easter_egg() {
-				document.getElementById("mario_block_easter_egg_button").innerHTML = "<img src='img/easter-eggs/mario-block.gif' width='16' height='16'>";
-				document.getElementById("mario_block_easter_egg_button").setAttribute("onclick","mario_block_easter_egg2();");
+			itemtypes[itemtype]();
+		}
+		function mario_block_easter_egg() {
+			document.getElementById("mario_block_easter_egg_button").innerHTML = "<img src='img/easter-eggs/mario-block.gif' width='16' height='16'>";
+			document.getElementById("mario_block_easter_egg_button").setAttribute("onclick", "mario_block_easter_egg2();");
+		}
+		function mario_block_easter_egg2() {
+			document.getElementById("mario_block_easter_egg_button").innerHTML = "<img src='img/easter-eggs/mario-mushroom.png' width='16' height='16'>";
+		}
+		function item_type_switch(itemtype) {
+			if (itemtype == "buildings") {
+				document.getElementById("cursors_shop").setAttribute("class", "hidden");
+				document.getElementById("buildings_shop").removeAttribute("class");
 			}
-			function mario_block_easter_egg2() {
-				document.getElementById("mario_block_easter_egg_button").innerHTML = "<img src='img/easter-eggs/mario-mushroom.png' width='16' height='16'>";
+			if (itemtype == "cursors") {
+				document.getElementById("buildings_shop").setAttribute("class", "hidden");
+				document.getElementById("cursors_shop").removeAttribute("class");
 			}
-			function item_type_switch(itemtype) {
-				if (itemtype == "buildings") {
-					document.getElementById("cursors_shop").setAttribute("class","hidden");
-					document.getElementById("buildings_shop").removeAttribute("class");
-				}
-				if (itemtype == "cursors") {
-					document.getElementById("buildings_shop").setAttribute("class","hidden");
-					document.getElementById("cursors_shop").removeAttribute("class");					
-				}
+		}
+		function show_statistics_and_options() {
+			if (document.getElementById("statistics_and_options").getAttribute("style") == "display: none;") {
+				document.getElementById("statistics_and_options").removeAttribute("style");
+			} else {
+				document.getElementById("statistics_and_options").setAttribute("style", "display: none;");
 			}
-			function show_statistics_and_options() {
-				if (document.getElementById("statistics_and_options").getAttribute("style") == "display: none;") {
-					document.getElementById("statistics_and_options").removeAttribute("style");
-				}else{
-					document.getElementById("statistics_and_options").setAttribute("style","display: none;");
-				}
-			}
-		</script>
+		}
+	</script>
 	</head>
 
 	<body id="body">
