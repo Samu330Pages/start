@@ -26,11 +26,6 @@ document.addEventListener("dragstart", function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
         event.preventDefault();
-        Swal.fire(
-            'Sin acceso?',
-            'Lo Siento pero no tienes permiso',
-            'question'
-        )
     }
 });
         </script>
