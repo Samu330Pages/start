@@ -19,7 +19,7 @@
 				border-radius: 30px;
 				width: 100%;
 				padding: 4px;
-				/*height: 100%;*/
+				/height: 100%;/
 			}
 			.item-type-switch {
 				background-color: #d4d4d4;
@@ -31,11 +31,14 @@
 				background-color: #aaa9a9;
 			}
 			#products-container {
-				text-align: left;
+				text-align: center;
 				width: 100%;
 				border-radius: 20px;
 				border: 3px #003953 solid;
 				background-color: #00aeff;	
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
 			}
 			#brick-container {
 				text-align: center;
@@ -44,6 +47,7 @@
 				text-align: center;
 			}
 			.product {
+				flex: 0 0 calc(33.333% - 28px);
 				border-radius: 20px;
 				margin: 14px;
 				border: 2.5px solid black;
@@ -176,20 +180,24 @@
 				}
 			}
 		</script>
+		<style media="screen and (max-width: 769px)">
+			.product {
+				flex: 0 0 calc(50% - 28px);
+			}
+		</style>
 	</head>
 
 	<body id="body">
 		<h1>Clicking on the brick</h1>
 		<div id="brick-container"><label id="bricks">0</label><img src="img/brick.png" alt=" Bricks" height="18" width="26"></div>
 		<div id="buttons">
-				<button onclick="show_statistics_and_options();">Statistics & Options</button>
-				<div id="statistics_and_options" style="display: none;">
-					<div id="bricks_per_second"><img src="img/brick.png" alt="Bricks" width="26" height="18"></div>
-					<hr>
-					<div>
-						<span class="bold">Select language:</span><br>
-						<button>English</button><a href="pt-br-index.html"><button>Português (Brasil)</button></a>
-					</div>
+			<button onclick="show_statistics_and_options();">Statistics & Options</button>
+			<div id="statistics_and_options" style="display: none;">
+				<div id="bricks_per_second"><img src="img/brick.png" alt="Bricks" width="26" height="18"></div>
+				<hr>
+				<div>
+					<span class="bold">Select language:</span><br>
+					<button>English</button><a href="pt-br-index.html"><button>Português (Brasil)</button></a>
 				</div>
 			</div>
 		</div>
