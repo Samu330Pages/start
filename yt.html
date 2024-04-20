@@ -4,59 +4,32 @@
     <title>Sopa de Letras</title>
     <style>
       #puzzle {
-    width: 300px;
-    height: 300px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-}
+        width: 300px;
+        height: 300px;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+      }
 
-#puzzle div {
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+      #puzzle div {
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-#wordList {
-    margin-top: 20px;
-}
+      #wordList {
+        margin-top: 20px;
+      }
 
-#wordList ul {
-    list-style-type: none;
-}
+      #wordList ul {
+        list-style-type: none;
+      }
 
-.found {
-    background-color: yellow;
-}
+      .found {
+        background-color: yellow;
+      }
     </style>
-    <script>
-      const words = ["hola", "amigo", "patata", "sopa", "letras"]; // Palabras para buscar
-
-const puzzleContainer = document.getElementById("puzzle");
-const wordList = document.getElementById("words");
-
-// Generar el cuadro de la sopa de letras
-for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
-        const letter = document.createElement("div");
-        letter.textContent = randomLetter(); // Función para generar una letra aleatoria
-        puzzleContainer.appendChild(letter);
-    }
-}
-
-// Agregar las palabras a buscar
-words.forEach(word => {
-    const li = document.createElement("li");
-    li.textContent = word;
-    wordList.appendChild(li);
-});
-
-function randomLetter() {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    return alphabet[Math.floor(Math.random() * alphabet.length)];
-}
-    </script>
 </head>
 <body>
     <h1>Sopa de Letras</h1>
@@ -65,5 +38,81 @@ function randomLetter() {
         <h2>Palabras para buscar:</h2>
         <ul id="words"></ul>
     </div>
+
+    <script>
+      const words = ["hola", "amigo", "patata", "sopa", "letras"]; // Palabras para buscar
+      const directions = ["horizontal", "vertical", "diagonal", "inverse"]; // Direcciones posibles
+
+      const puzzleContainer = document.getElementById("puzzle");
+      const wordList = document.getElementById("words");
+
+      // Generar el cuadro de la sopa de letras
+      for (let i = 0; i < 10; i++) {
+          for (let j = 0; j < 10; j++) {
+              const letter = document.createElement("div");
+              letter.textContent = randomLetter(); // Función para generar una letra aleatoria
+              puzzleContainer.appendChild(letter);
+          }
+      }
+
+      // Agregar las palabras a buscar
+      words.forEach(word => {
+          const li = document.createElement("li");
+          li.textContent = word;
+          const button = document.createElement("button");
+          button.textContent = "Buscar";
+          button.addEventListener("click", () => {
+              findWord(word);
+          });
+          li.appendChild(button);
+          wordList.appendChild(li);
+      });
+
+      function randomLetter() {
+          const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          return alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+
+      function findWord(word) {
+          const cells = puzzleContainer.children;
+
+          for (let i = 0; i < cells.length; i++) {
+              const cell = cells[i];
+              cell.classList.remove("found");
+          }
+
+          const direction = directions[Math.floor(Math.random() * directions.length)];
+
+          // Lógica para encontrar la palabra en la dirección dada
+          // Aquí deberás implementar tus propios algoritmos para buscar las palabras
+
+          // Ejemplo para resaltar la palabra encontrada en el cuadro
+          const letters = Array.from(puzzleContainer.children).map(cell => cell.textContent);
+          const wordIndex = letters.join("").indexOf(word);
+
+          if (wordIndex !== -1) {
+              const startCell = puzzleContainer.children[wordIndex];
+              const endCell = puzzleContainer.children[wordIndex + word.length - 1];
+
+              if (direction === "horizontal") {
+                  for (let i = startCell; i <= endCell; i++) {
+                      i.classList.add("found");
+                  }
+              } else if (direction === "vertical") {
+                  for (let i = startCell; i <= endCell; i += 10) {
+                      i.classList.add("found");
+                  }
+              } else if (direction === "diagonal") {
+                  for (let i = startCell; i <= endCell; i += 11) {
+                      i.classList.add("found");
+                  }
+              } else if (direction === "inverse") {
+                  for (let i = startCell; i >= endCell; i--) {
+                      i.classList.add("found");
+                  }
+              }
+          }
+      }
+    </script>
 </body>
 </html>
