@@ -81,36 +81,116 @@
               cell.classList.remove("found");
           }
 
+          const directions = ["horizontal", "vertical", "diagonal", "inverse"];
           const direction = directions[Math.floor(Math.random() * directions.length)];
 
+          const rows = 10;
+          const cols = 10;
+
           // Lógica para encontrar la palabra en la dirección dada
-          // Aquí deberás implementar tus propios algoritmos para buscar las palabras
+          // Implementando las direcciones de manera más completa
+          if (direction === "horizontal") {
+            const maxCol = cols - word.length;
+            const row = Math.floor(Math.random() * rows);
 
-          // Ejemplo para resaltar la palabra encontrada en el cuadro
-          const letters = Array.from(puzzleContainer.children).map(cell => cell.textContent);
-          const wordIndex = letters.join("").indexOf(word);
+            for (let col = 0; col <= maxCol; col++) {
+              let found = true;
 
-          if (wordIndex !== -1) {
-              const startCell = puzzleContainer.children[wordIndex];
-              const endCell = puzzleContainer.children[wordIndex + word.length - 1];
+              for (let i = 0; i < word.length; i++) {
+                const index = row * cols + col + i;
+                const cell = cells[index];
 
-              if (direction === "horizontal") {
-                  for (let i = startCell; i <= endCell; i++) {
-                      i.classList.add("found");
-                  }
-              } else if (direction === "vertical") {
-                  for (let i = startCell; i <= endCell; i += 10) {
-                      i.classList.add("found");
-                  }
-              } else if (direction === "diagonal") {
-                  for (let i = startCell; i <= endCell; i += 11) {
-                      i.classList.add("found");
-                  }
-              } else if (direction === "inverse") {
-                  for (let i = startCell; i >= endCell; i--) {
-                      i.classList.add("found");
-                  }
+                if (cell.textContent !== word[i]) {
+                  found = false;
+                  break;
+                }
               }
+
+              if (found) {
+                for (let i = 0; i < word.length; i++) {
+                  const index = row * cols + col + i;
+                  const cell = cells[index];
+                  cell.classList.add("found");
+                }
+                break;
+              }
+            }
+          } else if (direction === "vertical") {
+            const maxRow = rows - word.length;
+            const col = Math.floor(Math.random() * cols);
+
+            for (let row = 0; row <= maxRow; row++) {
+              let found = true;
+
+              for (let i = 0; i < word.length; i++) {
+                const index = (row + i) * cols + col;
+                const cell = cells[index];
+
+                if (cell.textContent !== word[i]) {
+                  found = false;
+                  break;
+                }
+              }
+
+              if (found) {
+                for (let i = 0; i < word.length; i++) {
+                  const index = (row + i) * cols + col;
+                  const cell = cells[index];
+                  cell.classList.add("found");
+                }
+                break;
+              }
+            }
+          } else if (direction === "diagonal") {
+            const maxRow = rows - word.length;
+            const maxCol = cols - word.length;
+            const row = Math.floor(Math.random() * maxRow);
+            const col = Math.floor(Math.random() * maxCol);
+
+            let found = true;
+
+            for (let i = 0; i < word.length; i++) {
+              const index = (row + i) * cols + col + i;
+              const cell = cells[index];
+
+              if (cell.textContent !== word[i]) {
+                found = false;
+                break;
+              }
+            }
+
+            if (found) {
+              for (let i = 0; i < word.length; i++) {
+                const index = (row + i) * cols + col + i;
+                const cell = cells[index];
+                cell.classList.add("found");
+              }
+            }
+          } else if (direction === "inverse") {
+            const maxRow = rows - word.length;
+            const maxCol = cols - word.length;
+            const row = Math.floor(Math.random() * maxRow) + word.length - 1;
+            const col = Math.floor(Math.random() * maxCol) + word.length - 1;
+
+            let found = true;
+
+            for (let i = 0; i < word.length; i++) {
+              const index = (row - i) * cols + col - i;
+              const cell = cells[index];
+
+              if (cell.textContent !== word[i]) {
+                found = false;
+                break;
+              }
+            }
+
+            if (found) {
+              for (let i = 0; i < word.length; i++) {
+                const index = (row - i) * cols + col - i;
+                const cell = cells[index];
+                cell.classList.add("found");
+              }
+            }
           }
       }
     </script>
