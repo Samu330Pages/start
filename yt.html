@@ -41,95 +41,91 @@
 
     <script>
       const words = ["hola", "amigo", "patata", "sopa", "letras"]; // Palabras para buscar
-      const directions = ["horizontal", "vertical", "diagonal", "inverse"]; // Direcciones posibles
 
       const puzzleContainer = document.getElementById("puzzle");
       const wordList = document.getElementById("words");
 
+      const rows = 10;
+      const cols = 10;
+
       // Generar el cuadro de la sopa de letras
-      for (let i = 0; i < 10; i++) {
-          for (let j = 0; j < 10; j++) {
+      for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
               const letter = document.createElement("div");
+              letter.textContent = randomLetter(); // Función para generar una letra aleatoria
               puzzleContainer.appendChild(letter);
           }
       }
 
-      // Posicionar palabras en la sopa de letras
+      // Agregar las palabras a buscar
       words.forEach(word => {
-          const randDirection = directions[Math.floor(Math.random() * directions.length)];
-          const positions = findWordPositions(word, randDirection);
-
-          positions.forEach(position => {
-              const row = position.row;
-              const col = position.col;
-              const index = row * 10 + col;
-
-              const letter = puzzleContainer.children[index];
-              letter.textContent = word[position.index];
-              letter.classList.add("found");
+          const li = document.createElement("li");
+          li.textContent = word;
+          const button = document.createElement("button");
+          button.textContent = "Buscar";
+          button.addEventListener("click", () => {
+              findWord(word);
           });
+          li.appendChild(button);
+          wordList.appendChild(li);
       });
 
-      function findWordPositions(word, direction) {
-          const positions = [];
+      function randomLetter() {
+          const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          return alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
 
-          if (direction === "horizontal") {
-              const maxCol = 10 - word.length;
-              const row = Math.floor(Math.random() * 10);
-              const col = Math.floor(Math.random() * maxCol);
+      function findWord(word) {
+          const cells = puzzleContainer.children;
 
-              for (let i = 0; i < word.length; i++) {
-                  const position = {
-                      row: row,
-                      col: col + i,
-                      index: i
-                  };
-                  positions.push(position);
-              }
-          } else if (direction === "vertical") {
-              const maxRow = 10 - word.length;
-              const col = Math.floor(Math.random() * 10);
-              const row = Math.floor(Math.random() * maxRow);
-
-              for (let i = 0; i < word.length; i++) {
-                  const position = {
-                      row: row + i,
-                      col: col,
-                      index: i
-                  };
-                  positions.push(position);
-              }
-          } else if (direction === "diagonal") {
-              const maxRow = 10 - word.length;
-              const maxCol = 10 - word.length;
-              const row = Math.floor(Math.random() * maxRow);
-              const col = Math.floor(Math.random() * maxCol);
-
-              for (let i = 0; i < word.length; i++) {
-                  const position = {
-                      row: row + i,
-                      col: col + i,
-                      index: i
-                  };
-                  positions.push(position);
-              }
-          } else if (direction === "inverse") {
-              const maxRow = 10 - word.length;
-              const maxCol = 10 - word.length;
-              const row = Math.floor(Math.random() * maxRow) + word.length - 1;
-              const col = Math.floor(Math.random() * maxCol) + word.length - 1;
-
-              for (let i = 0; i < word.length; i++) {
-                  const position = {
-                      row: row - i,
-                      col: col - i,
-                      index: i
-                  };
-                  positions.push(position);
-              }
+          for (let i = 0; i < cells.length; i++) {
+              const cell = cells[i];
+              cell.classList.remove("found");
           }
 
-          return positions;
+          const directions = ["horizontal", "vertical", "diagonal", "inverse"];
+          const direction = directions[Math.floor(Math.random() * directions.length)];
+
+          // Lógica para encontrar la palabra en la dirección dada
+          // Implementando las direcciones de manera más completa
+
+          if (direction === "horizontal") {
+            let row = Math.floor(Math.random() * rows);
+            let col = Math.floor(Math.random() * (cols - word.length + 1));
+
+            for (let i = 0; i < word.length; i++) {
+              const index = row * cols + col + i;
+              const cell = cells[index];
+              cell.textContent = word[i];
+            }
+          } else if (direction === "vertical") {
+            let row = Math.floor(Math.random() * (rows - word.length + 1));
+            let col = Math.floor(Math.random() * cols);
+
+            for (let i = 0; i < word.length; i++) {
+              const index = (row + i) * cols + col;
+              const cell = cells[index];
+              cell.textContent = word[i];
+            }
+          } else if (direction === "diagonal") {
+            let startRow = Math.floor(Math.random() * (rows - word.length + 1));
+            let startCol = Math.floor(Math.random() * (cols - word.length + 1));
+
+            for (let i = 0; i < word.length; i++) {
+              const index = (startRow + i) * cols + (startCol + i);
+              const cell = cells[index];
+              cell.textContent = word[i];
+            }
+          } else if (direction === "inverse") {
+            let endRow = Math.floor(Math.random() * (rows - word.length + 1)) + word.length - 1;
+            let endCol = Math.floor(Math.random() * (cols - word.length + 1)) + word.length - 1;
+
+            for (let i = 0; i < word.length; i++) {
+              const index = (endRow - i) * cols + (endCol - i);
+              const cell = cells[index];
+              cell.textContent = word[i];
+            }
+          }
       }
     </script>
 </body>
