@@ -1,102 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descarga de Videos y Audios de YouTube</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+    <title>Sopa de Letras</title>
+    <style>
+      #puzzle {
+    width: 300px;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+
+#puzzle div {
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wordList {
+    margin-top: 20px;
+}
+
+#wordList ul {
+    list-style-type: none;
+}
+
+.found {
+    background-color: yellow;
+}
+    </style>
+    <script>
+      const words = ["hola", "amigo", "patata", "sopa", "letras"]; // Palabras para buscar
+
+const puzzleContainer = document.getElementById("puzzle");
+const wordList = document.getElementById("words");
+
+// Generar el cuadro de la sopa de letras
+for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+        const letter = document.createElement("div");
+        letter.textContent = randomLetter(); // Función para generar una letra aleatoria
+        puzzleContainer.appendChild(letter);
     }
-    
-    h1 {
-      margin-bottom: 20px;
-    }
-    
-    input {
-      margin-bottom: 10px;
-    }
-    
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-  </style>
+}
+
+// Agregar las palabras a buscar
+words.forEach(word => {
+    const li = document.createElement("li");
+    li.textContent = word;
+    wordList.appendChild(li);
+});
+
+function randomLetter() {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return alphabet[Math.floor(Math.random() * alphabet.length)];
+}
+    </script>
 </head>
 <body>
-  <h1>Descarga de Videos y Audios de YouTube</h1>
-  
-  <label for="youtubeUrl">URL de YouTube:</label>
-  <input type="text" id="youtubeUrl" placeholder="Ingrese la URL de YouTube">
-  <button onclick="downloadVideo()">Descargar Video</button>
-  <button onclick="downloadAudio()">Descargar Audio</button>
-  
-  <p id="output"></p>
-
-  <script>
-    async function downloadVideo() {
-      const youtubeUrl = document.getElementById("youtubeUrl").value;
-      if (youtubeUrl.trim() === "") {
-        alert("Por favor ingrese una URL válida de YouTube");
-        return;
-      }
-      
-      const response = await fetch("/download-video", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          youtubeUrl
-        })
-      });
-      
-      const data = await response.json();
-      if (data.error) {
-        alert(data.error);
-      } else {
-        const downloadLink = document.createElement("a");
-        downloadLink.href = data.link;
-        downloadLink.download = data.output;
-        downloadLink.textContent = "Descargar video";
-        
-        document.getElementById("output").innerHTML = "";
-        document.getElementById("output").appendChild(downloadLink);
-      }
-    }
-    
-    async function downloadAudio() {
-      const youtubeUrl = document.getElementById("youtubeUrl").value;
-      if (youtubeUrl.trim() === "") {
-        alert("Por favor ingrese una URL válida de YouTube");
-        return;
-      }
-      
-      const response = await fetch("/download-audio", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          youtubeUrl
-        })
-      });
-      
-      const data = await response.json();
-      if (data.error) {
-        alert(data.error);
-      } else {
-        const downloadLink = document.createElement("a");
-        downloadLink.href = data.link;
-        downloadLink.download = data.output;
-        downloadLink.textContent = "Descargar audio";
-        
-        document.getElementById("output").innerHTML = "";
-        document.getElementById("output").appendChild(downloadLink);
-      }
-    }
-  </script>
+    <h1>Sopa de Letras</h1>
+    <div id="puzzle"></div>
+    <div id="wordList">
+        <h2>Palabras para buscar:</h2>
+        <ul id="words"></ul>
+    </div>
 </body>
-  </html>
+</html>
