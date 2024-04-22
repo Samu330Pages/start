@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Descargar Videos de YouTube</title>
+  <title>Descargador de videos</title>
 </head>
 <body>
-  <h1>Descargar Videos de xdYouTube</h1>
-  
-  <label for="videoUrl">URL del video:</label>
-  <input type="text" id="videoUrl">
+  <h1>Descargador de videos</h1>
+
+  <input type="text" id="videoUrl" placeholder="Ingrese el enlace del video">
   <button onclick="descargarVideo()">Descargar</button>
 
   <script>
     async function descargarVideo() {
-      const axios = require('axios');
-
+      const url = 'https://popular-video-downloader.p.rapidapi.com/general';
       const options = {
         method: 'POST',
-        url: 'https://popular-video-downloader.p.rapidapi.com/general',
         headers: {
           'content-type': 'application/json',
           'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
           'X-RapidAPI-Host': 'popular-video-downloader.p.rapidapi.com'
         },
-        data: {
+        body: JSON.stringify({
           url: document.getElementById('videoUrl').value
-        }
+        })
       };
 
       try {
-        const response = await axios.request(options);
-        alert(response.data)
+        const response = await fetch(url, options);
+        const result = await response.text();
+        alert(result);
       } catch (error) {
-        alert(error);
+        console.error(error);
+        alert("¡Hubo un error al descargar el video!");
       }
     }
   </script>
