@@ -4,7 +4,7 @@
   <title>Descargar Videos de YouTube</title>
 </head>
 <body>
-  <h1>Descargar Videos de YouTube</h1>
+  <h1>Descargar Videos de xdYouTube</h1>
   
   <label for="videoUrl">URL del video:</label>
   <input type="text" id="videoUrl">
@@ -29,7 +29,7 @@
 
       try {
         const response = await axios.request(options);
-        alert(JSON.stringify(response.data));
+        alert(response.data)
       } catch (error) {
         alert(error);
       }
