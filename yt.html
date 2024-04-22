@@ -1,132 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Sopa de Letras</title>
-    <style>
-      #puzzle {
-        width: 300px;
-        height: 300px;
-        display: grid;
-        grid-template-columns: repeat(10, 1fr);
-        grid-template-rows: repeat(10, 1fr);
-      }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      #puzzle div {
-        border: 1px solid black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+  <title>HTML</title>
+  
+  <!-- HTML -->
+  
 
-      #wordList {
-        margin-top: 20px;
-      }
-
-      #wordList ul {
-        list-style-type: none;
-      }
-
-      .found {
-        background-color: yellow;
-      }
-    </style>
+  <!-- Custom Styles -->
+  <style>
+      *{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+body {
+  background: white;
+}
+.container {
+  width: 80vmin;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  top: 120px;
+  background-color: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+h3 {
+  background-color: #e4e9fd;
+  text-align: center;
+  padding: 15px 0;
+  cursor: none;
+  font-weight: 600;
+  margin-left: 60px;
+  color: #4d5bf9;
+}
+.tab-content {
+  background-color: #ffffff;
+  padding: 50px 40px;
+}
+.tab-content h4 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #000224;
+  font-weight: 600;
+}
+.tab-content p {
+  text-align: justify;
+  line-height: 1.9;
+  letter-spacing: 0.4px;
+  color: #202238;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.tab-content div {
+  display: none;
+}
+.tab-content .active {
+  display: block;
+}
+.tabs .active {
+  background-color: #ffffff;
+  color: #FFC801;
+}
+h1{
+  text-align: center;
+  font-size: 20px;
+  color: #FFC801;
+}
+.link{
+    width: 99%;
+    height: 45px;
+    margin-top: 15px;
+    text-align: center;
+    border: 2px solid #FFC801;
+    border-radius: 5px;
+}
+.btn{
+  width: 100%;
+  color: #fff;
+  height: 45px;
+  outline: none;
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: none;
+  margin: 15px 0 5px 0;
+  border-radius: 5px;
+  background: #FFC801;
+}
+  </style>
 </head>
+
 <body>
-    <h1>Sopa de Letras</h1>
-    <div id="puzzle"></div>
-    <div id="wordList">
-        <h2>Palabras para buscar:</h2>
-        <ul id="words"></ul>
+  <div class="container">
+    <div class="tabs">
+      <h3 class="active">Video</h3>
+      <h3>Thumbnail</h3>
     </div>
+    <div class="tab-content">
+      <div class="active">
+        <h1>YouTube Video Downloader</h1>
+        <p>Download videos, shorts , playlists from YouTube quickly and easily in HD quality</p>
+        <input type="text" class="link" placeholder="https://youtu.be/a-FX981WxOY?si=OqZ9oJhN-WgjCu10" />
+        <button class="btn" onclick="video()">Get</button>
+      </div>
+  
+      <div>
+        <h1>YouTube Video Thumbnail Downloader</h1>
+        <p>Download thumbnails from YouTube videos in HD and in JPG, PNG, or WEBP format</p>
+  
+        <input type="text" class="link" placeholder="https://youtu.be/a-FX981WxOY?si=OqZ9oJhN-WgjCu10" />
+  
+        <button class="btn" onclick="video()">Get</button>
+      </div>
+    </div>
+  </div>
+  <!-- Project -->
+  <script>
+      let tabs = document.querySelectorAll(".tabs h3");
+let tabContents = document.querySelectorAll(".tab-content div");
 
-    <script>
-      const words = ["hola", "amigo", "patata", "sopa", "letras"]; // Palabras para buscar
+tabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => {
+    tabContents.forEach((content) => {
+      content.classList.remove("active");
+    });
+    tabs.forEach((tab) => {
+      tab.classList.remove("active");
+    });
+    tabContents[index].classList.add("active");
+    tabs[index].classList.add("active");
+  });
+});
 
-      const puzzleContainer = document.getElementById("puzzle");
-      const wordList = document.getElementById("words");
+var link = document.querySelector('.link');
+// video download button function 
+function video() {
+  if (link.value != "") {
+    if (link.value.indexOf("https://youtu.be/") != -1)
+    {
 
-      const rows = 10;
-      const cols = 10;
+      var YTurl = link.value.replace("https://youtu.be/", "https://www.000tube.com/watch?v=");
 
-      // Generar el cuadro de la sopa de letras
-      for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) {
-              const letter = document.createElement("div");
-              letter.textContent = randomLetter(); // Función para generar una letra aleatoria
-              puzzleContainer.appendChild(letter);
-          }
-      }
+      window.open(YTurl, '_bhank');
+    }
+    else {
 
-      // Agregar las palabras a buscar
-      words.forEach(word => {
-          const li = document.createElement("li");
-          li.textContent = word;
-          const button = document.createElement("button");
-          button.textContent = "Buscar";
-          button.addEventListener("click", () => {
-              findWord(word);
-          });
-          li.appendChild(button);
-          wordList.appendChild(li);
-      });
+      var YTurl = link.value.replace("you", "000");
 
-      function randomLetter() {
-          const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-          return alphabet[Math.floor(Math.random() * alphabet.length)];
-      }
-
-      function findWord(word) {
-          const cells = puzzleContainer.children;
-
-          for (let i = 0; i < cells.length; i++) {
-              const cell = cells[i];
-              cell.classList.remove("found");
-          }
-
-          const directions = ["horizontal", "vertical", "diagonal", "inverse"];
-          const direction = directions[Math.floor(Math.random() * directions.length)];
-
-          // Lógica para encontrar la palabra en la dirección dada
-          // Implementando las direcciones de manera más completa
-
-          if (direction === "horizontal") {
-            let row = Math.floor(Math.random() * rows);
-            let col = Math.floor(Math.random() * (cols - word.length + 1));
-
-            for (let i = 0; i < word.length; i++) {
-              const index = row * cols + col + i;
-              const cell = cells[index];
-              cell.textContent = word[i];
-            }
-          } else if (direction === "vertical") {
-            let row = Math.floor(Math.random() * (rows - word.length + 1));
-            let col = Math.floor(Math.random() * cols);
-
-            for (let i = 0; i < word.length; i++) {
-              const index = (row + i) * cols + col;
-              const cell = cells[index];
-              cell.textContent = word[i];
-            }
-          } else if (direction === "diagonal") {
-            let startRow = Math.floor(Math.random() * (rows - word.length + 1));
-            let startCol = Math.floor(Math.random() * (cols - word.length + 1));
-
-            for (let i = 0; i < word.length; i++) {
-              const index = (startRow + i) * cols + (startCol + i);
-              const cell = cells[index];
-              cell.textContent = word[i];
-            }
-          } else if (direction === "inverse") {
-            let endRow = Math.floor(Math.random() * (rows - word.length + 1)) + word.length - 1;
-            let endCol = Math.floor(Math.random() * (cols - word.length + 1)) + word.length - 1;
-
-            for (let i = 0; i < word.length; i++) {
-              const index = (endRow - i) * cols + (endCol - i);
-              const cell = cells[index];
-              cell.textContent = word[i];
-            }
-          }
-      }
-    </script>
+      window.open(YTurl, '_bhank');
+    }
+  }
+}
+  </script>
 </body>
 </html>
