@@ -1,38 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Descargador de videos</title>
+    <title>YouTube Downloader</title>
+    <script>
+        async function downloadVideo() {
+            const url = 'https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=' + document.getElementById('youtubeLink').value;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
+                    'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.text();
+                alert(result);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    </script>
 </head>
 <body>
-  <h1>Descargador de videos</h1>
+    <label for="youtubeLink">YouTube Video Link:</label>
+    <input type="text" id="youtubeLink">
 
-  <input type="text" id="videoUrl" placeholder="Ingrese el enlace del video">
-  <button onclick="descargarVideo()">Descargar</button>
-
-  <script>
-    async function descargarVideo() {
-      const url = 'https://popular-video-downloader.p.rapidapi.com/general';
-      const options = {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
-          'X-RapidAPI-Host': 'popular-video-downloader.p.rapidapi.com'
-        },
-        body: JSON.stringify({
-          url: document.getElementById('videoUrl').value
-        })
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const result = await response.text();
-        alert(result);
-      } catch (error) {
-        console.error(error);
-        alert("¡Hubo un error al descargar el video!");
-      }
-    }
-  </script>
+    <button onclick="downloadVideo()">Descargar</button>
 </body>
 </html>
