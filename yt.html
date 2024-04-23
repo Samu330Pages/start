@@ -35,81 +35,220 @@
       text-align: center;
     }
 
-input {
-  margin-bottom: 10px;
-  font-size: 20px;
-  padding: 20px;
-  background-color: white; /* Cambia el color de fondo a blanco */
-  border: none;
-  box-shadow: red;
-  border-radius: 20px;
-  border: 1px solid #c4c4c4; /* Agrega un borde gris para resaltar el input */
-}
+    input {
+      margin-bottom: 10px;
+      font-size: 20px;
+      padding: 20px;
+      background-color: white;
+      border: none;
+      box-shadow: red;
+      border-radius: 20px;
+      border: 1px solid #c4c4c4;
+    }
 
-input::placeholder {
-  color: #000; /* Cambia el color del texto del placeholder a negro */
-  opacity: 0.7; /* Para darle una ligera transparencia */
-}
+    input::placeholder {
+      color: #000;
+      opacity: 0.7;
+    }
 
-input:focus {
-  outline: none;
-  box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
-}
+    input:focus {
+      outline: none;
+      box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
+    }
 
-button {
-  padding: 20px 30px;
-  font-size: 20px;
-  background-color: #00FFFF;
-  border: none;
-  border-radius: 20px;
-  color: #000; /* Cambia el color del texto a negro */
-  cursor: pointer;
-}
+    button {
+      padding: 20px 30px;
+      font-size: 20px;
+      background-color: #00FFFF;
+      border: none;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+    }
 
     button:hover {
       background-color: #00CED1;
       box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
     }
+
+    /* Estilos para la ventana emergente */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .popup.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-content {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      text-align: center;
+      position: relative; /* Agrega esta línea */
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      animation: rgbAnimation 2s infinite;
+    }
+
+    @keyframes rgbAnimation {
+      0% {
+        color: red;
+      }
+      33% {
+        color: green;
+      }
+      66% {
+        color: blue;
+      }
+      100% {
+        color: red;
+      }
+    }
+
+    .close-button:hover {
+      animation: none;
+      color: #FF0000;
+    }
+
+    /* Estilos para la imagen */
+    .popup-image {
+      height: 150px;
+      width: auto;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px;
+    }
+
+    /* Estilos para las pestañas */
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background-color: #c4c4c4;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background-color: #00CED1;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      border: 1px solid #c4c4c4;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Estilos para la tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #c4c4c4;
+    }
+
+    th {
+      background-color: #00FFFF;
+    }
+
   </style>
 
-<script>
-    async function downloadVideo() {
-    const link = document.getElementById('youtubeLink').value;
-    const videoId = getYouTubeVideoId(link);
+  <script>
+    // ... Código JavaScript existente ...
 
-    const url = 'https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=' + videoId;
-    const options = {
+    async function downloadVideo() {
+      const link = document.getElementById('youtubeLink').value;
+      const videoId = getYouTubeVideoId(link);
+
+      const url = 'https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=' + videoId;
+      const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
-            'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
+          'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
+          'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
         }
-    };
+      };
 
-    try {
+      try {
         const response = await fetch(url, options);
         const result = await response.text();
         alert(result);
-    } catch (error) {
+      } catch (error) {
         console.error(error);
+      }
     }
-}
 
-function getYouTubeVideoId(link) {
-    let videoId = '';
+    function getYouTubeVideoId(link) {
+      let videoId = '';
 
-    if (link.includes('youtu.be/')) {
+      if (link.includes('youtu.be/')) {
         videoId = link.split('youtu.be/')[1];
-    } else if (link.includes('watch?v=')) {
+      } else if (link.includes('watch?v=')) {
         videoId = link.split('watch?v=')[1];
-    } else {
+      } else {
         // El enlace de YouTube no es válido
         alert('Enlace de YouTube no válido');
+      }
+
+      return videoId;
     }
 
-    return videoId;
-}
-    </script>
+    function openPopup() {
+      document.getElementById('popup').classList.add('active');
+      // Cambia la pestaña activa a la pestaña de video
+      changeTab('videoTab');
+    }
+
+    function closePopup() {
+      document.getElementById('popup').classList.remove('active');
+    }
+
+    function changeTab(tabName) {
+      const tabContents = document.getElementsByClassName('tab-content');
+      const tabs = document.getElementsByClassName('tab');
+
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+        tabs[i].classList.remove('active');
+      }
+
+      document.getElementById(tabName).classList.add('active');
+      document.querySelector(.tab[data-tab="${tabName}"]).classList.add('active');
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -118,8 +257,76 @@ function getYouTubeVideoId(link) {
 
   <div class="content">
     <div class="container">
-      <input type="text" placeholder="Pega aquí el link de YT" id="youtubeLink">
-      <button onClick="downloadVideo()">Descargar</button>
+      <input type="text" placeholder="Pega aquí el enlace de YouTube" id="youtubeLink">
+      <button onclick="openPopup()">Descargar</button>
+    </div>
+  </div>
+
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <span class="close-button" onclick="closePopup()">X</span>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6N3WsAdLVPmBQl_FY0ZHOVv3Hx5-g2CP1cUcTCiB4rA&s" alt="My Image" class="popup-image">
+      <h2>Ventana emergente</h2>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="videoTab" onclick="changeTab('videoTab')">Video</div>
+        <div class="tab" data-tab="audioTab" onclick="changeTab('audioTab')">Audio</div>
+        <div class="tab" data-tab="relatedTab" onclick="changeTab('relatedTab')">Relacionados</div>
+      </div>
+
+      <div id="videoTab" class="tab-content active">
+        <table>
+          <tr>
+            <th>Calidad</th>
+            <th>Tamaño</th>
+            <th>Descargar</th>
+          </tr>
+          <tr>
+            <td>Calidad 1</td>
+            <td>Tamaño 1</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 3</td>
+            <td>Tamaño 3</td>
+            <td><button>Descargar</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="audioTab" class="tab-content">
+        <table>
+          <tr>
+            <th>Calidad</th>
+            <th>Tamaño</th>
+            <th>Descargar</th>
+          </tr>
+          <tr>
+            <td>Calidad 1</td>
+            <td>Tamaño 1</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 3</td>
+            <td>Tamaño 3</td>
+            <td><button>Descargar</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="relatedTab" class="tab-content">
+        <!-- Contenido de la pestaña relacionados -->
+      </div>
     </div>
   </div>
 </body>
