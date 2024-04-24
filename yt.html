@@ -339,6 +339,27 @@
     async function download() {
       const youtubeLink = document.getElementById('youtubeLink').value;
 
+      // Verificar si el campo de entrada está vacío
+  if (!youtubeLink) {
+    Swal.fire({
+  	title: "Y el link?",
+  	text: "Por favor, ingrese un enlace de YouTube",
+  	icon: "question"
+	});
+    return;
+  }
+
+  // Verificar si el enlace no es válido
+  var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+  if (!pattern.test(youtubeLink)) {
+    Swal.fire({
+  	title: "Link de YouTube!",
+  	text: "Ingrese un enlace de YouTube válido",
+  	icon: "error"
+	});
+    return;
+  }
+
       // Obtener el ID del vídeo
       const videoId = getVideoId(youtubeLink);
 
@@ -391,29 +412,6 @@
     }
 
     function openPopup() {
-  var youtubeLink = document.getElementById('youtubeLink').value;
-  
-  // Verificar si el campo de entrada está vacío
-  if (!youtubeLink) {
-    Swal.fire({
-  	title: "Y el link?",
-  	text: "Por favor, ingrese un enlace de YouTube",
-  	icon: "question"
-	});
-    return;
-  }
-
-  // Verificar si el enlace no es válido
-  var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-  if (!pattern.test(youtubeLink)) {
-    Swal.fire({
-  	title: "Link de YouTube!",
-  	text: "Ingrese un enlace de YouTube válido",
-  	icon: "error"
-	});
-    return;
-  }
-
   document.getElementById('popup').classList.add('active');
 }
 
