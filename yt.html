@@ -4,6 +4,12 @@
   <title>Mi Página Ajustable</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- Agregar SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Agregar FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       background-color: white;
@@ -336,12 +342,6 @@
       // Obtener el ID del vídeo
       const videoId = getVideoId(youtubeLink);
 
-      // Verificar si se pudo obtener el ID
-      if (!videoId) {
-        alert('El enlace de YouTube no es válido');
-        return;
-      }
-
       // Llevar a cabo la función de descarga con el ID
       const url = `https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=${videoId}`;
       const options = {
@@ -395,14 +395,22 @@
   
   // Verificar si el campo de entrada está vacío
   if (!youtubeLink) {
-    alert('Por favor, ingrese un enlace de YouTube');
+    Swal.fire({
+  	title: "Y el link?",
+  	text: "Por favor, ingrese un enlace de YouTube",
+  	icon: "question"
+	});
     return;
   }
 
   // Verificar si el enlace no es válido
   var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
   if (!pattern.test(youtubeLink)) {
-    alert('Ingrese un enlace de YouTube válido');
+    Swal.fire({
+  	title: "Link de YouTube!",
+  	text: "Ingrese un enlace de YouTube válido",
+  	icon: "error"
+	});
     return;
   }
 
