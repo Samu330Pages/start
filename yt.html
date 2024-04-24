@@ -235,7 +235,7 @@
   <div class="content">
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
-      <button onclick="openPopup()">Descargar</button>
+      <button onclick="download(); openPopup()">Descargar</button>
     </div>
   </div>
 
@@ -328,6 +328,56 @@
   </div>
 
   <script>
+    
+    // Función principal para descargar
+    async function download() {
+      const youtubeLink = document.getElementById('youtubeLink').value;
+
+      // Obtener el ID del vídeo
+      const videoId = getVideoId(youtubeLink);
+
+      // Verificar si se pudo obtener el ID
+      if (!videoId) {
+        alert('El enlace de YouTube no es válido');
+        return;
+      }
+
+      // Llevar a cabo la función de descarga con el ID
+      const url = `https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=${videoId}`;
+      const options = {
+        method: 'GET',
+        headers: {
+          'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
+          'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
+        }
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        alert(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // Función auxiliar para obtener el ID del vídeo
+    function getVideoId(url) {
+      let videoId = '';
+
+      // Obtener el ID del enlace en Android
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1];
+      }
+      // Obtener el ID del enlace en PC
+      else if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('youtube.com/watch?v=')[1];
+      }
+
+      return videoId;
+    }
+    
+    
     let activeTab = 'videoTab';
 
     function changeTab(tabId) {
@@ -341,8 +391,23 @@
     }
 
     function openPopup() {
-      document.getElementById('popup').classList.add('active');
-    }
+  var youtubeLink = document.getElementById('youtubeLink').value;
+  
+  // Verificar si el campo de entrada está vacío
+  if (!youtubeLink) {
+    alert('Por favor, ingrese un enlace de YouTube');
+    return;
+  }
+
+  // Verificar si el enlace no es válido
+  var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+  if (!pattern.test(youtubeLink)) {
+    alert('Ingrese un enlace de YouTube válido');
+    return;
+  }
+
+  document.getElementById('popup').classList.add('active');
+}
 
     function closePopup() {
       document.getElementById('popup').classList.remove('active');
