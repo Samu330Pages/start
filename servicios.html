@@ -1,188 +1,550 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <title>Mi Página Ajustable</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- Agregar SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Agregar FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    body {
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
 
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
+    /* Estilos para la barra de desplazamiento */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background-color: #fff;
+    }
 
-h1 {
-  text-align: center;
-  color: #333;
-}
+    ::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      background-clip: content-box;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      animation: rainbow-animation 6s infinite;
+      background-color: #00ffff;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #00CED1;
+    }
 
-form {
-  margin-bottom: 20px;
-}
+    @keyframes rainbow-animation {
+      0% {
+        background-position: 0% 0%;
+      }
+      50% {
+        background-position: 100% 100%;
+      }
+      100% {
+        background-position: 0% 0%;
+      }
+    }
 
-label {
-  display: block;
-  margin-bottom: 10px;
-  color: #666;
-}
+    /* Resto de estilos del documento */
+    header {
+      background-color: #ff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding:6px;
+      text-align: center;
+    }
 
-.input-wrapper {
-  --padding: 16px;
-  --focus-color: black;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-input {
-  padding: var(--padding);
-  border: 2px solid gray;
-  outline: none;
-  border-radius: 6px;
-}
-.placeholder {
-  position: absolute;
-  background-color: white;
-  color: gray;
-  left: var(--padding);
-  padding: 0 4px;
-  transition: all 0.2s ease-in;
-}
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      text-align: center;
+    }
 
-input:is(:focus, :valid) {
-  border: 2px solid var(--focus-color);
-}
+    input {
+      margin-bottom: 10px;
+      font-size: 20px;
+      padding: 20px;
+      background-color: white;
+      border: none;
+      border-radius: 20px;
+      border: 1px solid #c4c4c4;
+    }
 
-input:is(:focus, :valid) + .placeholder {
-  transform: translatey(calc(-1 * var(--padding) - 14px));
-  font-size: 16px;
-  color: var(--focus-color);
-}    
+    input::placeholder {
+      color: #000;
+      opacity: 0.7;
+    }
 
-input1 {
+    input:focus {
+      outline: none;
+      box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
+    }
+
+    button {
+      padding: 20px 30px;
+      font-size: 20px;
+      background-color: #00FFFF;
+      border: none;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00CED1;
+      box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .popup.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-content {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      animation: rgbAnimation 2s infinite;
+    }
+
+    @keyframes rgbAnimation {
+      0% {
+        color: red;
+      }
+      33% {
+        color: green;
+      }
+      66% {
+        color: blue;
+      }
+      100% {
+        color: red;
+      }
+    }
+
+    .close-button:hover {
+      animation: none;
+      color: #FF0000;
+    }
+
+    .popup-image {
+      height: 200px;
+      width: auto;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background-color: #c4c4c4;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background-color: #00CED1;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      border: 1px solid #c4c4c4;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #c4c4c4;
+    }
+
+    th {
+      background-color: #00FFFF;
+    }
+    
+  #particles-js {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.btn1 {
-            margin: 10px;
-            background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
-            background-size: 100%;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 100px;
-            color: white;
-            border: none;
-            text-transform: uppercase;
-            padding: 1em 2em;
-            cursor: pointer;
-            transition: all 500ms ease;
-            box-shadow: 0 4px 6px -1px hsla(0, 0%, 0%, 0.1), 0 2px 4px -2px hsla(0, 0%, 0%, 0.1);
-        }
-
-.five {
-            background: linear-gradient(to right, #0000ff, #ff00ff, #00fff2, #5312e0);
-            background-size: 350% 100%;
-
-            transition: all .4s ease-in-out;
-        }
-
-        .five:hover {
-            background-position: 100% 0;
-        }
-
-.btn1:hover {
-            animation-name: flow;
-            animation-duration: 500ms;
-            animation-timing-function: linear;
-        }
-@keyframes flow {
-            0% {
-    background-position: 0% 50%;
+  height: 100%;
   }
-  100% {
-    background-position: 100%;
-  }
-        }
-
-button {
-  display: inline-block;
-  margin-right: 10px;
-  padding: 8px 16px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    
+.shaper {
+  background: gray url(https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk5Ni0wMDlfMS1rcm9pcjRkay5qcGc.jpg) repeat 0 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  height: 550px;
+  padding-top: 120px;
+  box-sizing: border-box;
+  -webkit-animation: slide 30s linear infinite;
+}
+@-webkit-keyframes slide {
+    from { background-position: 0 0; }
+    to { background-position: -512px -512px; }
 }
 
-.btn-puesto {
-  background-color: #000;
-}
-
-.btn-ter {
-  background-color: blue;
-}
-
-#listaEspera {
-  list-style-type: none;
-  padding: 0;
-}
-
-#listaEspera li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-#listaEspera li button {
-  margin-left: 10px;
-  background-color: #dc3545;
-}
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1><i class="fa-solid fa-car-on fa-fade" style="color: #ff0000;"></i></i> Lista de espera</h1>
-    <form id="formulario">
-      <div class="input-wrapper">
-      <!--<label for="nombre">Servicio:</label>-->
-      <input type="text" id="nombre" required>
-      <label 
-             for='nombre' 
-             class='placeholder'>
-        Servicio:
-      </label>
-      </div>
-      <label for="terminal">Terminal:</label>
-      <button type="button" class="btn-ter">T2 NAC <i class="fa-solid fa-pepper-hot" style="color: #ff0000;"></i></button>
-      <button type="button" class="btn-ter">T2 INTER <i class="fa-solid fa-earth-americas" style="color: #00e1ff;"></i></button>
-      <button type="button" class="btn-ter">T3 <i class="fa-regular fa-3" style="color: #ffff00;"></i></button>
-      <button type="button" class="btn-ter">T4 <i class="fa-solid fa-4" style="color: #00ff00;"></i></button>
-      <br>
-      <label for="puesto">Llegada:</label>
-      <button type="button" class="btn-puesto">Local <i class="fa-solid fa-hotel"></i></button>
-      <button type="button" class="btn-puesto">CUN <i class="fa-solid fa-umbrella-beach""></i></button>
-      <button type="button" class="btn-puesto">Ferry <i class="fa-solid fa-ferry"></i></button>
-      <button type="button" class="btn-puesto">PTM <i class="fa-solid fa-bridge"></i></button>
-
-      <label for="puesto"></label>
-      <button type="button" class="btn-puesto">PDC <i class="fa-solid fa-cart-flatbed-suitcase"></i></button>
-      <button type="button" class="btn-puesto">CORREDOR <i class="fa-solid fa-skull"></i></button>
-
-      <button class="btn1 five" type="submit" id="agregar">Agregar a la lista <i class="fa-solid fa-check fa-bounce" style="color: #00ff00;"></i></button>
-    </form>
-
-    <ul id="listaEspera"></ul>
+<body class="shaper">
+  <div id="particles-js"></div>
+  <header>
+    <h1>YouTube Downloader <i class="fa-brands fa-youtube" style="color: #ff0000;"></i></h1>
+  </header>
+  
+  <div class="content">
+    <div class="container">
+      <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
+      <button onclick="download()">Descargar <i class="fa-solid fa-download" style="color: #8000ff;"></i></button>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <span class="close-button" onclick="closePopup()">X</span>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6N3WsAdLVPmBQl_FY0ZHOVv3Hx5-g2CP1cUcTCiB4rA&s" alt="My Image" class="popup-image">
+      <h2>Ventana emergente</h2>
+
+      <div class="tabs">
+        <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
+        <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
+        <div class="tab" onclick="changeTab('relatedTab')" data-tab="relatedTab">Relacionados</div>
+      </div>
+
+      <div id="videoTab" class="tab-content active">
+        <table>
+          <tr>
+            <th>Calidad</th>
+            <th>Tamaño</th>
+            <th>Descargar</th>
+          </tr>
+          <tr>
+            <td>Calidad 1</td>
+            <td>Tamaño 1</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 3</td>
+            <td>Tamaño 3</td>
+            <td><button>Descargar</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="audioTab" class="tab-content">
+        <table>
+          <tr>
+            <th>Calidad</th>
+            <th>Tamaño</th>
+            <th>Descargar</th>
+          </tr>
+          <tr>
+            <td>Calidad 1</td>
+            <td>Tamaño 1</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 2</td>
+            <td>Tamaño 2</td>
+            <td><button>Descargar</button></td>
+          </tr>
+          <tr>
+            <td>Calidad 3</td>
+            <td>Tamaño 3</td>
+            <td><button>Descargar</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="relatedTab" class="tab-content">
+        <!-- Contenido de la pestaña relacionados -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+    // Función principal para descargar
+    async function download() {
+      const youtubeLink = document.getElementById('youtubeLink').value;
+
+      // Verificar si el campo de entrada está vacío
+  if (!youtubeLink) {
+    Swal.fire({
+  	title: "Y el link?",
+  	text: "Por favor, ingrese un enlace de YouTube",
+  	icon: "question"
+	});
+    return;
+  }
+
+  // Verificar si el enlace no es válido
+  var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+  if (!pattern.test(youtubeLink)) {
+    Swal.fire({
+  	title: "Ingrese un enlace de YouTube válido",
+  	icon: "error"
+	});
+    return;
+  }
+
+      // Obtener el ID del vídeo
+      const videoId = getVideoId(youtubeLink);
+
+      // Llevar a cabo la función de descarga con el ID
+      const url = `https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=${videoId}`;
+      const options = {
+        method: 'GET',
+        headers: {
+          'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
+          'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
+        }
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+	openPopup()
+        alert(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // Función auxiliar para obtener el ID del vídeo
+    function getVideoId(url) {
+      let videoId = '';
+
+      // Obtener el ID del enlace en Android
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1];
+      }
+      // Obtener el ID del enlace en PC
+      else if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('youtube.com/watch?v=')[1];
+      }
+
+      return videoId;
+    }
+    
+    
+    let activeTab = 'videoTab';
+
+    function changeTab(tabId) {
+      document.getElementById(activeTab).classList.remove('active');
+      document.querySelector('[data-tab="' + activeTab + '"]').classList.remove('active');
+
+      document.getElementById(tabId).classList.add('active');
+      document.querySelector('[data-tab="' + tabId + '"]').classList.add('active');
+
+      activeTab = tabId;
+    }
+
+    function openPopup() {
+  document.getElementById('popup').classList.add('active');
+}
+
+    function closePopup() {
+      document.getElementById('popup').classList.remove('active');
+    }
+    
+
+    particlesJS('particles-js', {
+    "particles": {
+      "number": {
+        "value": 90,
+        "density": {
+          "enable": true,
+          "value_area": 800
+        }
+      },
+      "color": {
+        "value": "#00CED1"
+      },
+      "shape": {
+        "type": "triangle",
+        "stroke": {
+          "width": 0,
+          "color": "#000000"
+        },
+        "polygon": {
+          "nb_sides": 5
+        },
+        "image": {
+          "src": "img/github.svg",
+          "width": 100,
+          "height": 100
+        }
+      },
+      "opacity": {
+        "value": 0.5,
+        "random": false,
+        "anim": {
+          "enable": false,
+          "speed": 1,
+          "opacity_min": 0.1,
+          "sync": false
+        }
+      },
+      "size": {
+        "value": 5,
+        "random": true,
+        "anim": {
+          "enable": false,
+          "speed": 40,
+          "size_min": 0.1,
+          "sync": false
+        }
+      },
+      "line_linked": {
+        "enable": true,
+        "distance": 150,
+        "color": "#ff00ff",
+        "opacity": 0.4,
+        "width": 1
+      },
+      "move": {
+        "enable": true,
+        "speed": 6,
+        "direction": "none",
+        "random": false,
+        "straight": false,
+        "out_mode": "out",
+        "bounce": false,
+        "attract": {
+          "enable": false,
+          "rotateX": 600,
+          "rotateY": 1200
+        }
+      }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": {
+        "onhover": {
+          "enable": true,
+          "mode": "repulse"
+        },
+        "onclick": {
+          "enable": true,
+          "mode": "push"
+        },
+        "resize": true
+      },
+      "modes": {
+        "grab": {
+          "distance": 400,
+          "line_linked": {
+            "opacity": 1
+          }
+        },
+        "bubble": {
+          "distance": 400,
+          "size": 40,
+          "duration": 2,
+          "opacity": 8,
+          "speed": 3
+        },
+        "repulse": {
+          "distance": 200,
+          "duration": 0.4
+        },
+        "push": {
+          "particles_nb": 4
+        },
+        "remove": {
+          "particles_nb": 2
+        }
+      }
+    },
+    "retina_detect": true
+  });
+  </script>
 </body>
 </html>
