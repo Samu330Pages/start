@@ -241,7 +241,7 @@
   <div class="content">
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
-      <button onclick="download(); openPopup()">Descargar</button>
+      <button onclick="download()">Descargar</button>
     </div>
   </div>
 
@@ -376,6 +376,7 @@
       try {
         const response = await fetch(url, options);
         const result = await response.text();
+	openPopup()
         alert(result);
       } catch (error) {
         console.error(error);
