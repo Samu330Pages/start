@@ -13,13 +13,13 @@
 <body class="shaper">
   <div id="particles-js"></div>
   <header>
-    <h1>YouTube Downloader</h1>
+    <h1>YouTube Downloader <i class="fa-brands fa-youtube" style="color: #ff0000;"></i></h1>
   </header>
 
   <div class="content">
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
-      <button onclick="download()">Descargar</button>
+      <button onclick="download()">Descargar <i class="fa-solid fa-download" style="color: #c800ff;"></i></button>
     </div>
   </div>
 
@@ -27,8 +27,13 @@
     <div class="popup-content">
       <span class="close-button" onclick="closePopup()">X</span>
       <img src="" alt="My Image" class="popup-image" id="popupImage">
-      <h2>Ventana emergente</h2>
-
+      <h1 id="vidName"></h1><i class="fa-solid fa-eye"></i>
+      <h3 id="channelViews"></h3>
+      <div class="channel-info">
+    	<img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
+    	<h3 id="channelName"></h3>
+  	  </div>
+	  <p id="descr"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -152,11 +157,27 @@
       };
 
       try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        openPopup(result.thumbnails[result.thumbnails.length - 1].url);
-      } catch (error) {
-        alert(error);
+    		const response = await fetch(url, options);
+    		const result = await response.json();
+
+    		// Obtener los datos del canal
+    		const channelData = result.channel;
+        	const vidName = result.title;
+        	const channelViews = result.viewCount;
+        	const descr = result.description;
+    		const avatarUrl = channelData.avatar[0].url;
+    		const channelName = channelData.name;
+
+    		// Mostrar la imagen y el nombre del canal en el popup
+        	document.getElementById('vidName').innerText = vidName;
+        	document.getElementById('channelViews').innerText = `Vistas: ${channelViews}`;
+        	document.getElementById('descr').innerText = descr;
+    		document.getElementById('avatarImage').src = avatarUrl;
+    		document.getElementById('channelName').innerText = channelName;
+
+    		openPopup(result.thumbnails[result.thumbnails.length - 1].url);
+  	} catch (error) {
+    		Swal.fire(error);
       }
     }
 
