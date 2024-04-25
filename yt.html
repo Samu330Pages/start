@@ -7,9 +7,7 @@
   <!-- Agregar SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Agregar FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body class="shaper">
@@ -17,7 +15,7 @@
   <header>
     <h1>YouTube Downloader</h1>
   </header>
-  
+
   <div class="content">
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
@@ -28,7 +26,7 @@
   <div class="popup" id="popup">
     <div class="popup-content">
       <span class="close-button" onclick="closePopup()">X</span>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6N3WsAdLVPmBQl_FY0ZHOVv3Hx5-g2CP1cUcTCiB4rA&s" alt="My Image" class="popup-image">
+      <img src="" alt="My Image" class="popup-image" id="popupImage">
       <h2>Ventana emergente</h2>
 
       <div class="tabs">
@@ -114,31 +112,31 @@
   </div>
 
   <script>
-    
+
     // Función principal para descargar
     async function download() {
       const youtubeLink = document.getElementById('youtubeLink').value;
 
       // Verificar si el campo de entrada está vacío
-  if (!youtubeLink) {
-    Swal.fire({
-  	title: "Y el link?",
-  	text: "Por favor, ingrese un enlace de YouTube",
-  	icon: "question"
-	});
-    return;
-  }
+      if (!youtubeLink) {
+        Swal.fire({
+          title: "Y el link?",
+          text: "Por favor, ingrese un enlace de YouTube",
+          icon: "question"
+        });
+        return;
+      }
 
-  // Verificar si el enlace no es válido
-  var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-  if (!pattern.test(youtubeLink)) {
-    Swal.fire({
-  	title: "Link de YouTube!",
-  	text: "Ingrese un enlace de YouTube válido",
-  	icon: "error"
-	});
-    return;
-  }
+      // Verificar si el enlace no es válido
+      var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+      if (!pattern.test(youtubeLink)) {
+        Swal.fire({
+          title: "Link de YouTube!",
+          text: "Ingrese un enlace de YouTube válido",
+          icon: "error"
+        });
+        return;
+      }
 
       // Obtener el ID del vídeo
       const videoId = getVideoId(youtubeLink);
@@ -155,11 +153,10 @@
 
       try {
         const response = await fetch(url, options);
-        const result = await response.text();
-	openPopup()
-        alert(result);
+        const result = await response.json();
+        openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
-        console.error(error);
+        alert(error);
       }
     }
 
@@ -178,8 +175,7 @@
 
       return videoId;
     }
-    
-    
+
     let activeTab = 'videoTab';
 
     function changeTab(tabId) {
@@ -192,125 +188,125 @@
       activeTab = tabId;
     }
 
-    function openPopup() {
-  document.getElementById('popup').classList.add('active');
-}
+    function openPopup(imageUrl) {
+      document.getElementById('popup').classList.add('active');
+      document.getElementById('popupImage').src = imageUrl;
+    }
 
     function closePopup() {
       document.getElementById('popup').classList.remove('active');
     }
-    
 
     particlesJS('particles-js', {
-    "particles": {
-      "number": {
-        "value": 90,
-        "density": {
-          "enable": true,
-          "value_area": 800
-        }
-      },
-      "color": {
-        "value": "#00CED1"
-      },
-      "shape": {
-        "type": "triangle",
-        "stroke": {
-          "width": 0,
-          "color": "#000000"
-        },
-        "polygon": {
-          "nb_sides": 5
-        },
-        "image": {
-          "src": "img/github.svg",
-          "width": 100,
-          "height": 100
-        }
-      },
-      "opacity": {
-        "value": 0.5,
-        "random": false,
-        "anim": {
-          "enable": false,
-          "speed": 1,
-          "opacity_min": 0.1,
-          "sync": false
-        }
-      },
-      "size": {
-        "value": 5,
-        "random": true,
-        "anim": {
-          "enable": false,
-          "speed": 40,
-          "size_min": 0.1,
-          "sync": false
-        }
-      },
-      "line_linked": {
-        "enable": true,
-        "distance": 150,
-        "color": "#ff00ff",
-        "opacity": 0.4,
-        "width": 1
-      },
-      "move": {
-        "enable": true,
-        "speed": 6,
-        "direction": "none",
-        "random": false,
-        "straight": false,
-        "out_mode": "out",
-        "bounce": false,
-        "attract": {
-          "enable": false,
-          "rotateX": 600,
-          "rotateY": 1200
-        }
-      }
-    },
-    "interactivity": {
-      "detect_on": "canvas",
-      "events": {
-        "onhover": {
-          "enable": true,
-          "mode": "repulse"
-        },
-        "onclick": {
-          "enable": true,
-          "mode": "push"
-        },
-        "resize": true
-      },
-      "modes": {
-        "grab": {
-          "distance": 400,
-          "line_linked": {
-            "opacity": 1
+      "particles": {
+        "number": {
+          "value": 90,
+          "density": {
+            "enable": true,
+            "value_area": 800
           }
         },
-        "bubble": {
-          "distance": 400,
-          "size": 40,
-          "duration": 2,
-          "opacity": 8,
-          "speed": 3
+        "color": {
+          "value": "#00CED1"
         },
-        "repulse": {
-          "distance": 200,
-          "duration": 0.4
+        "shape": {
+          "type": "triangle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          },
+          "image": {
+            "src": "img/github.svg",
+            "width": 100,
+            "height": 100
+          }
         },
-        "push": {
-          "particles_nb": 4
+        "opacity": {
+          "value": 0.5,
+          "random": false,
+          "anim": {
+            "enable": false,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
         },
-        "remove": {
-          "particles_nb": 2
+        "size": {
+          "value": 5,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 40,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#ff00ff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 6,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
         }
-      }
-    },
-    "retina_detect": true
-  });
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 400,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 400,
+            "size": 40,
+            "duration": 2,
+            "opacity": 8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 200,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    });
   </script>
 </body>
 </html>
