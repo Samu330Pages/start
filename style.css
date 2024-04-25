@@ -217,7 +217,22 @@
   height: 100%;
   }
 
-    
+
+.channel-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.channel-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin-right: 10px;
+}
+
+
 .shaper {
   background: gray url(https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk5Ni0wMDlfMS1rcm9pcjRkay5qcGc.jpg) repeat 0 0;
   width: 100%;
