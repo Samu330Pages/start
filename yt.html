@@ -113,33 +113,57 @@
         document.getElementById('channelName').innerText = result.channel.name;
         document.getElementById('descr').addEventListener('click', toggleDescriptionAlignment);
 
-        for (let i = 0; i < result.videos.items.length; i++) {
-          const video = result.videos.items[i];
-          const table = document.getElementById('videoTab').querySelector('table');
+for (let i = 0; i < result.videos.items.length; i++) {
+  const video = result.videos.items[i];
+  const table = document.getElementById('videoTab').querySelector('table');
 
-          const row = document.createElement('tr');
-          const qualityCell = document.createElement('td');
-          qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
-          const sizeCell = document.createElement('td');
-          sizeCell.innerText = video.sizeText;
-          const downloadCell = document.createElement('td');
-          const downloadButton = document.createElement('button');
-          downloadButton.innerText = 'Descargar';
-          downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
-          downloadCell.appendChild(downloadButton);
+  const row = document.createElement('tr');
+  const qualityCell = document.createElement('td');
+  qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
+  const sizeCell = document.createElement('td');
+  sizeCell.innerText = video.sizeText;
+  const downloadCell = document.createElement('td');
+  const downloadButton = document.createElement('button');
+  downloadButton.innerText = 'Descargar';
+  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`); // Aquí se pasa video.url como argumento
+  downloadCell.appendChild(downloadButton);
 
-          row.appendChild(qualityCell);
-          row.appendChild(sizeCell);
-          row.appendChild(downloadCell);
+  row.appendChild(qualityCell);
+  row.appendChild(sizeCell);
+  row.appendChild(downloadCell);
 
-          table.appendChild(row);
-        }
+  table.appendChild(row);
+}
 
         openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
         Swal.fire(error);
       }
     }
+    
+function downloadVideo(videoUrl) {
+  try {
+    Swal.fire({
+      title: "Descargando",
+      text: "La descarga ha iniciado",
+      icon: "info"
+    });
+
+    const link = document.createElement('a');
+    link.href = videoUrl;
+    link.download = 'video.mp4';
+    link.click();
+
+    Swal.close();
+    closePopup();
+  } catch (error) {
+    Swal.fire({
+      title: "Error de descarga",
+      text: "La descarga no pudo ser completada",
+      icon: "error"
+    });
+  }
+}
 
     function getVideoId(url) {
       let videoId = '';
@@ -169,33 +193,6 @@
       } else {
         descrElem.style.textAlign = 'left';
         descrElem.innerText = descr + " ...Leer menos";
-      }
-    }
-
-    async function downloadVideo(url) {
-      try {
-        Swal.fire({
-          title: "Descargando",
-          text: "La descarga ha iniciado",
-          icon: "info"
-        });
-
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const urlObject = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = urlObject;
-        link.download = 'video.mp4';
-        link.click();
-
-        Swal.close();
-        closePopup();
-      } catch (error) {
-        Swal.fire({
-          title: "Error de descarga",
-          text: "La descarga no pudo ser completada",
-          icon: "error"
-        });
       }
     }
 
