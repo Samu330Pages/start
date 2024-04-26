@@ -27,13 +27,14 @@
     <div class="popup-content">
       <span class="close-button" onclick="closePopup()">X</span>
       <img src="" alt="My Image" class="popup-image" id="popupImage">
-      <h1 id="vidName"></h1><i class="fa-solid fa-eye"></i>
-      <h3 id="channelViews"></h3>
+      <h1 id="vidName"></h1>
+      <h3 id="channelViews" style="textLign: left;"></h3>
+      <h3 id="publishTime" style="textLign: left;"></h3>
       <div class="channel-info">
-    	<img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
-    	<h3 id="channelName"></h3>
-  	  </div>
-	  <p id="descr" onclick="toggleDescriptionAlignment()"></p>
+        <img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
+        <h3 id="channelName"></h3>
+      </div>
+      <p id="descr" onclick="toggleDescriptionAlignment()"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -47,41 +48,6 @@
             <th>Tamaño</th>
             <th>Descargar</th>
           </tr>
-          <tr>
-            <td>Calidad 1</td>
-            <td>Tamaño 1</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 3</td>
-            <td>Tamaño 3</td>
-            <td><button>Descargar</button></td>
-          </tr>
         </table>
       </div>
 
@@ -91,21 +57,6 @@
             <th>Calidad</th>
             <th>Tamaño</th>
             <th>Descargar</th>
-          </tr>
-          <tr>
-            <td>Calidad 1</td>
-            <td>Tamaño 1</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 2</td>
-            <td>Tamaño 2</td>
-            <td><button>Descargar</button></td>
-          </tr>
-          <tr>
-            <td>Calidad 3</td>
-            <td>Tamaño 3</td>
-            <td><button>Descargar</button></td>
           </tr>
         </table>
       </div>
@@ -117,12 +68,9 @@
   </div>
 
   <script>
-
-    // Función principal para descargar
     async function download() {
       const youtubeLink = document.getElementById('youtubeLink').value;
 
-      // Verificar si el campo de entrada está vacío
       if (!youtubeLink) {
         Swal.fire({
           title: "Y el link?",
@@ -132,7 +80,6 @@
         return;
       }
 
-      // Verificar si el enlace no es válido
       var pattern = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
       if (!pattern.test(youtubeLink)) {
         Swal.fire({
@@ -143,10 +90,8 @@
         return;
       }
 
-      // Obtener el ID del vídeo
       const videoId = getVideoId(youtubeLink);
 
-      // Llevar a cabo la función de descarga con el ID
       const url = `https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=${videoId}`;
       const options = {
         method: 'GET',
@@ -157,66 +102,101 @@
       };
 
       try {
-    		const response = await fetch(url, options);
-    		const result = await response.json();
+        const response = await fetch(url, options);
+        const result = await response.json();
 
-    		// Obtener los datos del canal
-const channelData = result.channel;
-const vidName = result.title;
-const channelViews = result.viewCount;
-const descr = result.description;
-const avatarUrl = channelData.avatar[0].url;
-const channelName = channelData.name;
+        document.getElementById('vidName').innerText = result.title;
+        document.getElementById('channelViews').innerText = `Vistas: ${result.viewCount}`;
+        document.getElementById('publishTime').innerText = `Fecha de publicación: ${result.publishedTimeText}`;
+        document.getElementById('descr').innerText = truncateDescription(result.description, 150) + " Leer más";
+        document.getElementById('avatarImage').src = result.channel.avatar[0].url;
+        document.getElementById('channelName').innerText = result.channel.name;
+        document.getElementById('descr').addEventListener('click', toggleDescriptionAlignment);
 
-// Mostrar la imagen y el nombre del canal en el popup
-document.getElementById('vidName').innerText = vidName;
-document.getElementById('channelViews').innerText = `Vistas: ${channelViews}`;
-document.getElementById('descr').innerText = truncateDescription(descr, 150) + " Leer más";
-document.getElementById('avatarImage').src = avatarUrl;
-document.getElementById('channelName').innerText = channelName;
-document.getElementById('descr').addEventListener('click', toggleDescriptionAlignment);
+        for (let i = 0; i < result.videos.items.length; i++) {
+          const video = result.videos.items[i];
+          const table = document.getElementById('videoTab').querySelector('table');
 
-// Función para truncar la descripción
-function truncateDescription(description, maxLength) {
-  if (description.length > maxLength) {
-    return description.slice(0, maxLength) + "...";
-  } else {
-    return description;
-  }
-}
+          const row = document.createElement('tr');
+          const qualityCell = document.createElement('td');
+          qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
+          const sizeCell = document.createElement('td');
+          sizeCell.innerText = video.sizeText;
+          const downloadCell = document.createElement('td');
+          const downloadButton = document.createElement('button');
+          downloadButton.innerText = 'Descargar';
+          downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
+          downloadCell.appendChild(downloadButton);
 
-// Función para alternar la alineación de la descripción
-function toggleDescriptionAlignment() {
-  const descrElem = document.getElementById('descr');
-  if (descrElem.style.textAlign === 'left') {
-    descrElem.style.textAlign = '';
-    descrElem.innerText = truncateDescription(descr, 150) + " Leer más";
-  } else {
-    descrElem.style.textAlign = 'left';
-    descrElem.innerText = descr + " ...Leer menos";
-  }
-}
+          row.appendChild(qualityCell);
+          row.appendChild(sizeCell);
+          row.appendChild(downloadCell);
 
-    		openPopup(result.thumbnails[result.thumbnails.length - 1].url);
-  	} catch (error) {
-    		Swal.fire(error);
+          table.appendChild(row);
+        }
+
+        openPopup(result.thumbnails[result.thumbnails.length - 1].url);
+      } catch (error) {
+        Swal.fire(error);
       }
     }
 
-    // Función auxiliar para obtener el ID del vídeo
     function getVideoId(url) {
       let videoId = '';
 
-      // Obtener el ID del enlace en Android
       if (url.includes('youtu.be/')) {
         videoId = url.split('youtu.be/')[1];
-      }
-      // Obtener el ID del enlace en PC
-      else if (url.includes('youtube.com/watch?v=')) {
+      } else if (url.includes('youtube.com/watch?v=')) {
         videoId = url.split('youtube.com/watch?v=')[1];
       }
 
       return videoId;
+    }
+
+    function truncateDescription(description, maxLength) {
+      if (description.length > maxLength) {
+        return description.slice(0, maxLength) + "...";
+      } else {
+        return description;
+      }
+    }
+
+    function toggleDescriptionAlignment() {
+      const descrElem = document.getElementById('descr');
+      if (descrElem.style.textAlign === 'left') {
+        descrElem.style.textAlign = '';
+        descrElem.innerText = truncateDescription(descr, 150) + " Leer más";
+      } else {
+        descrElem.style.textAlign = 'left';
+        descrElem.innerText = descr + " ...Leer menos";
+      }
+    }
+
+    async function downloadVideo(url) {
+      try {
+        Swal.fire({
+          title: "Descargando",
+          text: "La descarga ha iniciado",
+          icon: "info"
+        });
+
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const urlObject = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = urlObject;
+        link.download = 'video.mp4';
+        link.click();
+
+        Swal.close();
+        closePopup();
+      } catch (error) {
+        Swal.fire({
+          title: "Error de descarga",
+          text: "La descarga no pudo ser completada",
+          icon: "error"
+        });
+      }
     }
 
     let activeTab = 'videoTab';
