@@ -232,6 +232,9 @@
   margin-right: 10px;
 }
 
+#descr {
+  text-align: left;
+}
 
 .shaper {
   background: gray url(https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk5Ni0wMDlfMS1rcm9pcjRkay5qcGc.jpg) repeat 0 0;
