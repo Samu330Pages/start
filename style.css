@@ -1,4 +1,4 @@
-    body {
+body {
       background-color: white;
       margin: 0;
       padding: 0;
@@ -95,6 +95,40 @@
       background-color: #00CED1;
       box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8), 0px 0px 20px rgba(0, 0, 255, 0.4);
     }
+
+/* Estilo para los botones en el popup */
+.download-button {
+  animation: buttonAnimation 1.5s infinite;
+  background-color: #c800ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background-color: #ab00cc;
+}
+
+/* Animación diagonal de color para los botones */
+@keyframes buttonAnimation {
+  0% {
+    background-color: #c800ff;
+  }
+  25% {
+    background-color: #ff0080;
+  }
+  50% {
+    background-color: #ff8000;
+  }
+  75% {
+    background-color: #ffff00;
+  }
+  100% {
+    background-color: #00ff80;
+  }
+}
 
     .popup {
       position: fixed;
