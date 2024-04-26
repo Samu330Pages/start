@@ -33,7 +33,7 @@
     	<img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
     	<h3 id="channelName"></h3>
   	  </div>
-	  <p id="descr"></p>
+	  <p id="descr" onclick="toggleDescriptionAlignment()"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -164,51 +164,37 @@
 const channelData = result.channel;
 const vidName = result.title;
 const channelViews = result.viewCount;
-let descr = result.description;
+const descr = result.description;
 const avatarUrl = channelData.avatar[0].url;
 const channelName = channelData.name;
 
 // Mostrar la imagen y el nombre del canal en el popup
 document.getElementById('vidName').innerText = vidName;
 document.getElementById('channelViews').innerText = `Vistas: ${channelViews}`;
-document.getElementById('descr').innerHTML = truncateDescription(descr, 50) + createReadMoreLink(descr, 50);
+document.getElementById('descr').innerText = truncateDescription(descr, 150) + " Leer más";
 document.getElementById('avatarImage').src = avatarUrl;
 document.getElementById('channelName').innerText = channelName;
+document.getElementById('descr').addEventListener('click', toggleDescriptionAlignment);
 
+// Función para truncar la descripción
 function truncateDescription(description, maxLength) {
   if (description.length > maxLength) {
-    return description.substr(0, maxLength) + '...';
+    return description.slice(0, maxLength) + "...";
   } else {
     return description;
   }
 }
 
-function createReadMoreLink(description, maxLength) {
-  if (description.length > maxLength) {
-    return ` <a href="#" onclick="expandDescription(event)">Leer más</a>`;
+// Función para alternar la alineación de la descripción
+function toggleDescriptionAlignment() {
+  const descrElem = document.getElementById('descr');
+  if (descrElem.style.textAlign === 'left') {
+    descrElem.style.textAlign = '';
+    descrElem.innerText = truncateDescription(descr, 150) + " Leer más";
   } else {
-    return '';
+    descrElem.style.textAlign = 'left';
+    descrElem.innerText = descr + " ...Leer menos";
   }
-}
-
-function expandDescription(event) {
-  event.preventDefault();
-  const description = result.description;
-  document.getElementById('descr').innerHTML = description + createReadLessLink(description, 50);
-}
-
-function createReadLessLink(description, maxLength) {
-  if (description.length > maxLength) {
-    return ` <a href="#" onclick="truncateAndCollapseDescription(event, ${maxLength})">Leer menos</a>`;
-  } else {
-    return '';
-  }
-}
-
-function truncateAndCollapseDescription(event, maxLength) {
-  event.preventDefault();
-  const description = result.description;
-  document.getElementById('descr').innerHTML = truncateDescription(description, maxLength) + createReadMoreLink(description, maxLength);
 }
 
     		openPopup(result.thumbnails[result.thumbnails.length - 1].url);
@@ -252,6 +238,13 @@ function truncateAndCollapseDescription(event, maxLength) {
 
     function closePopup() {
       document.getElementById('popup').classList.remove('active');
+    }
+
+    function toggleDescription() {
+      const descr = document.getElementById('descr');
+      descr.innerHTML = descr.innerHTML.includes('Leer más')
+        ? descr.innerHTML.slice(0, -19) + '... <a href="#" onclick="toggleDescription()">Leer menos</a>'
+        : descr.innerHTML.slice(0, -22) + '... <a href="#" onclick="toggleDescription()">Leer más</a>';
     }
 
     particlesJS('particles-js', {
