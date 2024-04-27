@@ -34,7 +34,7 @@
         <img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
         <h3 id="channelName"></h3>
       </div>
-      <p id="descr"></p>
+      <p id="descr" class="description"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -64,6 +64,7 @@
       <div id="relatedTab" class="tab-content">
         <!-- Contenido de la pestaña relacionados -->
       </div>
+      <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
     </div>
   </div>
 
@@ -167,6 +168,26 @@
         Swal.fire(error);
       }
     }
+    
+    function scrollToTop() {
+  const popupContent = document.querySelector('.popup-content');
+  const scrollDuration = 500; // Duración de la animación en milisegundos 
+  const scrollStep = -popupContent.scrollTop / (scrollDuration / 15); // Cantidad de píxeles a desplazar por intervalo
+  
+  let scrollIntervalId;
+  
+  function scrollToTopAnimation() {
+    if (popupContent.scrollTop !== 0) {
+      // Calcula la nueva posición del scroll
+      popupContent.scrollTop += scrollStep;
+      // Crea un intervalo recursivo para la animación
+      scrollIntervalId = setTimeout(scrollToTopAnimation, 15);
+    }
+  }
+  
+  // Inicia la animación
+  scrollToTopAnimation();
+}
     
     function downloadVideo(videoUrl) {
       try {
