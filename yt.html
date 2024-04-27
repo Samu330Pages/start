@@ -96,7 +96,7 @@
       const options = {
         method: 'GET',
         headers: {
-          'X-RapidAPI-Key': 'efa8cf51f3mshb734f22c963b61ap11ca33jsnb4f0079dfd70',
+          'X-RapidAPI-Key': 'b08a521a05msh9fb7af06d8c364ep1fd9b3jsnbfb450b152df',
           'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
         }
       };
@@ -125,7 +125,8 @@ for (let i = 0; i < result.videos.items.length; i++) {
   const downloadCell = document.createElement('td');
   const downloadButton = document.createElement('button');
   downloadButton.innerText = 'Descargar';
-  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`); // Aquí se pasa video.url como argumento
+  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
+  downloadButton.setAttribute('class', "download-button");
   downloadCell.appendChild(downloadButton);
 
   row.appendChild(qualityCell);
