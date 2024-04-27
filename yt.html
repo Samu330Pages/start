@@ -34,7 +34,7 @@
         <img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
         <h3 id="channelName"></h3>
       </div>
-      <p id="descr" onclick="toggleDescriptionAlignment()"></p>
+      <p id="descr"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -108,33 +108,59 @@
         document.getElementById('vidName').innerText = result.title;
         document.getElementById('channelViews').innerText = `Vistas: ${result.viewCount}`;
         document.getElementById('publishTime').innerText = `Fecha de publicación: ${result.publishedTimeText}`;
-        document.getElementById('descr').innerText = truncateDescription(result.description, 150) + " Leer más";
+
+        const description = result.description;
+        const descriptionElement = document.getElementById('descr');
+        descriptionElement.innerText = description.slice(0, 150) + '...';
+
+        if (description.length > 150) {
+          const readMoreLink = document.createElement('a');
+          readMoreLink.innerText = 'Leer más';
+          readMoreLink.className = 'read-more';
+          readMoreLink.onclick = function() {
+            descriptionElement.innerText = description;
+            descriptionElement.append(readLessLink);
+          };
+
+          const readLessLink = document.createElement('a');
+          readLessLink.innerText = 'Leer menos';
+          readLessLink.className = 'read-less';
+          readLessLink.style.display = 'none';
+          readLessLink.onclick = function() {
+            descriptionElement.innerText = description.slice(0, 150) + '...';
+            descriptionElement.append(readMoreLink);
+            readLessLink.style.display = 'none';
+          };
+
+          descriptionElement.append(readMoreLink);
+          descriptionElement.append(readLessLink);
+        }
+
         document.getElementById('avatarImage').src = result.channel.avatar[0].url;
         document.getElementById('channelName').innerText = result.channel.name;
-        document.getElementById('descr').addEventListener('click', toggleDescriptionAlignment);
 
-for (let i = 0; i < result.videos.items.length; i++) {
-  const video = result.videos.items[i];
-  const table = document.getElementById('videoTab').querySelector('table');
+        for (let i = 0; i < result.videos.items.length; i++) {
+          const video = result.videos.items[i];
+          const table = document.getElementById('videoTab').querySelector('table');
 
-  const row = document.createElement('tr');
-  const qualityCell = document.createElement('td');
-  qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
-  const sizeCell = document.createElement('td');
-  sizeCell.innerText = video.sizeText;
-  const downloadCell = document.createElement('td');
-  const downloadButton = document.createElement('button');
-  downloadButton.innerText = 'Descargar';
-  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
-  downloadButton.setAttribute('class', "download-button");
-  downloadCell.appendChild(downloadButton);
+          const row = document.createElement('tr');
+          const qualityCell = document.createElement('td');
+          qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
+          const sizeCell = document.createElement('td');
+          sizeCell.innerText = video.sizeText;
+          const downloadCell = document.createElement('td');
+          const downloadButton = document.createElement('button');
+          downloadButton.innerText = 'Descargar';
+          downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
+          downloadButton.setAttribute('class', "download-button");
+          downloadCell.appendChild(downloadButton);
 
-  row.appendChild(qualityCell);
-  row.appendChild(sizeCell);
-  row.appendChild(downloadCell);
+          row.appendChild(qualityCell);
+          row.appendChild(sizeCell);
+          row.appendChild(downloadCell);
 
-  table.appendChild(row);
-}
+          table.appendChild(row);
+        }
 
         openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
@@ -142,29 +168,29 @@ for (let i = 0; i < result.videos.items.length; i++) {
       }
     }
     
-function downloadVideo(videoUrl) {
-  try {
-    Swal.fire({
-      title: "Descargando",
-      text: "La descarga ha iniciado",
-      icon: "info"
-    });
+    function downloadVideo(videoUrl) {
+      try {
+        Swal.fire({
+          title: "Descargando",
+          text: "La descarga ha iniciado",
+          icon: "info"
+        });
 
-    const link = document.createElement('a');
-    link.href = videoUrl;
-    link.download = 'video.mp4';
-    link.click();
+        const link = document.createElement('a');
+        link.href = videoUrl;
+        link.download = 'video.mp4';
+        link.click();
 
-    Swal.close();
-    closePopup();
-  } catch (error) {
-    Swal.fire({
-      title: "Error de descarga",
-      text: "La descarga no pudo ser completada",
-      icon: "error"
-    });
-  }
-}
+        Swal.close();
+        closePopup();
+      } catch (error) {
+        Swal.fire({
+          title: "Error de descarga",
+          text: "La descarga no pudo ser completada",
+          icon: "error"
+        });
+      }
+    }
 
     function getVideoId(url) {
       let videoId = '';
@@ -178,24 +204,6 @@ function downloadVideo(videoUrl) {
       return videoId;
     }
 
-    function truncateDescription(description, maxLength) {
-      if (description.length > maxLength) {
-        return description.slice(0, maxLength) + "...";
-      } else {
-        return description;
-      }
-    }
-
-    function toggleDescriptionAlignment() {
-      const descrElem = document.getElementById('descr');
-      if (descrElem.style.textAlign === 'left') {
-        descrElem.style.textAlign = '';
-        descrElem.innerText = truncateDescription(descr, 150) + " Leer más";
-      } else {
-        descrElem.style.textAlign = 'left';
-        descrElem.innerText = descr + " ...Leer menos";
-      }
-    }
 
     let activeTab = 'videoTab';
 
@@ -218,12 +226,6 @@ function downloadVideo(videoUrl) {
       document.getElementById('popup').classList.remove('active');
     }
 
-    function toggleDescription() {
-      const descr = document.getElementById('descr');
-      descr.innerHTML = descr.innerHTML.includes('Leer más')
-        ? descr.innerHTML.slice(0, -19) + '... <a href="#" onclick="toggleDescription()">Leer menos</a>'
-        : descr.innerHTML.slice(0, -22) + '... <a href="#" onclick="toggleDescription()">Leer más</a>';
-    }
 
     particlesJS('particles-js', {
       "particles": {
