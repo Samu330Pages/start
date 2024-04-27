@@ -270,6 +270,12 @@ body {
   text-align: left;
 }
 
+
+.description {
+    max-height: 150px;
+    overflow: hidden;
+  }
+
 .shaper {
   background: gray url(https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk5Ni0wMDlfMS1rcm9pcjRkay5qcGc.jpg) repeat 0 0;
   width: 100%;
