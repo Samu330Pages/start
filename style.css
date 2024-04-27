@@ -270,11 +270,23 @@ body {
   text-align: left;
 }
 
-
 .description {
     max-height: 150px;
     overflow: hidden;
   }
+
+.back-to-top {
+      position: fixed;
+  	  bottom: 20px;
+  	  right: 20px;
+      background-color: #000;
+      color: #fff;
+  	  border: none;
+  	  border-radius: 50%;
+      padding: 10px;
+  	  font-size: 20px;
+      cursor: pointer;
+    }
 
 .shaper {
   background: gray url(https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk5Ni0wMDlfMS1rcm9pcjRkay5qcGc.jpg) repeat 0 0;
