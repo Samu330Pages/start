@@ -273,8 +273,16 @@ body {
   max-width: 100%;
 }
 
+.media-modal {
+  width: 70vw;
+  max-width: 100%;
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
 .media-modal video,
 .media-modal audio {
+  width: 100vw;
   display: block;
   max-width: 100%;
   margin-bottom: 20px;
