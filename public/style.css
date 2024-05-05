@@ -268,12 +268,31 @@ body {
 
 #descr {
   text-align: left;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
 }
 
-.description {
-    max-height: 150px;
-    overflow: hidden;
-  }
+.media-modal video,
+.media-modal audio {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.media-modal button {
+  display: inline-block;
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.media-modal button:hover {
+  background-color: #0056b3;
+}
 
 .back-to-top {
       position: fixed;
