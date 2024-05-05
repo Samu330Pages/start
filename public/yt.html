@@ -9,17 +9,44 @@
   <!-- Agregar FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" type="text/css" href="./style.css">
+
+  <script>
+document.oncontextmenu = function() {
+    return false
+}
+document.addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
+        event.preventDefault();
+    }
+});
+        </script>
 </head>
 <body class="shaper">
   <div id="particles-js"></div>
   <header>
     <h1>YouTube Downloader <i class="fa-brands fa-youtube" style="color: #ff0000;"></i></h1>
   </header>
-
   <div class="content">
+    <button class="centered-button" onclick="abrirVentana()">Clic aquí si no sabes como descargar</button>
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
       <button onclick="download()">Descargar <i class="fa-solid fa-download" style="color: #c800ff;"></i></button>
+    </div>
+  </div>
+  
+  <div class="ventana" id="ventana">
+    <div class="contenido">
+      <div class="imagenes">
+        <img class="imagen" src="" alt="" id="imagen">
+        <div class="flecha derecha" onclick="cambiarImagen(1)">&#8250;</div>
+        <div class="flecha izquierda" onclick="cambiarImagen(-1)">&#8249;</div>
+      </div>
+      <div id="texto"></div>
+      <button class="btnWn" onClick="cerrarVentana()">Listo!</button>
     </div>
   </div>
 
@@ -259,7 +286,7 @@ function downloadAudio(audioUrl) {
   closePopup()
   showMediaModal(modalContent);
 }
-    
+ 
 function showMediaModal(content) {
   const modal = document.createElement('div');
   modal.id = 'mediaModal';
@@ -315,6 +342,43 @@ function closeMediaModal() {
     function closePopup() {
       document.getElementById('popup').classList.remove('active');
     }
+    
+    
+    var imagenes = [
+  { src: "https://purina.com.mx/sites/default/files/styles/webp/public/2022-10/Que_debes_saber_antes_de_adoptar_un_gatito.jpg.webp?itok=t3EjykDK", texto: "Texto de la imagen 1" },
+  { src: "https://www.zooplus.es/magazine/wp-content/uploads/2018/04/fotolia_169457098.jpg", texto: "Texto de la imagen 2" },
+  { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHuADlZqqhe3g7-RBer7t08oOTwa9eeSZpXxxSEnsw1UmLbfs5Kco0KrqDc9Ebtte-M0Y&usqp=CAU", texto: "Texto de la imagen 3" }
+];
+var indiceActual = 0;
+
+function abrirVentana() {
+  document.getElementById('ventana').style.display = 'flex';
+  mostrarImagen(indiceActual);
+}
+
+function cerrarVentana() {
+  document.getElementById('ventana').style.display = 'none';
+}
+
+function mostrarImagen(indice) {
+  if (indice >= 0 && indice < imagenes.length) {
+    document.getElementById('imagen').src = imagenes[indice].src;
+    document.getElementById('texto').textContent = imagenes[indice].texto;
+    indiceActual = indice;
+  }
+}
+
+function cambiarImagen(direccion) {
+  var nuevoIndice = indiceActual + direccion;
+  
+  if (nuevoIndice < 0) {
+    nuevoIndice = imagenes.length - 1;
+  } else if (nuevoIndice >= imagenes.length) {
+    nuevoIndice = 0;
+  }
+  
+  mostrarImagen(nuevoIndice);
+}
 
 
     particlesJS('particles-js', {
