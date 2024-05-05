@@ -34,7 +34,7 @@
         <img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
         <h3 id="channelName"></h3>
       </div>
-      <p id="descr" class="description"></p>
+      <p id="descr"></p>
       <div class="tabs">
         <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
         <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
@@ -141,27 +141,34 @@
         document.getElementById('channelName').innerText = result.channel.name;
 
         for (let i = 0; i < result.videos.items.length; i++) {
-          const video = result.videos.items[i];
-          const table = document.getElementById('videoTab').querySelector('table');
+  const video = result.videos.items[i];
+  const table = document.getElementById('videoTab').querySelector('table');
 
-          const row = document.createElement('tr');
-          const qualityCell = document.createElement('td');
-          qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
-          const sizeCell = document.createElement('td');
-          sizeCell.innerText = video.sizeText;
-          const downloadCell = document.createElement('td');
-          const downloadButton = document.createElement('button');
-          downloadButton.innerText = 'Descargar';
-          downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
-          downloadButton.setAttribute('class', "download-button");
-          downloadCell.appendChild(downloadButton);
+  const row = document.createElement('tr');
+  const qualityCell = document.createElement('td');
+  qualityCell.innerText = `${video.quality} / ${video.width}x${video.height}`;
+  const sizeCell = document.createElement('td');
+  sizeCell.innerText = video.sizeText;
+  const downloadCell = document.createElement('td');
 
-          row.appendChild(qualityCell);
-          row.appendChild(sizeCell);
-          row.appendChild(downloadCell);
+  // Condición para ocultar las filas con hasAudio en false
+  if (!video.hasAudio) {
+    row.style.display = "none";
+  }
 
-          table.appendChild(row);
-        }
+  // Agrega el botón de descarga
+  const downloadButton = document.createElement('button');
+  downloadButton.innerText = 'Descargar';
+  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
+  downloadButton.setAttribute('class', "download-button");
+  downloadCell.appendChild(downloadButton);
+
+  row.appendChild(qualityCell);
+  row.appendChild(sizeCell);
+  row.appendChild(downloadCell);
+
+  table.appendChild(row);
+}
 
         openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
