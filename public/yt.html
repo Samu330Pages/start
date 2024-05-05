@@ -52,6 +52,7 @@
       </div>
 
       <div id="audioTab" class="tab-content">
+        <div id="audioPreviewContainer"></div>
         <table>
           <tr>
             <th>Calidad</th>
@@ -173,6 +174,21 @@
 // Obtén la información de audio del JSON
 const audioItems = result.audios.items;
 const audioTable = document.getElementById('audioTab').querySelector('table');
+        /////
+if (audioItems.length > 0) {
+  const firstAudioUrl = audioItems[0].url;
+  const audioElement = document.createElement('audio');
+
+  audioElement.src = firstAudioUrl; // Establece la fuente del audio
+  audioElement.controls = true; // Muestra los controles de reproducción
+
+  // Encuentra el contenedor donde deseas añadir el elemento audio
+  const audioContainer = document.getElementById('audioPreviewContainer'); // Asegúrate de tener un contenedor con este ID
+
+  // Limpia el contenedor y añade el nuevo elemento audio
+  audioContainer.innerHTML = ''; // Esto es opcional, en caso de que quieras eliminar otros contenidos previos
+  audioContainer.appendChild(audioElement);
+}
 
 for (let i = 0; i < audioItems.length; i++) {
   const audio = audioItems[i];
@@ -197,8 +213,7 @@ for (let i = 0; i < audioItems.length; i++) {
 
   // Agrega la fila a la tabla de audio
   audioTable.appendChild(row);
-}
-        
+}       
 
         openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
@@ -252,6 +267,14 @@ for (let i = 0; i < audioItems.length; i++) {
     
     function downloadAudio(audioUrl) {
   try {
+fetch(audioUrl)
+  .then(response => {
+    const finalUrl = response.url;
+    Swal.fire('URL final:', finalUrl);
+  })
+  .catch(error => {
+    Swal.fire('Error al obtener el URL final:', error);
+  });
     // Muestra una alerta indicando que la descarga ha iniciado
     Swal.fire({
       title: "Descargando",
@@ -259,7 +282,7 @@ for (let i = 0; i < audioItems.length; i++) {
       icon: "info"
     });
 
-    // Crea un elemento 'a' para iniciar la descarga
+    /*
     const a = document.createElement('a');
     a.href = audioUrl;
     a.download = 'audio.mp4'; // O el formato de audio que corresponda
@@ -275,7 +298,7 @@ for (let i = 0; i < audioItems.length; i++) {
       title: "Descarga Completada",
       text: "El audio se ha descargado correctamente.",
       icon: "success"
-    });
+});*/
   } catch (error) {
     // En caso de error, muestra una alerta indicando el fallo
     Swal.fire({
