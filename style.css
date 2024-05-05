@@ -318,9 +318,9 @@ audio {
 }
 
 
-	.ventana {
-      width: 100%;
-      height: 100%;
+    .ventana {
+      width: auto;
+      height: 250px;
       position: fixed;
       top: 0;
       left: 0;
