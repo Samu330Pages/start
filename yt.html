@@ -98,14 +98,6 @@ document.addEventListener('keydown', function(event) {
   <script>
     async function download() {
       const youtubeLink = document.getElementById('youtubeLink').value;
-      var overlay = document.createElement("div");
-  overlay.classList.add("loading-overlay");
-
-  var spinner = document.createElement("div");
-  spinner.classList.add("loading-spinner");
-
-  overlay.appendChild(spinner);
-  document.body.appendChild(overlay);
 
       if (!youtubeLink) {
         Swal.fire({
@@ -138,6 +130,15 @@ document.addEventListener('keydown', function(event) {
       };
 
       try {
+        var overlay = document.createElement("div");
+            overlay.classList.add("loading-overlay");
+
+        var spinner = document.createElement("div");
+            spinner.classList.add("loading-spinner");
+
+            overlay.appendChild(spinner);
+            document.body.appendChild(overlay);
+        
         const response = await fetch(url, options);
         const result = await response.json();
 
