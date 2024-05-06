@@ -4,6 +4,7 @@
   <title>Mi Página Ajustable</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg/dist/ffmpeg.min.js"></script>
   <!-- Agregar SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Agregar FontAwesome -->
@@ -130,6 +131,15 @@ document.addEventListener('keydown', function(event) {
       };
 
       try {
+        var overlay = document.createElement("div");
+            overlay.classList.add("loading-overlay");
+
+        var spinner = document.createElement("div");
+            spinner.classList.add("loading-spinner");
+
+            overlay.appendChild(spinner);
+            document.body.appendChild(overlay);
+        
         const response = await fetch(url, options);
         const result = await response.json();
 
@@ -207,6 +217,37 @@ document.getElementById('channelName').innerText = result.channel.name;
 const audioItems = result.audios.items;
 const audioTable = document.getElementById('audioTab').querySelector('table');
 
+// Encuentra el audio con extension "m4a" y el sizeText más alto
+const maxM4aAudio = audioItems
+  .filter(audio => audio.extension === 'm4a')
+  .reduce((prev, current) => (prev.sizeText > current.sizeText) ? prev : current, {sizeText: ''});
+
+// Crea la primera fila especial
+const specialRow = document.createElement('tr');
+const specialExtensionCell = document.createElement('td');
+specialExtensionCell.innerHTML = "<i class='fas fa-crown'></i> mp3 convert"; // Usa innerHTML para incluir elementos HTML como la corona
+specialExtensionCell.style.color = 'rgb(0,255,0)'; // Establece un color inicial, puedes cambiarlo por una animación RGB
+specialExtensionCell.classList.add('rgb-animation'); // Añade una clase para la animación RGB
+
+const specialSizeCell = document.createElement('td');
+specialSizeCell.innerText = maxM4aAudio.sizeText;
+
+const specialDownloadCell = document.createElement('td');
+const specialDownloadButton = document.createElement('button');
+specialDownloadButton.innerText = 'Descargar';
+specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}')`);
+specialDownloadButton.setAttribute('class', "download-button");
+specialDownloadCell.appendChild(specialDownloadButton);
+
+// Agrega las celdas a la fila especial
+specialRow.appendChild(specialExtensionCell);
+specialRow.appendChild(specialSizeCell);
+specialRow.appendChild(specialDownloadCell);
+
+// Agrega la fila especial a la tabla de audio antes de las otras filas
+audioTable.appendChild(specialRow);
+
+// Ahora procesa el resto de los audios como antes
 for (let i = 0; i < audioItems.length; i++) {
   const audio = audioItems[i];
 
@@ -232,6 +273,7 @@ for (let i = 0; i < audioItems.length; i++) {
   audioTable.appendChild(row);
 }       
 
+        overlay.remove();
         openPopup(result.thumbnails[result.thumbnails.length - 1].url);
       } catch (error) {
         Swal.fire(error);
@@ -274,20 +316,45 @@ function downloadVideo(videoUrl) {
 }
 
 function downloadAudio(audioUrl) {
-  const modalContent = `
+
+const { createFFmpeg, fetchFile } = FFmpeg;
+const ffmpeg = createFFmpeg({ log: true });
+    
+
+(async () => {
+  try {
+    await ffmpeg.load();
+
+  
+    ffmpeg.FS('writeFile', 'input.m4a', await fetchFile(audioUrl));
+    await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', 'output.mp3');
+    const data = ffmpeg.FS('readFile', 'output.mp3');
+    const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
+    const audioUrlD = URL.createObjectURL(audioBlob);
+    // Opción 2: Crea un enlace para descargar el MP3
+    const downloadLink = document.createElement('a');
+    downloadLink.href = audioUrlD;
+    downloadLink.download = 'output.mp3';
+    downloadLink.textContent = 'Descargar MP3';
+    document.body.appendChild(downloadLink);
+    closePopup()
+  } catch (error) {
+    // Maneja errores aquí
+    Swal.fire(message.error);
+    // Aquí puedes agregar cualquier otra lógica de manejo de errores, como mostrar un mensaje al usuario.
+  }
+})();
+  /*const modalContent = `
     <div class="media-modal">
       <audio controls autoplay>
         <source src="${audioUrl}" type="audio/mp4">
         Tu navegador no soporta audio HTML5.
       </audio>
-      <a href="${audioUrl}" download="samu.m4a">
-        Descargar
-      </a>
       <button onclick="closeMediaModal()">Cerrar</button>
     </div>
   `;
   closePopup()
-  showMediaModal(modalContent);
+showMediaModal(modalContent);*/
 }
  
 function showMediaModal(content) {
