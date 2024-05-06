@@ -332,11 +332,22 @@ const ffmpeg = createFFmpeg({ log: true });
     const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
     const audioUrlD = URL.createObjectURL(audioBlob);
     // Opción 2: Crea un enlace para descargar el MP3
-    const downloadLink = document.createElement('a');
+    const modalContent = `
+    <div class="media-modal">
+      <audio controls autoplay>
+        <source src="${audioUrlD}" type="audio/mp4">
+        Tu navegador no soporta audio HTML5.
+      </audio>
+      <button onclick="closeMediaModal()">Cerrar</button>
+    </div>
+  `;
+  closePopup()
+showMediaModal(modalContent);
+    /*const downloadLink = document.createElement('a');
     downloadLink.href = audioUrlD;
     downloadLink.download = 'output.mp3';
     downloadLink.textContent = 'Descargar MP3';
-    document.body.appendChild(downloadLink);
+    document.body.appendChild(downloadLink);*/
     closePopup()
   } catch (error) {
     // Maneja errores aquí
