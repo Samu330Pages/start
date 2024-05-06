@@ -348,10 +348,10 @@ showMediaModal(modalContent);
     downloadLink.download = 'output.mp3';
     downloadLink.textContent = 'Descargar MP3';
     document.body.appendChild(downloadLink);*/
-    closePopup()
+    //closePopup()
   } catch (error) {
     // Maneja errores aquí
-    Swal.fire(message.error);
+    Swal.fire(error);
     // Aquí puedes agregar cualquier otra lógica de manejo de errores, como mostrar un mensaje al usuario.
   }
 })();
@@ -365,8 +365,8 @@ showMediaModal(modalContent);
     </div>
   `;
   closePopup()
-showMediaModal(modalContent);*/
-}
+showMediaModal(modalContent);
+}*/
  
 function showMediaModal(content) {
   const modal = document.createElement('div');
