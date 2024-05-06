@@ -316,57 +316,37 @@ function downloadVideo(videoUrl) {
 }
 
 function downloadAudio(audioUrl) {
+  const { createFFmpeg, fetchFile } = FFmpeg;
+  const ffmpeg = createFFmpeg({ log: true });
 
-const { createFFmpeg, fetchFile } = FFmpeg;
-const ffmpeg = createFFmpeg({ log: true });
-    
-
-(async () => {
-  try {
-    await ffmpeg.load();
-
+  (async () => {
+    try {
+      await ffmpeg.load();
   
-    ffmpeg.FS('writeFile', 'input.m4a', await fetchFile(audioUrl));
-    await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', 'output.mp3');
-    const data = ffmpeg.FS('readFile', 'output.mp3');
-    const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
-    const audioUrlD = URL.createObjectURL(audioBlob);
-    // Opción 2: Crea un enlace para descargar el MP3
-    const modalContent = `
-    <div class="media-modal">
-      <audio controls autoplay>
-        <source src="${audioUrlD}" type="audio/mp4">
-        Tu navegador no soporta audio HTML5.
-      </audio>
-      <button onclick="closeMediaModal()">Cerrar</button>
-    </div>
-  `;
-  closePopup()
-showMediaModal(modalContent);
-    /*const downloadLink = document.createElement('a');
-    downloadLink.href = audioUrlD;
-    downloadLink.download = 'output.mp3';
-    downloadLink.textContent = 'Descargar MP3';
-    document.body.appendChild(downloadLink);*/
-    //closePopup()
-  } catch (error) {
-    // Maneja errores aquí
-    Swal.fire(error);
-    // Aquí puedes agregar cualquier otra lógica de manejo de errores, como mostrar un mensaje al usuario.
-  }
-})();
-  /*const modalContent = `
-    <div class="media-modal">
-      <audio controls autoplay>
-        <source src="${audioUrl}" type="audio/mp4">
-        Tu navegador no soporta audio HTML5.
-      </audio>
-      <button onclick="closeMediaModal()">Cerrar</button>
-    </div>
-  `;
-  closePopup()
-showMediaModal(modalContent);
-}*/
+      ffmpeg.FS('writeFile', 'input.m4a', await fetchFile(audioUrl));
+      await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', 'output.mp3');
+      const data = ffmpeg.FS('readFile', 'output.mp3');
+      const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
+      const audioUrlD = URL.createObjectURL(audioBlob);
+      
+      // Crea un modal con el audio y un botón para descargar el MP3
+      const modalContent = `
+        <div class="media-modal">
+          <audio controls autoplay>
+            <source src="${audioUrlD}" type="audio/mp3">
+            Tu navegador no soporta audio HTML5.
+          </audio>
+          <a href="${audioUrlD}" download="output.mp3" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
+          <button onclick="closeMediaModal()" style="margin-top: 10px;">Cerrar</button>
+        </div>
+      `;
+      closePopup();
+      showMediaModal(modalContent);
+    } catch (error) {
+      Swal.fire(error.toString());
+    }
+  })();
+}
  
 function showMediaModal(content) {
   const modal = document.createElement('div');
