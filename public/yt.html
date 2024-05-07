@@ -319,31 +319,17 @@ function downloadVideo(videoUrl) {
 }
 
 function downloadAudio(audioUrl, artistName) {
-  const { createFFmpeg, fetchFile } = FFmpeg;
-  const ffmpeg = createFFmpeg({ log: true });
-
   (async () => {
     try {
-      if (!ffmpeg.isLoaded()) {
-        await ffmpeg.load();
-      }
-
       const response = await fetch(audioUrl);
       const arrayBuffer = await response.arrayBuffer();
       const audioData = new Uint8Array(arrayBuffer);
-
-      ffmpeg.FS('writeFile', 'input.m4a', audioData);
-
-      await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', `-metadata`, `artist=${artistName}`, `${artistName}.mp3`);
-
-      const data = ffmpeg.FS('readFile', `${artistName}.mp3`);
-
-      // Importante: Liberar la memoria de los archivos en FS después de su uso
-      ffmpeg.FS('unlink', 'input.m4a');
-      ffmpeg.FS('unlink', `${artistName}.mp3`);
-
-      const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
+      const audioBlob = new Blob([audioData], { type: 'audio/mpeg' }); // Asumiendo que el audio es MP3. Ajusta el tipo si es necesario.
       const audioUrlD = URL.createObjectURL(audioBlob);
+
+      // Aquí generamos el nombre del archivo con el nombre del artista y una extensión de archivo predeterminada.
+      // Asegúrate de incluir la extensión correcta según el tipo de archivo de audio que estás manejando.
+      const downloadFileName = `${artistName}.mp3`; 
 
       // Crea un modal con el audio y un botón para descargar el MP3
       const modalContent = `
@@ -352,15 +338,14 @@ function downloadAudio(audioUrl, artistName) {
             <source src="${audioUrlD}" type="audio/mp3">
             Tu navegador no soporta audio HTML5.
           </audio>
-          <a href="${audioUrlD}" download="${artistName.replace(/\s+/g, '_')}.mp3" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
+          <a href="${audioUrlD}" download="${downloadFileName}" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
           <button onclick="closeMediaModal()" style="margin-top: 10px;">Cerrar</button>
         </div>
       `;
-      closePopup(); // Asegúrate de que esta función esté definida en alguna parte
-      showMediaModal(modalContent); // Asegúrate de que esta función esté definida en alguna parte
+      closePopup(); // Asumiendo que esta función cierra un popup existente.
+      showMediaModal(modalContent); // Asumiendo que esta función muestra el modal con el contenido generado.
     } catch (error) {
-      console.error(error);
-      Swal.fire(error.toString());
+      Swal.fire(error.toString()); // Mostrar el error usando SweetAlert.
     }
   })();
 }
