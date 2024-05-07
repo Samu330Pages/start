@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversor de Audio</title>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsmediatags/build/jsmediatags.min.js"></script>
+</head>
+<body>
+    <input type="file" id="audioFile" accept="audio/*">
+    <input type="text" id="fileName" placeholder="Nombre del archivo">
+    <input type="text" id="artistName" placeholder="Nombre del artista">
+    <button onclick="convertAndTagAudio()">Convertir y Etiquetar</button>
+
+    <script>
+      async function convertAndTagAudio() {
+    const audioFile = document.getElementById('audioFile').files[0];
+    const fileName = document.getElementById('fileName').value;
+    const artistName = document.getElementById('artistName').value;
+
+    if (!audioFile) {
+        alert('Por favor, selecciona un archivo de audio.');
+        return;
+    }
+
+    // Aquí iría la lógica para convertir el formato del archivo usando ffmpeg.js
+    // Por ejemplo, convertir de mp3 a ogg (esto es solo un placeholder, necesitas configurar ffmpeg.js correctamente)
+    const convertedAudioBlob = await convertAudioFormat(audioFile, 'outputFormat');
+
+    // Ahora, editarías la metadata del archivo convertido
+    // Nota: Esto también es un placeholder, necesitarías usar jsmediatags o una biblioteca similar
+    const taggedAudioBlob = await addMetadataToAudio(convertedAudioBlob, {
+        title: fileName,
+        artist: artistName,
+    });
+
+    // Finalmente, guardas o haces algo con el archivo resultante
+    // Por ejemplo, mostrarlo en la página para que el usuario lo descargue
+    saveConvertedFile(taggedAudioBlob, fileName);
+}
+
+function convertAudioFormat(audioBlob, outputFormat) {
+    // Implementación de conversión de formato
+    return new Promise((resolve, reject) => {
+        // Placeholder para la conversión real
+    });
+}
+
+function addMetadataToAudio(audioBlob, metadata) {
+    // Implementación de edición de metadata
+    return new Promise((resolve, reject) => {
+        // Placeholder para la edición real de metadata
+    });
+}
+
+function saveConvertedFile(audioBlob, fileName) {
+    // Función para permitir al usuario descargar el archivo procesado
+    const url = URL.createObjectURL(audioBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName + '.desiredExtension'; // Asegúrate de cambiar 'desiredExtension' por la extensión deseada
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+    </script>
+</body>
+</html>
