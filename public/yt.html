@@ -325,26 +325,32 @@ function downloadAudio(audioUrl) {
       <button id="descargar">desc</button>
     </div>
   `;
-  closePopup()
+  closePopup();
   showMediaModal(modalContent);
+
   document.getElementById('descargar').addEventListener('click', function() {
-       // Obtén la URL del archivo de audio desde la etiqueta <audio>
-       var audioSrc = document.getElementById('audio').querySelector('source').src;
-       
-       // Crea un elemento <a> temporal y configura sus propiedades
-       var downloadLink = document.createElement('a');
-       downloadLink.href = audioSrc;
-       
-       // Define aquí el nuevo nombre de archivo
-       downloadLink.download = 'NuevoNombreDeArchivo.m4a';
-       
-       // Agrega el enlace al documento y haz clic en él
-       document.body.appendChild(downloadLink);
-       downloadLink.click();
-       
-       // Limpia al remover el enlace del documento
-       document.body.removeChild(downloadLink);
-   });
+    // Obtén la URL del archivo de audio desde la etiqueta <audio>
+    var audioSrc = document.getElementById('audio').querySelector('source').src;
+  
+    // Realiza una solicitud fetch para obtener el contenido del archivo como un blob
+    fetch(audioSrc)
+      .then(response => response.blob())
+      .then(blob => {
+        // Crea un enlace temporal y configura sus propiedades
+        var downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        
+        // Define aquí el nuevo nombre de archivo
+        downloadLink.download = 'NuevoNombreDeArchivo.m4a';
+        
+        // Agrega el enlace al documento y haz clic en él
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        
+        // Limpia al remover el enlace del documento
+        document.body.removeChild(downloadLink);
+      });
+  });
 }
  
 function showMediaModal(content) {
