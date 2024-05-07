@@ -323,8 +323,11 @@ function downloadAudio(audioUrl) {
     try {
       await ffmpeg.load();
   
-      // Utiliza ArrayBuffer en lugar de SharedArrayBuffer
-      ffmpeg.FS('writeFile', 'input.m4a', new Uint8Array(await fetchFile(audioUrl)).buffer);
+      const response = await fetch(audioUrl);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioData = new Uint8Array(arrayBuffer);
+  
+      ffmpeg.FS('writeFile', 'input.m4a', audioData);
       await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', 'output.mp3');
       const data = ffmpeg.FS('readFile', 'output.mp3');
       const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
