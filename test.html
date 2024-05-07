@@ -58,7 +58,7 @@ function saveConvertedFile(audioBlob, fileName) {
     const url = URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = fileName + '.desiredExtension'; // Asegúrate de cambiar 'desiredExtension' por la extensión deseada
+    a.download = fileName + '.m4a'; // Asegúrate de cambiar 'desiredExtension' por la extensión deseada
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
