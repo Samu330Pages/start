@@ -315,37 +315,34 @@ function downloadVideo(videoUrl) {
 }
 
 function downloadAudio(audioUrl) {
-  // Función para capturar el evento de clic en el botón de descarga
-  function descargarArchivo() {
-    // Obtener la ubicación del usuario utilizando el API de Geolocalización
-    navigator.geolocation.getCurrentPosition(function(position) {
-      // Obtener la latitud y longitud de la ubicación
-      var latitude = position.coords.latitude;
-      var longitude = position.coords.longitude;
-
-      // Crear un nombre de archivo personalizado utilizando la ubicación
-      var filename = "archivo_" + latitude + "_" + longitude + ".mp3";
-
-      // Crear un enlace de descarga con el nombre de archivo personalizado
-      var downloadLink = document.createElement("a");
-      downloadLink.href = audioUrl;
-      downloadLink.download = filename;
-
-      // Simular el clic en el enlace de descarga para iniciar la descarga
-      downloadLink.click();
-    });
-  }
-
   const modalContent = `
     <div class="media-modal">
-      <audio controls autoplay>
+      <audio id="audio" controls autoplay>
         <source src="${audioUrl}" type="audio/mp4">
         Tu navegador no soporta audio HTML5.
       </audio>
       <button onclick="closeMediaModal()">Cerrar</button>
-      <button onclick="descargarArchivo()">Descargar</button>
+      <button id="descargar">desc</button>
     </div>
   `;
+  document.getElementById('descargar').addEventListener('click', function() {
+       // Obtén la URL del archivo de audio desde la etiqueta <audio>
+       var audioSrc = document.getElementById('audio').querySelector('source').src;
+       
+       // Crea un elemento <a> temporal y configura sus propiedades
+       var downloadLink = document.createElement('a');
+       downloadLink.href = audioSrc;
+       
+       // Define aquí el nuevo nombre de archivo
+       downloadLink.download = 'NuevoNombreDeArchivo.mp3';
+       
+       // Agrega el enlace al documento y haz clic en él
+       document.body.appendChild(downloadLink);
+       downloadLink.click();
+       
+       // Limpia al remover el enlace del documento
+       document.body.removeChild(downloadLink);
+   });
   closePopup()
   showMediaModal(modalContent);
 }
