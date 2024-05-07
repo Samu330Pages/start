@@ -6,7 +6,6 @@
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <!-- Agregar SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- Agregar FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" type="text/css" href="./style.css">
@@ -316,41 +315,39 @@ function downloadVideo(videoUrl) {
 }
 
 function downloadAudio(audioUrl) {
-  axios({
-    method: 'get',
-    url: audioUrl,
-    responseType: 'blob', // Importante para manejar el contenido binario
-  })
-  .then((response) => {
-    // Crear un enlace temporal DOM para descargar el blob
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
+  // Función para capturar el evento de clic en el botón de descarga
+  function descargarArchivo() {
+    // Obtener la ubicación del usuario utilizando el API de Geolocalización
+    navigator.geolocation.getCurrentPosition(function(position) {
+      // Obtener la latitud y longitud de la ubicación
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
 
-    // Puede ser útil asignar un nombre de archivo predeterminado
-    const contentDisposition = response.headers['content-disposition'];
-    let fileName = audioUrl.substring(audioUrl.lastIndexOf('/') + 1);
-    if (contentDisposition) {
-      const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
-      if (fileNameMatch.length === 2) 
-        fileName = fileNameMatch[1];
-    }
+      // Crear un nombre de archivo personalizado utilizando la ubicación
+      var filename = "archivo_" + latitude + "_" + longitude + ".mp3";
 
-    link.setAttribute('download', fileName); // Define el nombre de archivo para descargar
-    document.body.appendChild(link);
-    link.click(); // Inicia la descarga
+      // Crear un enlace de descarga con el nombre de archivo personalizado
+      var downloadLink = document.createElement("a");
+      downloadLink.href = audioUrl;
+      downloadLink.download = filename;
 
-    link.remove(); // Limpia el DOM removiendo el enlace
-    window.URL.revokeObjectURL(url); // Libera el objeto URL
-  })
-  .catch((error) => {
-    // Manejar el error mostrando un mensaje con SweetAlert2
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Error al descargar el archivo de audio: ' + error.message,
+      // Simular el clic en el enlace de descarga para iniciar la descarga
+      downloadLink.click();
     });
-  });
+  }
+
+  const modalContent = `
+    <div class="media-modal">
+      <audio controls autoplay>
+        <source src="${audioUrl}" type="audio/mp4">
+        Tu navegador no soporta audio HTML5.
+      </audio>
+      <button onclick="closeMediaModal()">Cerrar</button>
+      <button onclick="descargarArchivo()">Descargar</button>
+    </div>
+  `;
+  closePopup()
+  showMediaModal(modalContent);
 }
  
 function showMediaModal(content) {
