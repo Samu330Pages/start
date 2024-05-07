@@ -13,8 +13,16 @@
     <audio id="audioPlayer" controls style="display:none;"></audio>
 
     <script>
+      let ffmpegLoaded = false;
       const { createFFmpeg, fetchFile } = FFmpeg;
       const ffmpeg = createFFmpeg({ log: true });
+
+      async function loadFFmpeg() {
+        if (!ffmpegLoaded) {
+          await ffmpeg.load();
+          ffmpegLoaded = true;
+        }
+      }
 
       async function convertAndTagAudio() {
         const audioFile = document.getElementById('audioFile').files[0];
@@ -27,7 +35,7 @@
         }
 
         try {
-            if (!ffmpeg.isLoaded()) await ffmpeg.load();
+            await loadFFmpeg(); // Asegúrate de cargar ffmpeg antes de usarlo.
 
             // Convertir el formato del archivo a m4a
             await ffmpeg.FS('writeFile', audioFile.name, await fetchFile(audioFile));
