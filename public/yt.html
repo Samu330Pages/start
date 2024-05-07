@@ -318,20 +318,18 @@ function downloadVideo(videoUrl) {
   showMediaModal(modalContent);
 }
 
-function downloadAudio(audioUrl, artistName) {
+downloadAudio(audioUrl, artistName) {
   (async () => {
     try {
       const response = await fetch(audioUrl);
+      const redirectedUrl = response.url; // Obtenemos la URL final después de seguir las redirecciones
       const arrayBuffer = await response.arrayBuffer();
       const audioData = new Uint8Array(arrayBuffer);
-      const audioBlob = new Blob([audioData], { type: 'audio/mpeg' }); // Asumiendo que el audio es MP3. Ajusta el tipo si es necesario.
+      const audioBlob = new Blob([audioData], { type: 'audio/mpeg' });
       const audioUrlD = URL.createObjectURL(audioBlob);
 
-      // Aquí generamos el nombre del archivo con el nombre del artista y una extensión de archivo predeterminada.
-      // Asegúrate de incluir la extensión correcta según el tipo de archivo de audio que estás manejando.
-      const downloadFileName = `${artistName}.mp3`; 
+      const downloadFileName = `${artistName}.mp3`;
 
-      // Crea un modal con el audio y un botón para descargar el MP3
       const modalContent = `
         <div class="media-modal">
           <audio controls autoplay>
@@ -342,10 +340,10 @@ function downloadAudio(audioUrl, artistName) {
           <button onclick="closeMediaModal()" style="margin-top: 10px;">Cerrar</button>
         </div>
       `;
-      closePopup(); // Asumiendo que esta función cierra un popup existente.
-      showMediaModal(modalContent); // Asumiendo que esta función muestra el modal con el contenido generado.
+      closePopup();
+      showMediaModal(modalContent);
     } catch (error) {
-      Swal.fire(error.toString()); // Mostrar el error usando SweetAlert.
+      Swal.fire(error.toString());
     }
   })();
 }
