@@ -325,6 +325,8 @@ function downloadAudio(audioUrl) {
       <button id="descargar">desc</button>
     </div>
   `;
+  closePopup()
+  showMediaModal(modalContent);
   document.getElementById('descargar').addEventListener('click', function() {
        // Obtén la URL del archivo de audio desde la etiqueta <audio>
        var audioSrc = document.getElementById('audio').querySelector('source').src;
@@ -334,7 +336,7 @@ function downloadAudio(audioUrl) {
        downloadLink.href = audioSrc;
        
        // Define aquí el nuevo nombre de archivo
-       downloadLink.download = 'NuevoNombreDeArchivo.mp3';
+       downloadLink.download = 'NuevoNombreDeArchivo.m4a';
        
        // Agrega el enlace al documento y haz clic en él
        document.body.appendChild(downloadLink);
@@ -343,8 +345,6 @@ function downloadAudio(audioUrl) {
        // Limpia al remover el enlace del documento
        document.body.removeChild(downloadLink);
    });
-  closePopup()
-  showMediaModal(modalContent);
 }
  
 function showMediaModal(content) {
