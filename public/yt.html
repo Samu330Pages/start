@@ -3,11 +3,7 @@
 <head>
   <title>Mi Página Ajustable</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    window.SharedArrayBuffer = function() {};
-  </script>
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg/dist/ffmpeg.min.js"></script>
   <!-- Agregar SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Agregar FontAwesome -->
@@ -238,7 +234,7 @@ specialSizeCell.innerText = maxM4aAudio.sizeText;
 const specialDownloadCell = document.createElement('td');
 const specialDownloadButton = document.createElement('button');
 specialDownloadButton.innerText = 'Descargar';
-specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}', 'samu')`);
+specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}', "samu")`);
 specialDownloadButton.setAttribute('class', "download-button");
 specialDownloadCell.appendChild(specialDownloadButton);
 
