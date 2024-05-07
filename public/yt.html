@@ -234,7 +234,7 @@ specialSizeCell.innerText = maxM4aAudio.sizeText;
 const specialDownloadCell = document.createElement('td');
 const specialDownloadButton = document.createElement('button');
 specialDownloadButton.innerText = 'Descargar';
-specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}', "samu")`);
+specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}')`);
 specialDownloadButton.setAttribute('class', "download-button");
 specialDownloadCell.appendChild(specialDownloadButton);
 
@@ -259,7 +259,7 @@ for (let i = 0; i < audioItems.length; i++) {
 
   const downloadButton = document.createElement('button');
   downloadButton.innerText = 'Descargar';
-  downloadButton.setAttribute('onclick', `downloadAudio('${audio.url}', 'samu')`);
+  downloadButton.setAttribute('onclick', `downloadAudio('${audio.url}')`);
   downloadButton.setAttribute('class', "download-button");
   downloadCell.appendChild(downloadButton);
 
@@ -314,37 +314,30 @@ function downloadVideo(videoUrl) {
   showMediaModal(modalContent);
 }
 
-downloadAudio(audioUrl, artistName) {
-  try {
-    // Realiza la solicitud inicial y sigue las redirecciones hasta obtener el URL final.
-    const response = await fetch(audioUrl, {redirect: 'follow'});
-    const finalUrl = response.url; // Obtiene el URL final después de seguir los redireccionamientos.
+function downloadAudio(audioUrl) {
+  // Agrega el código de detección de descarga aquí
+  window.addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Evita que el menú desplegable aparezca automáticamente
+    // Obtiene la ubicación y el nombre del archivo de descarga
+    var downloadLocation = prompt('Ingresa la ubicación de descarga:');
+    var downloadName = prompt('Ingresa el nombre del archivo de descarga:');
 
-    // Una vez que tenemos el URL final, continuamos con el proceso de descarga.
-    const arrayBuffer = await response.arrayBuffer();
-    const audioData = new Uint8Array(arrayBuffer);
-    const audioBlob = new Blob([audioData], { type: 'audio/mpeg' }); // Asumiendo que el audio es MP3. Ajusta el tipo si es necesario.
-    const audioUrlD = URL.createObjectURL(audioBlob);
+    // Muestra la ubicación y el nombre del archivo de descarga
+    alert('El archivo se descargará en: ' + downloadLocation + ' con el nombre: ' + downloadName);
+  });
 
-    // Aquí generamos el nombre del archivo con el nombre del artista y una extensión de archivo predeterminada.
-    const downloadFileName = `${artistName}.mp3`;
-
-    // Crea un modal con el audio y un botón para descargar el MP3
-    const modalContent = `
-      <div class="media-modal">
-        <audio controls autoplay>
-          <source src="${audioUrlD}" type="audio/mp3">
-          Tu navegador no soporta audio HTML5.
-        </audio>
-        <a href="${audioUrlD}" download="${downloadFileName}" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
-        <button onclick="closeMediaModal()" style="margin-top: 10px;">Cerrar</button>
-      </div>
-    `;
-    closePopup(); // Asumiendo que esta función cierra un popup existente.
-    showMediaModal(modalContent); // Asumiendo que esta función muestra el modal con el contenido generado.
-  } catch (error) {
-    Swal.fire(error.toString()); // Mostrar el error usando SweetAlert.
-  }
+  // Resto de tu código para mostrar el audio en un modal
+  const modalContent = `
+    <div class="media-modal">
+      <audio controls autoplay>
+        <source src="${audioUrl}" type="audio/mp4">
+        Tu navegador no soporta audio HTML5.
+      </audio>
+      <button onclick="closeMediaModal()">Cerrar</button>
+    </div>
+  `;
+  closePopup();
+  showMediaModal(modalContent);
 }
  
 function showMediaModal(content) {
