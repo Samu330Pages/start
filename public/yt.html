@@ -315,32 +315,37 @@ function downloadVideo(videoUrl) {
   showMediaModal(modalContent);
 }
 
-function downloadAudio(audioUrl) {
+function editAudioMetadata(audioUrl, newName, artistName) {
   const { createFFmpeg, fetchFile } = FFmpeg;
   const ffmpeg = createFFmpeg({ log: true });
 
   (async () => {
     try {
       await ffmpeg.load();
-  
+
       const response = await fetch(audioUrl);
       const arrayBuffer = await response.arrayBuffer();
       const audioData = new Uint8Array(arrayBuffer);
-  
-      ffmpeg.FS('writeFile', 'input.m4a', audioData);
-      await ffmpeg.run('-i', 'input.m4a', '-b:a', '192k', 'output.mp3');
-      const data = ffmpeg.FS('readFile', 'output.mp3');
+
+      // Escribe el archivo original en el sistema de archivos de FFmpeg
+      ffmpeg.FS('writeFile', 'original.m4a', audioData);
+
+      // Comando FFmpeg para cambiar el nombre y editar metadatos
+      // Asegúrate de ajustar los parámetros de metadatos según necesites
+      await ffmpeg.run('-i', 'original.m4a', '-metadata', `title=samu330`, '-metadata', `artist=samu330`, `samu330.mp3`);
+
+      const data = ffmpeg.FS('readFile', `samu330.mp3`);
       const audioBlob = new Blob([data.buffer], { type: 'audio/mp3' });
       const audioUrlD = URL.createObjectURL(audioBlob);
       
-      // Crea un modal con el audio y un botón para descargar el MP3
+      // Crea un modal con el audio y un botón para descargar con los nuevos metadatos
       const modalContent = `
         <div class="media-modal">
           <audio controls autoplay>
             <source src="${audioUrlD}" type="audio/mp3">
             Tu navegador no soporta audio HTML5.
           </audio>
-          <a href="${audioUrlD}" download="output.mp3" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
+          <a href="${audioUrlD}" download="${newName}.mp3" style="display:block; margin-top: 10px; text-decoration: none; color: #000; background-color: #4CAF50; padding: 10px 20px; text-align: center;">Descargar MP3</a>
           <button onclick="closeMediaModal()" style="margin-top: 10px;">Cerrar</button>
         </div>
       `;
