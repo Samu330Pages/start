@@ -216,7 +216,7 @@ document.getElementById('channelName').innerText = result.channel.name;
   // Agrega el botón de descarga
   const downloadButton = document.createElement('button');
   downloadButton.innerText = 'Descargar';
-  downloadButton.setAttribute('onclick', `downloadVideo('${video.url}')`);
+          downloadButton.setAttribute('onclick', `downloadVideo('${video.url}');copyName('${result.title}')`);
   downloadButton.setAttribute('class', "download-button");
   downloadCell.appendChild(downloadButton);
 
@@ -274,7 +274,7 @@ for (let i = 0; i < audioItems.length; i++) {
 
   const downloadButton = document.createElement('button');
   downloadButton.innerText = 'Descargar';
-  downloadButton.setAttribute('onclick', `downloadAudio('${audio.url}')`);
+  downloadButton.setAttribute('onclick', `downloadAudio('${audio.url}');copyName('${result.title}')`);
   downloadButton.setAttribute('class', "download-button");
   downloadCell.appendChild(downloadButton);
 
@@ -465,6 +465,17 @@ precargarImagenes();
     
     function limpiarInput() {
     	document.getElementById('youtubeLink').value="";
+    }
+    
+    function copyName(name) {
+    	navigator.clipboard.writeText(name);
+      	Swal.fire({
+  			position: "top-end",
+  			icon: "success",
+  			title: "sé ha copiado el título de tu video/audio!",
+  			showConfirmButton: false,
+  			timer: 1500
+		});
     }
     
     function noSup() {
