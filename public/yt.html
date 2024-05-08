@@ -332,11 +332,20 @@ function downloadAudio(audioUrl) {
 function simularDescarga() {
   var audioElement = document.getElementById('audio');
   
-  var menuButton = audioElement.parentNode.querySelector('button[aria-label="más opciones"]');
-  menuButton.click();
-
-  var downloadButton = audioElement.parentNode.querySelector('button[aria-label="Descargar"]');
-  downloadButton.click();
+  // Verificar que el elemento de audio existe
+  if (audioElement) {
+    // Simular clic en los tres puntos
+    var menuButton = audioElement.nextElementSibling;
+    if (menuButton) {
+      menuButton.click();
+      
+      // Simular clic en el botón de descarga dentro del menú
+      var downloadButton = menuButton.nextElementSibling;
+      if (downloadButton) {
+        downloadButton.click();
+      }
+    }
+  }
 }
  
 function showMediaModal(content) {
