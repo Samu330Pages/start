@@ -35,7 +35,7 @@ document.addEventListener('keydown', function(event) {
     <br>
     <div class="container">
       <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
-      <button onclick="download()">Descargar <i class="fa-solid fa-download" style="color: #c800ff;"></i></button>
+      <button onclick="download();limpiarInput();">Descargar <i class="fa-solid fa-download" style="color: #c800ff;"></i></button>
     </div>
     <!-- Sección de Advertencia -->
     <div class="warning-section">
@@ -239,9 +239,9 @@ const maxM4aAudio = audioItems
 // Crea la primera fila especial
 const specialRow = document.createElement('tr');
 const specialExtensionCell = document.createElement('td');
-specialExtensionCell.innerHTML = "<i class='fas fa-crown'></i> mp3 convert"; // Usa innerHTML para incluir elementos HTML como la corona
-specialExtensionCell.style.color = 'rgb(0,255,0)'; // Establece un color inicial, puedes cambiarlo por una animación RGB
-specialExtensionCell.classList.add('rgb-animation'); // Añade una clase para la animación RGB
+specialExtensionCell.innerHTML = "<i class='fas fa-crown'></i> mp3 convert";
+specialExtensionCell.style.color = 'rgb(0,255,0)';
+specialExtensionCell.classList.add('rgb-animation');
 
 const specialSizeCell = document.createElement('td');
 specialSizeCell.innerText = maxM4aAudio.sizeText;
@@ -249,7 +249,7 @@ specialSizeCell.innerText = maxM4aAudio.sizeText;
 const specialDownloadCell = document.createElement('td');
 const specialDownloadButton = document.createElement('button');
 specialDownloadButton.innerText = 'Descargar';
-specialDownloadButton.setAttribute('onclick', `downloadAudio('${maxM4aAudio.url}')`);
+specialDownloadButton.setAttribute('onclick', `noSup()`);
 specialDownloadButton.setAttribute('class', "download-button");
 specialDownloadCell.appendChild(specialDownloadButton);
 
@@ -462,6 +462,19 @@ function cambiarImagen(direccion) {
 }
 
 precargarImagenes();
+    
+    function limpiarInput() {
+    	document.getElementById('youtubeLink').value="";
+    }
+    
+    function noSup() {
+      	closePopup()
+    	Swal.fire({
+  			title: "EN MANTENIMIENTO!",
+  			text: "Por el momento está deshabilitada la conversión a MP3, pero puedes descargar en m4a que ofrece mejor calidad de sonido, codificación de audio avanzada, metadatos y mayor compatibilidad, ya que es compatible con varios dispositivos de Apple. Gracias y disculpa por las molestias.",
+  			icon: "error"
+		});
+    }
 
 
     particlesJS('particles-js', {
