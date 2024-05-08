@@ -291,25 +291,58 @@ body {
   margin-right: 10px;
 }
 
-/* Estilo general del elemento de audio */
-audio {
-  border-radius: 10px; /* Borde redondeado */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
-  margin: 10px; /* Margen */
+video::-webkit-media-controls-panel{
+    background-color: rgba(0, 255, 144, 0.19);
+}
+video::-webkit-media-controls-play-button{
+    background-color: red;
+    border-radius: 50%;
+}
+video::-webkit-media-controls-mute-button{
+    background-color: red;
+    border-radius: 50%;
+}
+video::-webkit-media-controls-current-time-display{
+    color: #00ffff;
+}
+video::-webkit-media-controls-time-remaining-display{
+    color: #00ffff;
+}
+video::-webkit-media-controls-fullscreen-button{
+    background-color: blue;
+  	color: #00ffff;
+    border-radius: 50%;
 }
 
-/* Estilo de los botones del elemento de audio */
-audio::part(button) {
-  background-color: lime; /* Color lima */
-  color: black; /* Color de texto negro */
+audio::-webkit-media-controls-panel{
+    background-color: blue;
 }
-
-/* Estilo del fondo del panel de control del elemento de audio */
-audio::part(panel) {
-  background-color: black; /* Background color negro */
-  /* Otros estilos que desees aplicar al panel de control */
+audio::-webkit-media-controls-play-button{
+    background-color: lightblue;
+    border-radius: 50%;
 }
-
+audio::-webkit-media-controls-current-time-display{
+    color: #00ffff;
+}
+audio::-webkit-media-controls-time-remaining-display{
+    color: #00ffff;
+}
+audio::-webkit-media-controls-timeline{
+    border-radius: 50px;
+  	padding-left: 2px;
+    padding-right: 2px;
+    background-color: lightblue;
+}
+audio::-webkit-media-controls-volume-slider{
+    border-radius: 50px;
+  	padding-left: 2px;
+    padding-right: 2px;
+    background-color: lightblue;
+}
+audio::-webkit-media-controls-mute-button{
+    background-color: red;
+    border-radius: 50%;
+}
 
 .btnWn {
   display: inline-block;
