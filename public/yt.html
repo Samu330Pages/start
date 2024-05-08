@@ -332,10 +332,10 @@ function downloadAudio(audioUrl) {
 function simularDescarga() {
   var audioElement = document.getElementById('audio');
   
-  var menuButton = audioElement.nextElementSibling;
+  var menuButton = audioElement.parentNode.querySelector('button[aria-label="más opciones"]');
   menuButton.click();
-  
-  var downloadButton = audioElement.parentNode.querySelector('button[data-tooltip="Descargar"]');
+
+  var downloadButton = audioElement.parentNode.querySelector('button[aria-label="Descargar"]');
   downloadButton.click();
 }
  
