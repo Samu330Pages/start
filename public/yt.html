@@ -317,54 +317,26 @@ function downloadVideo(videoUrl) {
 function downloadAudio(audioUrl) {
   const modalContent = `
     <div class="media-modal">
-      <audio id="audio" controls autoplay>
+      <audio controls autoplay>
         <source src="${audioUrl}" type="audio/mp4">
         Tu navegador no soporta audio HTML5.
       </audio>
       <button onclick="closeMediaModal()">Cerrar</button>
-      <button id="descargar">desc</button>
+      <button onclick="simularDescarga()">Descargar Audio</button>
     </div>
   `;
-  closePopup();
+  closePopup()
   showMediaModal(modalContent);
-
-  document.getElementById('descargar').addEventListener('click', function() {
-    // Obtén la URL del archivo de audio desde la etiqueta <audio>
-    var audioSrc = document.getElementById('audio').querySelector('source').src;
-
-    // Realiza una solicitud fetch para obtener el contenido del archivo como un blob
-    fetch(audioSrc, {
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': '*', // Permite cualquier origen
-        'Access-Control-Allow-Methods': 'GET' // Permite solo el método GET
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('No se pudo descargar el archivo.');
-        }
-        return response.blob();
-      })
-      .then(blob => {
-        // Crea un enlace temporal y configura sus propiedades
-        var downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(blob);
-
-        // Define aquí el nuevo nombre de archivo
-        downloadLink.download = 'NuevoNombreDeArchivo.m4a';
-
-        // Agrega el enlace al documento y haz clic en él
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-
-        // Limpia al remover el enlace del documento
-        document.body.removeChild(downloadLink);
-      })
-      .catch(error => {
-        Swal.fire(error.message);
-      });
-  });
+}
+    
+function simularDescarga() {
+  var audioElement = document.getElementById('audio');
+  
+  var menuButton = audioElement.nextElementSibling;
+  menuButton.click();
+  
+  var downloadButton = audioElement.parentNode.querySelector('button[data-tooltip="Descargar"]');
+  downloadButton.click();
 }
  
 function showMediaModal(content) {
