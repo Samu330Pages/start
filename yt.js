@@ -361,24 +361,24 @@ precargarImagenes();
     }
     
     function m4a() {
-      const info = `<div style="display: flex; justify-content: center; align-items: center; width: 100vh; height: 100vh;">
-  <div style="width: 80%; max-height: 80%; overflow-y: auto; background-color: #c4c4; color: #0056b3; padding: 20px; border-radius: 10px; text-align: left;">
-    <h2 style="color: #004094;">¿Por qué es mejor el formato M4A y WEBM?</h2>
-    <p>El formato M4A y WEBM ofrecen una serie de ventajas en comparación con el formato MP3, entre las que destacan:</p>
-    <ul style="list-style-type: disc; margin-left: 20px;">
-      <li><strong>Mejor calidad de sonido:</strong> Ambos formatos permiten una mejor compresión sin pérdida de calidad.</li>
-      <li><strong>Compatibilidad:</strong> Son ampliamente compatibles con dispositivos modernos y plataformas de streaming.</li>
-      <li><strong>Optimización de archivos:</strong> Permiten obtener tamaños de archivo más pequeños a igualdad de calidad, lo que facilita la descarga y el almacenamiento.</li>
-      <li><strong>Soporte para metadatos avanzados:</strong> Permiten incluir más información sobre el archivo, como carátulas, letras de canciones, etc.</li>
-    </ul>
-    <p>Estas características hacen que el M4A y WEBM sean opciones superiores para la descarga y el disfrute de contenido multimedia, ofreciendo una experiencia de usuario mejorada.</p>
-    <p style="margin-top: 30px; text-align: center;">
-      <button onclick="closeMediaModal()" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Entendido</button>
-    </p>
-  </div>
-</div>`
-    showMediaModal(info);
-    }
+  const info = `<div style="display: flex; justify-content: center; align-items: center; width: 90vw; height: 80vh;">
+    <div style="width: 80%; max-height: 80%; overflow-y: auto; background-color: #c4c4; color: #0056b3; padding: 20px; border-radius: 10px; text-align: left; box-sizing: border-box;">
+      <h2 style="color: #004094;">¿Por qué es mejor el formato M4A y WEBM?</h2>
+      <p>El formato M4A y WEBM ofrecen una serie de ventajas en comparación con el formato MP3, entre las que destacan:</p>
+      <ul style="list-style-type: disc; margin-left: 20px;">
+        <li><strong>Mejor calidad de sonido:</strong> Ambos formatos permiten una mejor compresión sin pérdida de calidad.</li>
+        <li><strong>Compatibilidad:</strong> Son ampliamente compatibles con dispositivos modernos y plataformas de streaming.</li>
+        <li><strong>Optimización de archivos:</strong> Permiten obtener tamaños de archivo más pequeños a igualdad de calidad, lo que facilita la descarga y el almacenamiento.</li>
+        <li><strong>Soporte para metadatos avanzados:</strong> Permiten incluir más información sobre el archivo, como carátulas, letras de canciones, etc.</li>
+      </ul>
+      <p>Estas características hacen que el M4A y WEBM sean opciones superiores para la descarga y el disfrute de contenido multimedia, ofreciendo una experiencia de usuario mejorada.</p>
+      <p style="margin-top: 30px; text-align: center;">
+        <button onclick="closeMediaModal()" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Entendido</button>
+      </p>
+    </div>
+  </div>`;
+  showMediaModal(info);
+}
     
     function copyName(name) {
     	navigator.clipboard.writeText(name);
