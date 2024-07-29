@@ -1,136 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube Video DL</title>
-    <meta name="description" content="Descarga tus videos favoritos de YouTube sin interrupciones por anuncios. Rápido, seguro y gratuito.">
-    <meta name="keywords" content="descarga videos YouTube, YouTube sin anuncios, descarga videos gratis, descarga videos rápido, descarga videos seguro">
-    <link rel="icon" href="https://icons.iconarchive.com/icons/graphics-vibe/neon-glow-social/256/youtube-icon.png" type="image/png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://samu330.com">
-    <meta property="og:title" content="YouTube Video DL By Samu330">
-    <meta property="og:description" content="Descarga tus videos favoritos de YouTube sin interrupciones por anuncios. Rápido, seguro y gratuito.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Samu330Pages/start/main/images/og.jpg">
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <!-- Agregar SweetAlert -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Agregar FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" type="text/css" href="./style.css">
-
-  <script>
-document.oncontextmenu = function() {
-    return false
-}
-document.addEventListener("dragstart", function(event) {
-    event.preventDefault();
-});
-
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-        event.preventDefault();
-    }
-});
-        </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desarrollo de Páginas Web</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="shaper">
-  <div id="particles-js"></div>
-  <header>
-    <div class="header-content">
-        <div class="social-downloads">
-          <span>Mas descargas:</span>
-          <br>
-            <a href=""><i class="fa-brands fa-facebook"></i></a>
-            <a href=""><i class="fa-brands fa-tiktok"></i></a>
-            <a href=""><i class="fa-brands fa-instagram"></i></a>
+<body>
+    <header>
+        <h1>Desarrollo de Páginas Web</h1>
+        <p>Creación de páginas web adaptadas a las necesidades de tu negocio.</p>
+    </header>
+    <main>
+        <section id="why-website">
+            <h2>¿Por Qué Tener una Página Web?</h2>
+            <p>En la era digital actual, tener una página web es esencial para cualquier negocio. Te permite llegar a más clientes, ofrecer información sobre tus productos y servicios, y mejorar tu presencia en línea. Además, una página web bien diseñada puede aumentar la credibilidad de tu negocio y ayudarte a destacarte de la competencia.</p>
+            <p>Al contactarme para crear tu página web, obtendrás un servicio profesional y económico. Por un único pago anual, tendrás tu página con dominio incluido. Adaptaré el diseño y las funcionalidades según tus gustos y necesidades, asegurando que tu presencia en línea sea efectiva y atractiva.</p>
+        </section>
+      <div id="overlay" class="overlay hidden">
+    <div class="preview-window">
+        <div class="preview-header">
+            <h2 id="preview-title">Título del preview</h2>
+            <button id="close-preview-button">Cerrar Vista Previa ✖</button>
         </div>
-      <br>
-        <h1 style="color: #ff0000;">YouTube Downloader <i class="fa-brands fa-youtube" style="color: #ff0000;"></i></h1>
-    </div>
-</header>
-  <div class="content">
-    <button class="css-button-shadow-border-sliding--rose" onclick="abrirVentana()">Intrucciones</button>
-    <br>
-    <div class="container">
-      <input type="text" placeholder="Pega aquí el enlace de YT" id="youtubeLink">
-      <button onclick="download();limpiarInput();">Descargar <i class="fa-solid fa-download" style="color: #c800ff;"></i></button>
-    </div>
-    <!-- Sección de Advertencia -->
-    <div class="warning-section">
-      <button class="btn" onClick="m4a()">Porque descargar en M4A<i class="fa-regular fa-circle-question" style="color: #ffffff;"></i></button>
-        <h2 class="warning-title"><i class="fa-solid fa-triangle-exclamation"></i> ADVERTENCIA <i class="fa-solid fa-triangle-exclamation"></i></h2>
-        <div class="instructions">
-            <p>Para garantizar una experiencia de descarga óptima, por favor sigue estas instrucciones, dado que por motivos de privacidad, no es posible modificar el nombre de los Audios/Videos, es necesario o más bien, bajo a consideración del usuario cambiar el nombre de cada archivo que se descarga, ya que el navegador le da un nombre predeterminado que no se puede manipular.</p>
-          	<br>
-            <ol>
-                <li>Activa en tu navegador la opción que permite mostrar un mensaje al descargar un archivo, indicando dónde se guardará y qué nombre tendrá.</li>
-                <li>Al hacer clic en el botón de descarga, el nombre del archivo se copiará automáticamente a tu portapapeles.</li>
-                <li>Simplemente pega el nombre del archivo en el diálogo de guardado para mantener una organización adecuada.</li>
-            </ol>
-          <br>
-          <p>¡Te sugerimos estar al tanto de actualizaciones para enterarte de cualquier modificación, y de probable solución al cambio de nombre al descargar los archivos, por su compresión gracias!.</p>
-        </div>
-        <a href="https://whatsapp.com/channel/0029VaDVQFVL7UVd71R7bY23" class="whatsapp-button">Canal de WhatsApp para actualizaciones <i class="fa-brands fa-whatsapp"></i></a>
+        <iframe id="preview-frame" src="" frameborder="0"></iframe>
     </div>
 </div>
-  
-  <div class="ventana" id="ventana">
-    <div class="contenido">
-      <div class="imagenes">
-        <img class="imagen" src="" alt="" id="imagen">
-        <div class="flecha derecha" onclick="cambiarImagen(1)">&#8250;</div>
-        <div class="flecha izquierda" onclick="cambiarImagen(-1)">&#8249;</div>
-      </div>
-      <div id="texto"></div>
-      <button class="btnWn" onClick="cerrarVentana()">Listo!</button>
-    </div>
-  </div>
+        <section id="carousel">
+            <h2>Tipo de Páginas, Click en la imagen para vista previa:</h2>
+            <div class="carousel-container">
+                <button class="carousel-button prev-button" onclick="changeSlide(-1)">&#10094;</button>
+                <div class="carousel-slide">
+                    <img id="Negocio" src="https://www.zooplus.es/magazine/wp-content/uploads/2018/04/fotolia_169457098.jpg" alt="Negocios">
+                    <img id="personal" src="https://i.pinimg.com/564x/fb/a3/6d/fba36d09ee5281a039e2750f45c21acb.jpg" alt="personal">
+                    <img id="blog" src="https://hips.hearstapps.com/hmg-prod/images/curious-kitten-royalty-free-image-1691414019.jpg?crop=1.00xw:1.00xh;0,0&resize=640:*" alt="blog">
+                    <img id="tienda" src="https://i.pinimg.com/564x/fb/a3/6d/fba36d09ee5281a039e2750f45c21acb.jpg" alt="tienda">
+                </div>
+                <button class="carousel-button next-button" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+        </section>
+        <section id="contact-form">
+            <h2>Personaliza tu Página Web</h2>
+            <form id="customization-form">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" required>
 
-  <div class="popup" id="popup">
-    <div class="popup-content">
-      <span class="close-button" onclick="closePopup()">X</span>
-      <img src="" alt="Thumb" class="popup-image" id="popupImage">
-      <h1 id="vidName"></h1>
-      <h3 id="channelViews" style="textLign: left;"></h3>
-      <h3 id="publishTime" style="textLign: left;"></h3>
-      <div class="channel-info">
-        <img src="" alt="Avatar" class="channel-avatar" id="avatarImage">
-        <h3 id="channelName"></h3>
-      </div>
-      <p id="descr"></p>
-      <div class="tabs">
-        <div class="tab active" onclick="changeTab('videoTab')" data-tab="videoTab">Video</div>
-        <div class="tab" onclick="changeTab('audioTab')" data-tab="audioTab">Audio</div>
-        <div class="tab" onclick="changeTab('relatedTab')" data-tab="relatedTab">Relacionados</div>
-      </div>
+                <label for="email">Correo Electrónico (opcional):</label>
+                <input type="email" id="email" name="email">
 
-      <div id="videoTab" class="tab-content active">
-        <table>
-          <tr>
-            <th>Calidad</th>
-            <th>Tamaño</th>
-            <th>Descargar</th>
-          </tr>
-        </table>
-      </div>
+                <label for="phone">Teléfono:</label>
+                <input type="tel" id="phone" name="phone" required>
 
-      <div id="audioTab" class="tab-content">
-        <table>
-          <tr>
-            <th>Calidad</th>
-            <th>Tamaño</th>
-            <th>Descargar</th>
-          </tr>
-        </table>
-      </div>
+                <label for="type">Tipo de Página:</label>
+                <select id="type" name="type">
+                    <option value="negocio">Negocio</option>
+                    <option value="personal">Personal</option>
+                    <option value="blog">Blog</option>
+                    <option value="tienda">Tienda en línea</option>
+                </select>
 
-      <div id="relatedTab" class="tab-content">
-        <!-- Contenido de la pestaña relacionados -->
-      </div>
-      <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
-    </div>
-  </div>
+                <label for="description">Descripción:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
 
-  <script src="./yt.js"></script>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+        <section id="contact-info">
+            <h2>Contáctanos</h2>
+            <div class="contact-buttons">
+                <a href="tel:+529984907794" class="contact-btn"><i class="fas fa-phone"></i> Llamar</a>
+                <a href="https://wa.me/529984907794" class="contact-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="mailto:samu330ofc@gmail.com" class="contact-btn"><i class="fas fa-envelope"></i> Correo</a>
+                <a href="https://www.facebook.com/sm330.io" class="contact-btn"><i class="fab fa-facebook"></i> Facebook</a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Samu330-Dev. Todos los derechos reservados.</p>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
