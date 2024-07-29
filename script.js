@@ -12,7 +12,7 @@ document.getElementById('customization-form').addEventListener('submit', functio
         emailText = "Sin Correo";
     }
 
-    const message = `*Nombre:* ${name}\n*Correo:* ${email}\n*Teléfono:* ${phone}\n*Tipo de Página:* ${type}\n*Descripción:* ${description}`;
+    const message = `*Nombre:* ${name}\n*Correo:* ${emailText}\n*Teléfono:* ${phone}\n*Tipo de Página:* ${type}\n*Descripción:* ${description}`;
     const whatsappUrl = `https://wa.me/5219984907794?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, '_blank');
