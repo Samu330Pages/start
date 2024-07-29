@@ -9,10 +9,10 @@ document.getElementById('customization-form').addEventListener('submit', functio
 
     let emailText = email;
     if (email === "") {
-        emailText = "Sin Correo";
+        emailText = "_Sin Correo_";
     }
 
-    const message = `*Nombre:* ${name}\n*Correo:* ${emailText}\n*Teléfono:* ${phone}\n*Tipo de Página:* ${type}\n*Descripción:* ${description}`;
+    const message = `*👤 Nombre:* ${name}\n*📩 Correo:* ${emailText}\n*📱 Teléfono:* ${phone}\n*🗂 Tipo de Página:* ${type}\n*📝 Descripción:* ${description}`;
     const whatsappUrl = `https://wa.me/5219984907794?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, '_blank');
@@ -31,7 +31,7 @@ pics.forEach((pic) => {
     const imgId = pic.id;
     const previewHtml = `${imgId}.html`;
     previewFrame.src = previewHtml;
-    previewTitle.textContent = `Vista previa de ${pic.alt}`;
+    previewTitle.textContent = `Tipo: ${pic.alt}`;
     overlay.classList.remove('hidden');
   });
 });
