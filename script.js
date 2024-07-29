@@ -1,47 +1,77 @@
-// Configuración de Firebase
-var config = {
-    apiKey: "AIzaSyCqsYZA9wU9Y1YvYGicdZQ_7DDzfEVLXDU",
-    authDomain: "number-ac729.firebaseapp.com",
-    projectId: "number-ac729",
-    storageBucket: "number-ac729.appspot.com",
-    messagingSenderId: "36610055964",
-    appId: "1:36610055964:web:ec80cc7ea2fb23287ce4d9",
-    measurementId: "G-0BTNK7VNM3"
-};
-
-firebase.initializeApp(config);
-
-// Verificar el estado de autenticación del usuario
-firebase.auth().onAuthStateChanged(function(user) {
-    if (!user) {
-        // El usuario no ha iniciado sesión, redirigir al login
-        window.location.href = "index";
-    } else {
-        // Obtener el nombre de usuario actual del objeto "user"
-        //var username = user.displayName || user.email; // Si el nombre de usuario no está disponible, mostrar el correo electrónico
-
-        // Actualizar el contenido del elemento "h2" con el mensaje de bienvenida
-        //var welcomeMessage = document.getElementById("welcome-message");
-        //welcomeMessage.innerText = "Bienvenido " + username;
-    }
-});
-
-document.oncontextmenu = function() {
-    return false
-}
-document.addEventListener("dragstart", function(event) {
+document.getElementById('customization-form').addEventListener('submit', function(event) {
     event.preventDefault();
-});
 
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-        event.preventDefault();
-        Swal.fire(
-            'Sin acceso?',
-            'Lo Siento pero no tienes permiso',
-            'question'
-        )
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const type = document.getElementById('type').value;
+    const description = document.getElementById('description').value;
+
+    let emailText = email;
+    if (email === "") {
+        emailText = "Sin Correo";
     }
+
+    const message = `*Nombre:* ${name}\n*Correo:* ${email}\n*Teléfono:* ${phone}\n*Tipo de Página:* ${type}\n*Descripción:* ${description}`;
+    const whatsappUrl = `https://wa.me/5219984907794?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, '_blank');
 });
 
-/////////////////////////////////////////////////////////////////////
+let slideIndex = 0;
+const slides = document.querySelectorAll('.carousel-slide img');
+const totalSlides = slides.length;
+
+function updateSlides() {
+    slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'adjacent');
+        if (index === slideIndex) {
+            slide.classList.add('active');
+        } else if (index === (slideIndex + 1) % totalSlides || index === (slideIndex - 1 + totalSlides) % totalSlides) {
+            slide.classList.add('adjacent');
+        }
+    });
+}
+
+function showSlide(index) {
+    const offset = -index * 100;
+    document.querySelector('.carousel-slide').style.transform = `translateX(${offset}%)`;
+    updateSlides();
+}
+
+function nextSlide() {
+    slideIndex = (slideIndex + 1) % totalSlides;
+    showSlide(slideIndex);
+}
+
+function prevSlide() {
+    slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
+    showSlide(slideIndex);
+}
+
+document.querySelector('.next-button').addEventListener('click', nextSlide);
+document.querySelector('.prev-button').addEventListener('click', prevSlide);
+
+setInterval(nextSlide, 3000);
+showSlide(slideIndex);
+
+// Ventana
+const overlay = document.getElementById('overlay');
+const previewFrame = document.getElementById('preview-frame');
+const previewTitle = document.getElementById('preview-title');
+const closePreviewButton = document.getElementById('close-preview-button');
+
+slides.forEach((slide) => {
+    slide.addEventListener('click', () => {
+        const imgId = slide.id;
+        const previewHtml = `${imgId}.html`;
+        previewFrame.src = previewHtml;
+        previewTitle.textContent = `Vista previa de ${slide.alt}`;
+        overlay.classList.remove('hidden');
+    });
+});
+
+closePreviewButton.addEventListener('click', () => {
+    overlay.classList.add('hidden');
+    previewFrame.src = '';
+});
