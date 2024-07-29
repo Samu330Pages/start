@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda en Línea</title>
+  <style>
+  /* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Estilos del header */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+header nav h1 {
+    font-size: 24px;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos del hero */
+.hero {
+    background: url('https://www.zarla.com/images/Zarla-TuLogo-Hind-Madurai-2400x2400-20240104.png?crop=1:1,smart&width=150&dpr=2') no-repeat center center/cover;
+    color: #fff;
+  	display: flex;
+  	max-width: 100%;
+    text-align: center;
+    padding: 200px 20px;
+}
+
+.hero h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+/* Estilos de la sección de productos */
+.productos {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.productos h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.producto {
+    background: #fff;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.producto img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.producto h3 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.producto p {
+    font-size: 18px;
+    color: #555;
+}
+
+.producto button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.producto button:hover {
+    background-color: #555;
+}
+
+/* Estilos de la sección de información */
+.informacion {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.informacion h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    header nav ul {
+        flex-direction: column;
+    }
+
+    .hero {
+        padding: 40px 20px;
+    }
+
+    .productos, .informacion {
+        padding: 0 10px;
+    }
+
+    .producto {
+        margin: 10px 0;
+    }
+}</style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Nombre de tu la Tienda</h1>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Productos</a></li>
+                <li><a href="#">Contacto</a></li>
+                <li><a href="#">Carrito (0)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>.</h2>
+            <p>.</p>
+        </section>
+
+        <section class="productos">
+            <h2>Nuestros Productos</h2>
+            <div class="producto">
+                <img src="https://cdn.icon-icons.com/icons2/37/PNG/512/productapplication_producto_3010.png" width="70" alt="Producto 1">
+                <h3>Producto 1</h3>
+                <p>$10.00</p>
+                <button>Añadir al carrito</button>
+            </div>
+            <div class="producto">
+                <img src="https://cdn.icon-icons.com/icons2/37/PNG/512/productapplication_producto_3010.png" width="70" alt="Producto 2">
+                <h3>Producto 2</h3>
+                <p>$20.00</p>
+                <button>Añadir al carrito</button>
+            </div>
+            <!-- Más productos -->
+        </section>
+
+        <section class="informacion">
+            <h2>Información</h2>
+            <p>Detalles sobre la tienda, políticas, etc. ¡Puedes editar a tu gusto los colores, animaciones, imágenes... todo lo que desees!</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nombre de la Tienda. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
