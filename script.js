@@ -18,43 +18,6 @@ document.getElementById('customization-form').addEventListener('submit', functio
     window.open(whatsappUrl, '_blank');
 });
 
-let slideIndex = 0;
-const slides = document.querySelectorAll('.carousel-slide img');
-const totalSlides = slides.length;
-
-function updateSlides() {
-    slides.forEach((slide, index) => {
-        slide.classList.remove('active', 'adjacent');
-        if (index === slideIndex) {
-            slide.classList.add('active');
-        } else if (index === (slideIndex + 1) % totalSlides || index === (slideIndex - 1 + totalSlides) % totalSlides) {
-            slide.classList.add('adjacent');
-        }
-    });
-}
-
-function showSlide(index) {
-    const offset = -index * 100;
-    document.querySelector('.carousel-slide').style.transform = `translateX(${offset}%)`;
-    updateSlides();
-}
-
-function nextSlide() {
-    slideIndex = (slideIndex + 1) % totalSlides;
-    showSlide(slideIndex);
-}
-
-function prevSlide() {
-    slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
-    showSlide(slideIndex);
-}
-
-document.querySelector('.next-button').addEventListener('click', nextSlide);
-document.querySelector('.prev-button').addEventListener('click', prevSlide);
-
-setInterval(nextSlide, 3000);
-showSlide(slideIndex);
-
 // Ventana
 const overlay = document.getElementById('overlay');
 const previewFrame = document.getElementById('preview-frame');
