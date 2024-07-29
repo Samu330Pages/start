@@ -90,53 +90,27 @@ form button:hover {
     margin-right: 8px;
 }
 
-.carousel-container {
-    position: relative;
-  	display: flex;
-    width: 60%;
-    overflow: hidden;
-    margin: 0 auto;
-}
-
-.carousel-slide {
+.image-container {
     display: flex;
-    transition: transform 0.5s ease-in-out;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px auto;
 }
 
-.carousel-slide img {
-    width: 100%;
-    flex-shrink: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+.image-container img {
+    width: 30%;
+    height: auto;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 10px;
 }
 
-.carousel-slide img.active {
-    opacity: 1;
-}
-
-.carousel-slide img.adjacent {
-    opacity: 0.5;
-}
-
-.prev-button, .next-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-  	border-radius: 20%;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.prev-button {
-    left: 10px;
-}
-
-.next-button {
-    right: 10px;
+.image-container img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 footer {
