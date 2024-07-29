@@ -29,7 +29,7 @@ const pics = document.querySelectorAll('.image-container img');
 pics.forEach((pic) => {
   pic.addEventListener('click', () => {
     const imgId = pic.id;
-    const previewHtml = `${imgId}.html`;
+    const previewHtml = `types/${imgId}.html`;
     previewFrame.src = previewHtml;
     previewTitle.textContent = `Tipo: ${pic.alt}`;
     overlay.classList.remove('hidden');
