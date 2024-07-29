@@ -31,7 +31,7 @@ pics.forEach((pic) => {
     const imgId = pic.id;
     const previewHtml = `types/${imgId}.html`;
     previewFrame.src = previewHtml;
-    previewTitle.textContent = `Tipo: ${pic.alt}`;
+    previewTitle.textContent = `Vista previa: ${pic.alt}`;
     overlay.classList.remove('hidden');
   });
 });
