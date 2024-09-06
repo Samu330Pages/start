@@ -59,7 +59,7 @@
 </head>
 <body>
 
-<h2>test xdxd</h2>
+<h2>test zdzd</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
@@ -83,7 +83,7 @@
             const flightData = await response.json();
             return flightData.flights[0]; // Retornar el primer vuelo
         } catch (error) {
-            console.error('Error al cargar datos del vuelo:', error.message);
+            alert('Error al cargar datos del vuelo:', error.message);
             return null;
         }
     }
@@ -159,6 +159,14 @@
         if (flightDetailsDiv.innerHTML) {
             // Si ya hay datos, ocultar o mostrar
             flightDetailsDiv.style.display = flightDetailsDiv.style.display === 'none' ? 'block' : 'none';
+            return;
+        }
+
+        // Verificar si flightNumber está definido y no es vacío
+        if (!flightNumber) {
+            console.error('Número de vuelo no válido');
+            flightDetailsDiv.innerHTML = `<p class="error">Número de vuelo no válido.</p>`;
+            flightDetailsDiv.style.display = 'block';
             return;
         }
 
