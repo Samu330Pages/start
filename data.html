@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Servicios de Vuelo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .service-info {
+            background-color: #fff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .flight-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Subir Archivo Excel con Servicios de Vuelo</h2>
+<input type="file" id="file-input" />
+<button id="process-button">Procesar Servicios</button>
+<div id="services-list"></div>
+
+<script>
+    async function fetchFlightData(flightNumber) {
+        const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}`; // Cambia esto a la URL de tu proxy
+
+        try {
+            const response = await fetch(targetUrl);
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del proxy');
+            }
+            const flightData = await response.json();
+            return flightData.flights[0]; // Retornar el primer vuelo
+        } catch (error) {
+            console.error('Error al cargar datos del vuelo:', error.message);
+            return null;
+        }
+    }
+
+    document.getElementById('process-button').onclick = async () => {
+        const fileInput = document.getElementById('file-input');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Por favor, selecciona un archivo Excel.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+
+            // Leer los datos de los servicios
+            const services = [];
+            for (let row = 4; row <= sheet['!ref'].split(':')[1].replace(/[0-9]/g, ''); row++) {
+                const orderCell = sheet[`A${row}`];
+                const serviceCell = sheet[`G${row}`];
+                const timeCell = sheet[`B${row}`];
+                const flightCell = sheet[`I${row}`];
+
+                if (orderCell && serviceCell && flightCell) {
+                    const order = orderCell.v;
+                    const serviceNumber = serviceCell.v;
+                    const time = timeCell.v;
+                    const flightNumber = flightCell.v;
+                    services.push({ order, serviceNumber, time, flightNumber });
+                }
+
+                // Salto de 5 filas por cada servicio
+                row += 4;
+            }
+
+            // Mostrar los servicios en la página
+            const servicesList = document.getElementById('services-list');
+            servicesList.innerHTML = '';
+            for (const service of services) {
+                const serviceDiv = document.createElement('div');
+                serviceDiv.className = 'service-info';
+                serviceDiv.innerHTML = `
+                    <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time}</p>
+                    <button onclick="showFlightDetails('${service.flightNumber}', this)">Ver Detalles del Vuelo</button>
+                    <div class="flight-details"></div>
+                `;
+                servicesList.appendChild(serviceDiv);
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    };
+
+    async function showFlightDetails(flightNumber, button) {
+        const flightDetailsDiv = button.nextElementSibling;
+        if (flightDetailsDiv.innerHTML) {
+            // Si ya hay datos, ocultar o mostrar
+            flightDetailsDiv.style.display = flightDetailsDiv.style.display === 'none' ? 'block' : 'none';
+            return;
+        }
+
+        const flightData = await fetchFlightData(flightNumber);
+        if (flightData) {
+            flightDetailsDiv.innerHTML = `
+                <p><strong>Número de Vuelo:</strong> ${flightData.ident}</p>
+                <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
+                <p><strong>Estado:</strong> ${flightData.status}</p>
+                <p><strong>Origen:</strong> ${flightData.origin.name} (${flightData.origin.code_iata})</p>
+                <p><strong>Destino:</strong> ${flightData.destination.name} (${flightData.destination.code_iata})</p>
+            `;
+            flightDetailsDiv.style.display = 'block';
+        } else {
+            flightDetailsDiv.innerHTML = `<p class="error">No se encontró información del vuelo.</p>`;
+            flightDetailsDiv.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
