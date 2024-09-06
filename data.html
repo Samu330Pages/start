@@ -59,7 +59,7 @@
 </head>
 <body>
 
-<h2>test zdzd</h2>
+<h2>test xxdx</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
@@ -73,7 +73,7 @@
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
-        alert("URL de la API para el vuelo:", targetUrl); // Imprimir la URL para depuración
+        alert(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
 
         try {
             const response = await fetch(targetUrl);
@@ -81,9 +81,10 @@
                 throw new Error('Error en la respuesta del proxy');
             }
             const flightData = await response.json();
+            console.log("Datos del vuelo recibidos:", flightData); // Imprimir datos recibidos
             return flightData.flights[0]; // Retornar el primer vuelo
         } catch (error) {
-            alert('Error al cargar datos del vuelo:', error.message);
+            console.error('Error al cargar datos del vuelo:', error.message);
             return null;
         }
     }
@@ -126,6 +127,7 @@
                     const isArrival = typeCell && typeCell.v.includes('LLEGADA'); // Verificar si es llegada
 
                     if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
+                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${flightNumber}`); // Para depuración
                         services.push({ order, serviceNumber, time, flightNumber, isArrival });
                     }
                 }
