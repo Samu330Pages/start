@@ -39,6 +39,10 @@
             color: red; /* Color para indicar demoras */
             font-weight: bold;
         }
+        .on-time {
+            color: green; /* Color para vuelos a tiempo */
+            font-weight: bold;
+        }
         .flight-summary {
             display: flex;
             flex-direction: column;
@@ -194,8 +198,8 @@
         if (flightData) {
             const scheduledDeparture = new Date(flightData.scheduled_off);
             const scheduledArrival = new Date(flightData.scheduled_on);
-            const departureDelay = flightData.departure_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos</span>` : 'A tiempo';
-            const arrivalDelay = flightData.arrival_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos</span>` : 'A tiempo';
+            const departureDelay = flightData.departure_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos</span>` : '<span class="on-time">A tiempo</span>';
+            const arrivalDelay = flightData.arrival_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos</span>` : '<span class="on-time">A tiempo</span>';
 
             flightDetailsDiv.innerHTML = `
                 <div class="flight-summary">
@@ -203,8 +207,8 @@
                     <div class="flight-status">
                         <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
                         <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
-                        <p class="${flightData.departure_delay > 0 ? 'delay' : ''}"><strong>Salida:</strong> ${scheduledDeparture.toLocaleString()} (${departureDelay})</p>
-                        <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Llegada:</strong> ${scheduledArrival.toLocaleString()} (${arrivalDelay})</p>
+                        <p><strong>Salida:</strong> ${scheduledDeparture.toLocaleString()} (${departureDelay})</p>
+                        <p><strong>Llegada:</strong> ${scheduledArrival.toLocaleString()} (${arrivalDelay})</p>
                         <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
                         <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
                     </div>
@@ -215,7 +219,7 @@
                         <p><strong>P Puerta de Llegada:</strong> ${flightData.gate_destination}</p>
                         <p><strong>Terminal de Salida:</strong> ${flightData.terminal_origin}</p>
                         <p><strong>Terminal de Llegada:</strong> ${flightData.terminal_destination}</p>
-                        <p><strong>Estado:</strong> ${flightData.status}</p>
+                        <p><strong>Estado:</strong> <span class="${flightData.cancelled ? 'delay' : 'on-time'}">${flightData.cancelled ? 'Cancelado' : flightData.status}</span></p>
                         <p><strong>Tiempo Estimado de Vuelo:</strong> ${Math.ceil(flightData.filed_ete / 60)} minutos</p>
                     </div>
                 </div>
