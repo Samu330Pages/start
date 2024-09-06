@@ -37,11 +37,19 @@
         }
         .delay {
             color: red; /* Color para indicar demoras */
+            font-weight: bold;
         }
         .flight-summary {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .flight-status, .flight-details {
+            background-color: #f9f9f9; /* Fondo claro */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
         }
         button {
             background-color: #007bff; /* Color del botón */
@@ -55,11 +63,21 @@
         button:hover {
             background-color: #0056b3; /* Color del botón al pasar el mouse */
         }
+        @media (min-width: 768px) {
+            .flight-summary {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .flight-status, .flight-details {
+                flex: 1;
+                margin: 5px; /* Espacio entre columnas */
+            }
+        }
     </style>
 </head>
 <body>
 
-<h2>test xxdx</h2>
+<h2>Gestor de Servicios de Vuelo</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
@@ -68,12 +86,12 @@
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
-        tomorrow.setDate(now.getDate()); // Incrementar un día
+        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
         const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
-        alert(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
+        console.log(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
 
         try {
             const response = await fetch(targetUrl);
@@ -176,15 +194,30 @@
         if (flightData) {
             const scheduledDeparture = new Date(flightData.scheduled_off);
             const scheduledArrival = new Date(flightData.scheduled_on);
+            const departureDelay = flightData.departure_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos</span>` : 'A tiempo';
+            const arrivalDelay = flightData.arrival_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos</span>` : 'A tiempo';
 
             flightDetailsDiv.innerHTML = `
                 <div class="flight-summary">
-                    <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
-                    <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
-                    <p class="${flightData.departure_delay > 0 ? 'delay' : ''}"><strong>Salida:</strong> ${scheduledDeparture.toLocaleString()} ${flightData.departure_delay > 0 ? `(Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos)` : ''}</p>
-                    <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Llegada:</strong> ${scheduledArrival.toLocaleString()} ${flightData.arrival_delay > 0 ? `(Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos)` : ''}</p>
-                    <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
-                    <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
+                    <h3>Estado del Vuelo</h3>
+                    <div class="flight-status">
+                        <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
+                        <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
+                        <p class="${flightData.departure_delay > 0 ? 'delay' : ''}"><strong>Salida:</strong> ${scheduledDeparture.toLocaleString()} (${departureDelay})</p>
+                        <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Llegada:</strong> ${scheduledArrival.toLocaleString()} (${arrivalDelay})</p>
+                        <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
+                        <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
+                    </div>
+                    <h4>Detalles del Vuelo</h4>
+                    <div class="flight-details">
+                        <p><strong>Tipo de Aeronave:</strong> ${flightData.aircraft_type}</p>
+                        <p><strong>P Puerta de Salida:</strong> ${flightData.gate_origin}</p>
+                        <p><strong>P Puerta de Llegada:</strong> ${flightData.gate_destination}</p>
+                        <p><strong>Terminal de Salida:</strong> ${flightData.terminal_origin}</p>
+                        <p><strong>Terminal de Llegada:</strong> ${flightData.terminal_destination}</p>
+                        <p><strong>Estado:</strong> ${flightData.status}</p>
+                        <p><strong>Tiempo Estimado de Vuelo:</strong> ${Math.ceil(flightData.filed_ete / 60)} minutos</p>
+                    </div>
                 </div>
             `;
             flightDetailsDiv.style.display = 'block';
