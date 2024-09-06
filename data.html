@@ -75,24 +75,39 @@
 
             // Leer los datos de los servicios
             const services = [];
-            for (let row = 4; row <= sheet['!ref'].split(':')[1].replace(/[A-Z]/g, ''); row += 5) { // Saltar cada 5 filas
+            const maxRow = sheet['!ref'].split(':')[1].replace(/[A-Z]/g, ''); // Obtener el número máximo de fila
+            const totalRows = parseInt(maxRow);
+
+            for (let row = 4; row <= totalRows; row++) { // Comenzar desde la fila 4
                 const orderCell = sheet[`A${row}`];
                 const serviceCell = sheet[`G${row}`];
                 const timeCell = sheet[`B${row}`];
                 const flightCell = sheet[`I${row}`];
 
+                // Solo agregar si hay información
                 if (orderCell && serviceCell && flightCell) {
                     const order = orderCell.v;
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
-                    const flightNumber = flightCell.v;
-                    services.push({ order, serviceNumber, time, flightNumber });
+                    const flightNumber = flightCell.v.trim(); // Eliminar espacios
+
+                    if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
+                        services.push({ order, serviceNumber, time, flightNumber });
+                    }
                 }
+
+                // Saltar las filas vacías (5 filas por servicio)
+                row += 4;
             }
 
             // Mostrar los servicios en la página
             const servicesList = document.getElementById('services-list');
             servicesList.innerHTML = '';
+            if (services.length === 0) {
+                servicesList.innerHTML = `<p class="error">No se encontraron servicios en el archivo.</p>`;
+                return;
+            }
+
             for (const service of services) {
                 const serviceDiv = document.createElement('div');
                 serviceDiv.className = 'service-info';
