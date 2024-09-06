@@ -78,11 +78,12 @@
             const maxRow = sheet['!ref'].split(':')[1].replace(/[A-Z]/g, ''); // Obtener el número máximo de fila
             const totalRows = parseInt(maxRow);
 
-            for (let row = 4; row <= totalRows; row++) { // Comenzar desde la fila 4
-                const orderCell = sheet[`A${row}`];
-                const serviceCell = sheet[`G${row}`];
-                const timeCell = sheet[`B${row}`];
-                const flightCell = sheet[`I${row}`];
+            for (let row = 4; row <= totalRows; row += 5) { // Empezar en la fila 4 y saltar cada 5 filas
+                const serviceRow = row + 1; // La fila con la información del servicio es la siguiente
+                const orderCell = sheet[`A${serviceRow}`];
+                const serviceCell = sheet[`G${serviceRow}`];
+                const timeCell = sheet[`B${serviceRow}`];
+                const flightCell = sheet[`I${serviceRow}`];
 
                 // Solo agregar si hay información
                 if (orderCell && serviceCell && flightCell) {
@@ -95,9 +96,6 @@
                         services.push({ order, serviceNumber, time, flightNumber });
                     }
                 }
-
-                // Saltar las filas vacías (5 filas por servicio)
-                row += 4;
             }
 
             // Mostrar los servicios en la página
