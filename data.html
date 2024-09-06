@@ -18,18 +18,30 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .service-arrival {
+            background-color: #d4edda; /* Color verde claro para llegadas */
+        }
         .flight-details {
             display: none;
             margin-top: 10px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #fafafa;
         }
         .status {
             font-weight: bold;
         }
         .error {
             color: red;
+        }
+        .delay {
+            color: red; /* Color para indicar demoras */
+        }
+        .flight-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
     </style>
 </head>
@@ -84,6 +96,7 @@
                 const serviceCell = sheet[`G${serviceRow}`];
                 const timeCell = sheet[`B${serviceRow}`];
                 const flightCell = sheet[`I${serviceRow}`];
+                const typeCell = sheet[`C${serviceRow}`]; // Columna de tipo (LLEGADAS)
 
                 // Solo agregar si hay información
                 if (orderCell && serviceCell && flightCell) {
@@ -91,9 +104,10 @@
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
                     const flightNumber = flightCell.v.trim(); // Eliminar espacios
+                    const isArrival = typeCell && typeCell.v === 'LLEGADAS'; // Verificar si es llegada
 
                     if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
-                        services.push({ order, serviceNumber, time, flightNumber });
+                        services.push({ order, serviceNumber, time, flightNumber, isArrival });
                     }
                 }
             }
@@ -108,9 +122,9 @@
 
             for (const service of services) {
                 const serviceDiv = document.createElement('div');
-                serviceDiv.className = 'service-info';
+                serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
                 serviceDiv.innerHTML = `
-                    <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time}</p>
+                    <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
                     <button onclick="showFlightDetails('${service.flightNumber}', this)">Ver Detalles del Vuelo</button>
                     <div class="flight-details"></div>
                 `;
@@ -131,12 +145,31 @@
 
         const flightData = await fetchFlightData(flightNumber);
         if (flightData) {
+            const now = new Date();
+            const estimatedArrival = new Date(flightData.estimated_in);
+            const actualArrival = flightData.actual_in ? new Date(flightData.actual_in) : null;
+
+            // Calcular tiempo desde el aterrizaje
+            let timeSinceLanding = '';
+            if (actualArrival) {
+                const timeElapsed = Math.floor((now - actualArrival) / 60000); // Tiempo en minutos desde que aterrizó
+                timeSinceLanding = `Tiempo desde aterrizaje: ${timeElapsed} minutos`;
+            } else if (estimatedArrival < now) {
+                const timeElapsed = Math.floor((now - estimatedArrival) / 60000); // Tiempo en minutos desde la llegada estimada
+                timeSinceLanding = `Tiempo desde llegada estimada: ${timeElapsed} minutos`;
+            }
+
             flightDetailsDiv.innerHTML = `
-                <p><strong>Número de Vuelo:</strong> ${flightData.ident}</p>
-                <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
-                <p><strong>Estado:</strong> ${flightData.status}</p>
-                <p><strong>Origen:</strong> ${flightData.origin.name} (${flightData.origin.code_iata})</p>
-                <p><strong>Destino:</strong> ${flightData.destination.name} (${flightData.destination.code_iata})</p>
+                <div class="flight-summary">
+                    <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
+                    <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
+                    <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Estado:</strong> ${flightData.status} ${flightData.arrival_delay > 0 ? `| Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos` : ''}</p>
+                    <p><strong>Origen:</strong> ${flightData.origin.name} (${flightData.origin.code_iata})</p>
+                    <p><strong>Destino:</strong> ${flightData.destination.name} (${flightData.destination.code_iata})</p>
+                    <p>${timeSinceLanding}</p>
+                    <p><strong>Terminal de Origen:</strong> ${flightData.terminal_origin}</p>
+                    <p><strong>Terminal de Destino:</strong> ${flightData.terminal_destination}</p>
+                </div>
             `;
             flightDetailsDiv.style.display = 'block';
         } else {
