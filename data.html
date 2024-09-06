@@ -81,7 +81,7 @@
             const flightData = await response.json();
             return flightData.flights[0]; // Retornar el primer vuelo
         } catch (error) {
-            console.error('Error al cargar datos del vuelo:', error.message);
+            alert('Error al cargar datos del vuelo:', error.message);
             return null;
         }
     }
