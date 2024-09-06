@@ -59,21 +59,22 @@
 </head>
 <body>
 
-<h2>Subir Archivo Excel con Servicios de Vuelo</h2>
+<h2>test zdxds</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
 
 <script>
-    async function fetchFlightData(flightNumber, date) {
-        const targetUrl = `https://aeroapi.flightaware.com/aeroapi/flights/${flightNumber}?ident_type=designator&start=${date}&end=${date}&max_pages=1`; // Cambiar la API según tu requerimiento
+    async function fetchFlightData(flightNumber) {
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
+        const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+        const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
         try {
-            const response = await fetch(targetUrl, {
-                headers: {
-                    'Authorization': 'Bearer YOUR_API_TOKEN' // Asegúrate de reemplazar esto con tu token de API
-                }
-            });
+            const response = await fetch(targetUrl);
             if (!response.ok) {
                 throw new Error('Error en la respuesta del proxy');
             }
@@ -159,13 +160,7 @@
             return;
         }
 
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
-
-        const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-
-        const flightData = await fetchFlightData(flightNumber, dateFormatted);
+        const flightData = await fetchFlightData(flightNumber);
         if (flightData) {
             const scheduledDeparture = new Date(flightData.scheduled_off);
             const scheduledArrival = new Date(flightData.scheduled_on);
