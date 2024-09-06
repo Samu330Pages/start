@@ -43,6 +43,18 @@
             flex-direction: column;
             gap: 8px;
         }
+        button {
+            background-color: #007bff; /* Color del botón */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3; /* Color del botón al pasar el mouse */
+        }
     </style>
 </head>
 <body>
@@ -145,30 +157,24 @@
 
         const flightData = await fetchFlightData(flightNumber);
         if (flightData) {
-            const now = new Date();
-            const estimatedArrival = new Date(flightData.estimated_in);
-            const actualArrival = flightData.actual_in ? new Date(flightData.actual_in) : null;
+            const today = new Date();
+            const oneDayLater = new Date(today);
+            oneDayLater.setDate(oneDayLater.getDate() + 1); // Incrementar un día
 
-            // Calcular tiempo desde el aterrizaje
-            let timeSinceLanding = '';
-            if (actualArrival) {
-                const timeElapsed = Math.floor((now - actualArrival) / 60000); // Tiempo en minutos desde que aterrizó
-                timeSinceLanding = `Tiempo desde aterrizaje: ${timeElapsed} minutos`;
-            } else if (estimatedArrival < now) {
-                const timeElapsed = Math.floor((now - estimatedArrival) / 60000); // Tiempo en minutos desde la llegada estimada
-                timeSinceLanding = `Tiempo desde llegada estimada: ${timeElapsed} minutos`;
-            }
+            // Ajustar las fechas de salida y llegada
+            const scheduledDeparture = new Date(flightData.scheduled_off);
+            const scheduledArrival = new Date(flightData.scheduled_on);
+            scheduledDeparture.setDate(scheduledDeparture.getDate() + 1);
+            scheduledArrival.setDate(scheduledArrival.getDate() + 1);
 
             flightDetailsDiv.innerHTML = `
                 <div class="flight-summary">
                     <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
                     <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
-                    <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Estado:</strong> ${flightData.status} ${flightData.arrival_delay > 0 ? `| Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos` : ''}</p>
-                    <p><strong>Origen:</strong> ${flightData.origin.name} (${flightData.origin.code_iata})</p>
-                    <p><strong>Destino:</strong> ${flightData.destination.name} (${flightData.destination.code_iata})</p>
-                    <p>${timeSinceLanding}</p>
-                    <p><strong>Terminal de Origen:</strong> ${flightData.terminal_origin}</p>
-                    <p><strong>Terminal de Destino:</strong> ${flightData.terminal_destination}</p>
+                    <p class="${flightData.departure_delay > 0 ? 'delay' : ''}"><strong>Salida:</strong> ${scheduledDeparture.toLocaleString()} ${flightData.departure_delay > 0 ? `(Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos)` : ''}</p>
+                    <p class="${flightData.arrival_delay > 0 ? 'delay' : ''}"><strong>Llegada:</strong> ${scheduledArrival.toLocaleString()} ${flightData.arrival_delay > 0 ? `(Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos)` : ''}</p>
+                    <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
+                    <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
                 </div>
             `;
             flightDetailsDiv.style.display = 'block';
