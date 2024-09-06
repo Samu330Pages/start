@@ -28,7 +28,6 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #fafafa;
-            overflow: hidden; /* Evitar el desbordamiento */
         }
         .status {
             font-weight: bold;
@@ -50,7 +49,7 @@
             gap: 10px;
             margin-top: 10px;
         }
-        .flight-status, .flight-details {
+        .flight-status {
             background-color: #f9f9f9; /* Fondo claro */
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -72,16 +71,6 @@
         }
         button:hover {
             background-color: #0056b3; /* Color del botón al pasar el mouse */
-        }
-        @media (min-width: 768px) {
-            .flight-summary {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-            .flight-status, .flight-details {
-                flex: 1;
-                margin: 5px; /* Espacio entre columnas */
-            }
         }
     </style>
 </head>
@@ -209,46 +198,13 @@
 
             flightDetailsDiv.innerHTML = `
                 <div class="flight-summary">
-                    <h3>Estado del Vuelo</h3>
                     <div class="flight-status">
-                        <p><strong>Número de Vuelo:</strong> ${flightData.ident} (${flightData.flight_number})</p>
-                        <p><strong>Operador:</strong> ${flightData.operator_iata}</p>
-                        <p><strong>Salida:</strong></p>
-                        <div class="flight-detail-item">
-                            <p>${scheduledDeparture.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> <small>${scheduledDeparture.toLocaleDateString()}</small></p>
-                            <p>${departureDelay}</p>
-                        </div>
-                        <p><strong>Llegada:</strong></p>
-                        <div class="flight-detail-item">
-                            <p>${scheduledArrival.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> <small>${scheduledArrival.toLocaleDateString()}</small></p>
-                            <p>${arrivalDelay}</p>
-                        </div>
                         <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
+                        <p><strong>Hora de Salida:</strong> ${scheduledDeparture.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> ${scheduledDeparture.toLocaleDateString()}</p>
+                        <p>${departureDelay}</p>
                         <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
-                    </div>
-                    <h4>Detalles del Vuelo</h4>
-                    <div class="flight-details">
-                        <div class="flight-detail-item">
-                            <p><strong>Tipo de Aeronave:</strong> ${flightData.aircraft_type}</p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>P Puerta de Salida:</strong> ${flightData.gate_origin}</p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>P Puerta de Llegada:</strong> ${flightData.gate_destination}</p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>Terminal de Salida:</strong> ${flightData.terminal_origin}</p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>Terminal de Llegada:</strong> ${flightData.terminal_destination}</p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>Estado:</strong> <span class="${flightData.cancelled ? 'delay' : 'on-time'}">${flightData.cancelled ? 'Cancelado' : flightData.status}</span></p>
-                        </div>
-                        <div class="flight-detail-item">
-                            <p><strong>Tiempo Estimado de Vuelo:</strong> ${Math.ceil(flightData.filed_ete / 60)} minutos</p>
-                        </div>
+                        <p><strong>Hora de Llegada:</strong> ${scheduledArrival.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> ${scheduledArrival.toLocaleDateString()}</p>
+                        <p>${arrivalDelay}</p>
                     </div>
                 </div>
             `;
