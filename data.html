@@ -75,7 +75,7 @@
 
             // Leer los datos de los servicios
             const services = [];
-            for (let row = 4; row <= sheet['!ref'].split(':')[1].replace(/[0-9]/g, ''); row++) {
+            for (let row = 4; row <= sheet['!ref'].split(':')[1].replace(/[A-Z]/g, ''); row += 5) { // Saltar cada 5 filas
                 const orderCell = sheet[`A${row}`];
                 const serviceCell = sheet[`G${row}`];
                 const timeCell = sheet[`B${row}`];
@@ -88,9 +88,6 @@
                     const flightNumber = flightCell.v;
                     services.push({ order, serviceNumber, time, flightNumber });
                 }
-
-                // Salto de 5 filas por cada servicio
-                row += 4;
             }
 
             // Mostrar los servicios en la página
