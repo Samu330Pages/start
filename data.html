@@ -59,7 +59,7 @@
 </head>
 <body>
 
-<h2>Test zdxd</h2>
+<h2>test xdxd</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
@@ -73,6 +73,8 @@
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
+        alert("URL de la API para el vuelo:", targetUrl); // Imprimir la URL para depuración
+
         try {
             const response = await fetch(targetUrl);
             if (!response.ok) {
@@ -81,7 +83,7 @@
             const flightData = await response.json();
             return flightData.flights[0]; // Retornar el primer vuelo
         } catch (error) {
-            alert('Error al cargar datos del vuelo:', error.message);
+            console.error('Error al cargar datos del vuelo:', error.message);
             return null;
         }
     }
