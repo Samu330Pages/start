@@ -68,7 +68,7 @@
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
-        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
+        tomorrow.setDate(now.getDate()); // Incrementar un día
         const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
