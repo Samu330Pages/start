@@ -59,17 +59,21 @@
 </head>
 <body>
 
-<h2>test xdxx</h2>
+<h2>Subir Archivo Excel con Servicios de Vuelo</h2>
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
 
 <script>
-    async function fetchFlightData(flightNumber) {
-        const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}`; // Cambia esto a la URL de tu proxy
+    async function fetchFlightData(flightNumber, date) {
+        const targetUrl = `https://aeroapi.flightaware.com/aeroapi/flights/${flightNumber}?ident_type=designator&start=${date}&end=${date}&max_pages=1`; // Cambiar la API según tu requerimiento
 
         try {
-            const response = await fetch(targetUrl);
+            const response = await fetch(targetUrl, {
+                headers: {
+                    'Authorization': 'Bearer YOUR_API_TOKEN' // Asegúrate de reemplazar esto con tu token de API
+                }
+            });
             if (!response.ok) {
                 throw new Error('Error en la respuesta del proxy');
             }
@@ -116,7 +120,7 @@
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
                     const flightNumber = flightCell.v.trim(); // Eliminar espacios
-                    const isArrival = typeCell && typeCell.v === 'LLEGADAS'; // Verificar si es llegada
+                    const isArrival = typeCell && typeCell.v.includes('LLEGADA'); // Verificar si es llegada
 
                     if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
                         services.push({ order, serviceNumber, time, flightNumber, isArrival });
@@ -155,17 +159,16 @@
             return;
         }
 
-        const flightData = await fetchFlightData(flightNumber);
-        if (flightData) {
-            const today = new Date();
-            const oneDayLater = new Date(today);
-            oneDayLater.setDate(oneDayLater.getDate() + 1); // Incrementar un día
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
 
-            // Ajustar las fechas de salida y llegada
+        const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+        const flightData = await fetchFlightData(flightNumber, dateFormatted);
+        if (flightData) {
             const scheduledDeparture = new Date(flightData.scheduled_off);
             const scheduledArrival = new Date(flightData.scheduled_on);
-            scheduledDeparture.setDate(scheduledDeparture.getDate() + 1);
-            scheduledArrival.setDate(scheduledArrival.getDate() + 1);
 
             flightDetailsDiv.innerHTML = `
                 <div class="flight-summary">
