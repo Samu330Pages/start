@@ -95,14 +95,27 @@
     }
 
     function findFlightCode(flightName) {
-        // Búsqueda flexible de coincidencias
         const flightNameUpper = flightName.toLowerCase();
+        let matchedCode = null;
+
         for (const [fullName, code] of Object.entries(flightCodes)) {
             if (flightNameUpper.includes(fullName.toLowerCase()) || fullName.toLowerCase().includes(flightNameUpper)) {
-                return code; // Retorna el código IATA correspondiente
+                matchedCode = code; // Retorna el código IATA correspondiente
+                break; // Salir del bucle al encontrar la primera coincidencia
             }
         }
-        return null; // Si no se encuentra una coincidencia
+
+        // Si no se encuentra un código exacto, intentar con coincidencias parciales
+        if (!matchedCode) {
+            for (const [fullName, code] of Object.entries(flightCodes)) {
+                if (fullName.toLowerCase().startsWith(flightNameUpper)) {
+                    matchedCode = code;
+                    break;
+                }
+            }
+        }
+
+        return matchedCode; // Retorna el código IATA encontrado o null
     }
 
     async function fetchFlightData(flightNumber) {
@@ -173,7 +186,7 @@
 
                     if (iataCode) { // Solo agregar si el IATA no está vacío
                         console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${iataCode}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber: iataCode });
+                        services.push({ order, serviceNumber, time, flightNumber: iataCode, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
                     }
                 }
             }
@@ -188,7 +201,7 @@
 
             for (const service of services) {
                 const serviceDiv = document.createElement('div');
-                serviceDiv.className = `service-info`;
+                serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
                 serviceDiv.innerHTML = `
                     <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
                     <button onclick="showFlightDetails('${service.flightNumber}', this)">Ver Detalles del Vuelo</button>
