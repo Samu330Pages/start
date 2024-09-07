@@ -94,21 +94,6 @@
         }
     }
 
-    function findFlightCode(flightName) {
-        const flightNameUpper = flightName.toLowerCase();
-        let matchedCode = null;
-
-        // Búsqueda flexible para encontrar el código IATA
-        for (const [fullName, code] of Object.entries(flightCodes)) {
-            if (flightNameUpper.includes(fullName.toLowerCase())) {
-                matchedCode = code; // Retorna el código IATA correspondiente
-                break; // Salir del bucle al encontrar la primera coincidencia
-            }
-        }
-
-        return matchedCode; // Retorna el código IATA encontrado o null
-    }
-
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
@@ -117,7 +102,7 @@
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
-        alert(`${targetUrl}`); // Imprimir la URL para depuración
+        console.log(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
 
         try {
             const response = await fetch(targetUrl);
@@ -169,16 +154,9 @@
                     const time = timeCell.v;
                     const flightName = flightCell.v.trim(); // Eliminar espacios
 
-                    // Obtener el código IATA del vuelo usando búsqueda flexible
-                    const airlineCode = findFlightCode(flightName);
-                    const flightNumber = flightName.match(/\d+/) ? flightName.match(/\d+/)[0] : ''; // Extraer el número de vuelo
-
-                    // Formar el nuevo flightNumber en el formato correcto (IATA + número de vuelo)
-                    const formattedFlightNumber = airlineCode ? airlineCode + flightNumber : null; // Usar solo el IATA y el número
-
-                    if (formattedFlightNumber) { // Solo agregar si el IATA no está vacío
-                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${formattedFlightNumber}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber: formattedFlightNumber, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
+                    if (flightName) { // Solo agregar si el nombre del vuelo no está vacío
+                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${flightName}`); // Para depuración
+                        services.push({ order, serviceNumber, time, flightNumber: flightName, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
                     }
                 }
             }
