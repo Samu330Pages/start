@@ -82,6 +82,29 @@
 <div id="services-list"></div>
 
 <script>
+    let flightCodes = {};
+
+    // Cargar el archivo JSON con los códigos de vuelo
+    async function loadFlightCodes() {
+        try {
+            const response = await fetch('flights.json');
+            flightCodes = await response.json();
+        } catch (error) {
+            console.error('Error al cargar el archivo de códigos de vuelo:', error);
+        }
+    }
+
+    function findFlightCode(flightName) {
+        // Búsqueda flexible de coincidencias
+        const flightNameUpper = flightName.toLowerCase();
+        for (const [fullName, code] of Object.entries(flightCodes)) {
+            if (flightNameUpper.includes(fullName.toLowerCase()) || fullName.toLowerCase().includes(flightNameUpper)) {
+                return code; // Retorna el código IATA correspondiente
+            }
+        }
+        return null; // Si no se encuentra una coincidencia
+    }
+
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
@@ -140,12 +163,17 @@
                     const order = orderCell.v;
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
-                    const flightNumber = flightCell.v.trim(); // Eliminar espacios
-                    const isArrival = typeCell && typeCell.v.includes('LLEGADA'); // Verificar si es llegada
+                    const flightName = flightCell.v.trim(); // Eliminar espacios
 
-                    if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
-                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${flightNumber}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber, isArrival });
+                    // Obtener el código IATA del vuelo usando búsqueda flexible
+                    const airlineCode = findFlightCode(flightName);
+                    const flightNumber = flightName.match(/\d+/) ? flightName.match(/\d+/)[0] : ''; // Extraer el número de vuelo
+
+                    const iataCode = airlineCode ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
+
+                    if (iataCode) { // Solo agregar si el IATA no está vacío
+                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${iataCode}`); // Para depuración
+                        services.push({ order, serviceNumber, time, flightNumber: iataCode });
                     }
                 }
             }
@@ -160,7 +188,7 @@
 
             for (const service of services) {
                 const serviceDiv = document.createElement('div');
-                serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
+                serviceDiv.className = `service-info`;
                 serviceDiv.innerHTML = `
                     <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
                     <button onclick="showFlightDetails('${service.flightNumber}', this)">Ver Detalles del Vuelo</button>
@@ -214,6 +242,9 @@
             flightDetailsDiv.style.display = 'block';
         }
     }
+
+    // Cargar los códigos de vuelo al inicio
+    loadFlightCodes();
 </script>
 
 </body>
