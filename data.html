@@ -82,18 +82,6 @@
 <div id="services-list"></div>
 
 <script>
-    let flightCodes = {};
-
-    // Cargar el archivo JSON con los códigos de vuelo
-    async function loadFlightCodes() {
-        try {
-            const response = await fetch('flights.json');
-            flightCodes = await response.json();
-        } catch (error) {
-            console.error('Error al cargar el archivo de códigos de vuelo:', error);
-        }
-    }
-
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
@@ -152,11 +140,12 @@
                     const order = orderCell.v;
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
-                    const flightName = flightCell.v.trim(); // Eliminar espacios
+                    const flightNumber = flightCell.v.trim(); // Eliminar espacios
+                    const isArrival = typeCell && typeCell.v.includes('LLEGADA'); // Verificar si es llegada
 
-                    if (flightName) { // Solo agregar si el nombre del vuelo no está vacío
-                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${flightName}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber: flightName, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
+                    if (flightNumber) { // Solo agregar si el número de vuelo no está vacío
+                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${flightNumber}`); // Para depuración
+                        services.push({ order, serviceNumber, time, flightNumber, isArrival });
                     }
                 }
             }
@@ -225,9 +214,6 @@
             flightDetailsDiv.style.display = 'block';
         }
     }
-
-    // Cargar los códigos de vuelo al inicio
-    loadFlightCodes();
 </script>
 
 </body>
