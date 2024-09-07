@@ -182,11 +182,12 @@
                     const airlineCode = findFlightCode(flightName);
                     const flightNumber = flightName.match(/\d+/) ? flightName.match(/\d+/)[0] : ''; // Extraer el número de vuelo
 
-                    const iataCode = airlineCode ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
+                    // Formar el flightNumber en el formato correcto (IATA + número de vuelo)
+                    const iataFlightNumber = airlineCode ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
 
-                    if (iataCode) { // Solo agregar si el IATA no está vacío
-                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${iataCode}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber: iataCode, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
+                    if (iataFlightNumber) { // Solo agregar si el IATA no está vacío
+                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${iataFlightNumber}`); // Para depuración
+                        services.push({ order, serviceNumber, time, flightNumber: iataFlightNumber, isArrival: typeCell && typeCell.v.includes('LLEGADA') });
                     }
                 }
             }
