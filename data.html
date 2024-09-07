@@ -87,7 +87,7 @@
     // Cargar el archivo JSON con los códigos de vuelo
     async function loadFlightCodes() {
         try {
-            const response = await fetch('./flights.json');
+            const response = await fetch('flights.json');
             flightCodes = await response.json();
         } catch (error) {
             console.error('Error al cargar el archivo de códigos de vuelo:', error);
@@ -174,7 +174,7 @@
                     const flightNumber = flightName.match(/\d+/) ? flightName.match(/\d+/)[0] : ''; // Extraer el número de vuelo
 
                     // Formar el nuevo flightNumber en el formato correcto (IATA + número de vuelo)
-                    const formattedFlightNumber = airlineCode && flightNumber ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
+                    const formattedFlightNumber = airlineCode ? airlineCode + flightNumber : null; // Usar solo el IATA y el número
 
                     if (formattedFlightNumber) { // Solo agregar si el IATA no está vacío
                         console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${formattedFlightNumber}`); // Para depuración
