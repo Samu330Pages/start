@@ -87,7 +87,7 @@
     // Cargar el archivo JSON con los códigos de vuelo
     async function loadFlightCodes() {
         try {
-            const response = await fetch('flights.json');
+            const response = await fetch('./flights.json');
             flightCodes = await response.json();
         } catch (error) {
             console.error('Error al cargar el archivo de códigos de vuelo:', error);
@@ -100,19 +100,9 @@
 
         // Búsqueda flexible para encontrar el código IATA
         for (const [fullName, code] of Object.entries(flightCodes)) {
-            if (flightNameUpper.includes(fullName.toLowerCase()) || fullName.toLowerCase().includes(flightNameUpper)) {
+            if (flightNameUpper.includes(fullName.toLowerCase())) {
                 matchedCode = code; // Retorna el código IATA correspondiente
                 break; // Salir del bucle al encontrar la primera coincidencia
-            }
-        }
-
-        // Si no se encuentra un código exacto, intentar con coincidencias parciales
-        if (!matchedCode) {
-            for (const [fullName, code] of Object.entries(flightCodes)) {
-                if (fullName.toLowerCase().startsWith(flightNameUpper)) {
-                    matchedCode = code;
-                    break;
-                }
             }
         }
 
@@ -184,7 +174,7 @@
                     const flightNumber = flightName.match(/\d+/) ? flightName.match(/\d+/)[0] : ''; // Extraer el número de vuelo
 
                     // Formar el nuevo flightNumber en el formato correcto (IATA + número de vuelo)
-                    const formattedFlightNumber = airlineCode ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
+                    const formattedFlightNumber = airlineCode && flightNumber ? airlineCode + flightNumber : flightName; // Reemplazar por el IATA
 
                     if (formattedFlightNumber) { // Solo agregar si el IATA no está vacío
                         console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${formattedFlightNumber}`); // Para depuración
