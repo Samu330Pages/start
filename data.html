@@ -99,7 +99,7 @@
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
-        console.log(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
+        alert(`${targetUrl}`); // Imprimir la URL para depuración
 
         try {
             const response = await fetch(targetUrl);
