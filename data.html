@@ -99,7 +99,7 @@
 
         const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
 
-        alert(`${targetUrl}`); // Imprimir la URL para depuración
+        console.log(`URL de la API para el vuelo: ${targetUrl}`); // Imprimir la URL para depuración
 
         try {
             const response = await fetch(targetUrl);
@@ -116,13 +116,13 @@
     }
 
     function getIATAAndFlightNumber(flightName) {
-        // Buscar el código IATA en el nombre del vuelo
+        // Buscar el código IATA en el nombre del vuelo, sin importar mayúsculas o minúsculas
         let iataCode = null;
         let flightNumber = '';
 
         // Verificar si el vuelo contiene un código IATA
         for (const [code, name] of Object.entries(flightCodes)) {
-            if (flightName.includes(name) || flightName.includes(code)) {
+            if (flightName.toUpperCase().includes(name.toUpperCase()) || flightName.toUpperCase().includes(code.toUpperCase())) {
                 iataCode = code;
                 break;
             }
@@ -182,7 +182,7 @@
 
                     if (formattedFlightNumber) { // Solo agregar si el IATA no está vacío
                         console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${formattedFlightNumber}`); // Para depuración
-                        services.push({ order, serviceNumber, time, flightNumber: formattedFlightNumber, isArrival });
+                        services.push({ order, serviceNumber, time, flightNumber: flightName, formattedFlightNumber, isArrival });
                     }
                 }
             }
@@ -200,7 +200,7 @@
                 serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
                 serviceDiv.innerHTML = `
                     <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
-                    <button onclick="showFlightDetails('${service.flightNumber}', this)">Ver Detalles del Vuelo</button>
+                    <button onclick="showFlightDetails('${service.formattedFlightNumber}', this)">Ver Detalles del Vuelo</button>
                     <div class="flight-details"></div>
                 `;
                 servicesList.appendChild(serviceDiv);
