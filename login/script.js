@@ -151,7 +151,7 @@ function signup() {
           // Registrar usuario en Firebase y redirigir a gz330 después de 8 segundos
           firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(function() {
-              window.location.href = "gz330";
+              window.location.href = "https://wa.me/samu330";
             })
             .catch(function(error) {
               Swal.fire(`Error durante la creación del usuario ${error}`);
@@ -167,7 +167,7 @@ function signup() {
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // El usuario ha iniciado sesión, redirigir a gz330.html
-    window.location.href = "gz330";
+    window.location.href = "https://wa.me/samu330";
   } else {
     // El usuario no ha iniciado sesión
   }
