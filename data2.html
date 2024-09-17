@@ -9,7 +9,7 @@
 <body>
     <h1>Flight Tracker</h1>
     <input type="text" id="flightNumber" placeholder="Número de vuelo (ej: AA123)">
-    <input type="date" id="flightDate" placeholder="Fecha de vuelo">
+    <input type="date" id="flightDate" placeholder="Fecha de vuelo" format="YYYY-MM-DD">
     <button id="checkStatus">Consultar Estado del Vuelo</button>
     <pre id="result"></pre>
 
@@ -18,11 +18,27 @@
             const flightNumber = document.getElementById('flightNumber').value;
             const flightDate = document.getElementById('flightDate').value;
 
+            // Validar que la fecha y el número de vuelo no estén vacíos
+            if (!flightNumber || !flightDate) {
+                alert("Por favor, completa ambos campos.");
+                return;
+            }
+
+            // Formatear la fecha como YYYY-MM-DD
+            const formattedDate = flightDate;
+
+            // Construir la URL y los datos a enviar
+            const url = 'http://localhost:3000/api/flight-status';
+            const data = {
+                date: formattedDate,
+                flightNumber: flightNumber
+            };
+
+            // Mostrar alerta con la URL y los datos
+            alert(`Enviando datos a:\n${url}\nCon los siguientes datos:\n${JSON.stringify(data, null, 2)}`);
+
             try {
-                const response = await axios.post('http://localhost:3000/api/flight-status', {
-                    date: flightDate,
-                    flightNumber: flightNumber
-                });
+                const response = await axios.post(url, data);
                 document.getElementById('result').textContent = JSON.stringify(response.data, null, 2);
             } catch (error) {
                 alert(error.response ? error.response.data.error : "Error desconocido");
