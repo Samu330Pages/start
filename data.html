@@ -48,6 +48,7 @@
 <body>
 
 <h2>Gestor de Servicios de Vuelo</h2>
+<input type="date" id="date-input" value="${new Date().toISOString().split('T')[0]}" />
 <input type="file" id="file-input" />
 <button id="process-button">Procesar Servicios</button>
 <div id="services-list"></div>
@@ -81,11 +82,7 @@
         "WS": "WestJet",
     };
 
-    async function fetchFlightData(flightNumber) {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dateFormatted = tomorrow.toISOString().split('T')[0];
-
+    async function fetchFlightData(flightNumber, selectedDate) {
         const targetUrl = `http://localhost:3000/getFlightStatus`;
 
         try {
@@ -94,7 +91,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ flightNumber, date: dateFormatted }),
+                body: JSON.stringify({ flightNumber, date: selectedDate }),
             });
 
             if (!response.ok) {
@@ -131,6 +128,8 @@
 
     document.getElementById('process-button').onclick = async () => {
         const fileInput = document.getElementById('file-input');
+        const dateInput = document.getElementById('date-input');
+        const selectedDate = dateInput.value; // Obtener la fecha seleccionada
         const file = fileInput.files[0];
 
         if (!file) {
@@ -177,7 +176,7 @@
                         servicesList.appendChild(serviceDiv);
 
                         setTimeout(async () => {
-                            const flightData = await fetchFlightData(formattedFlightNumber);
+                            const flightData = await fetchFlightData(formattedFlightNumber, selectedDate); // Enviar la fecha seleccionada
                             if (flightData) {
                                 const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
                                 const arrivalDelay = flightData.arrival.delay ? `<span class="delay">Demora: ${flightData.arrival.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
@@ -186,9 +185,9 @@
                                     <p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p>
                                     <div class="flight-details">
                                         <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${formattedFlightNumber}</p>
-                                        <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${flightData.departure.time} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
+                                        <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${new Date(flightData.departure.date).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
                                         <p>${departureDelay}</p>
-                                        <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${flightData.arrival.time} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
+                                        <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${new Date(flightData.arrival.date).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
                                         <p>${arrivalDelay}</p>
                                         <p><strong>Status:</strong> ${flightData.status}</p>
                                     </div>
