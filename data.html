@@ -7,16 +7,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: #343a40;
             padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 10px auto;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 10px auto;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         .service-info {
             background-color: #fff;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
         }
         .service-arrival {
@@ -25,22 +48,22 @@
         .flight-details {
             margin-top: 10px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            background-color: #f8f9fa;
             border-radius: 5px;
-            background-color: #fafafa;
         }
         .status {
             font-weight: bold;
         }
         .error {
-            color: red;
+            color: #dc3545;
         }
         .delay {
-            color: red;
+            color: #dc3545;
             font-weight: bold;
         }
         .on-time {
-            color: green;
+            color: #28a745;
             font-weight: bold;
         }
     </style>
@@ -186,9 +209,9 @@
                                     <p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p>
                                     <div class="flight-details">
                                         <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${formattedFlightNumber}</p>
-                                        <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${flightData.departure.time} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
+                                        <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${new Date(flightData.departure.time).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
                                         <p>${departureDelay}</p>
-                                        <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${flightData.arrival.time} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
+                                        <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${new Date(flightData.arrival.time).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
                                         <p>${arrivalDelay}</p>
                                         <p><strong>Status:</strong> ${flightData.status}</p>
                                     </div>
