@@ -86,6 +86,7 @@
         let iataCode = null;
         let flightNumber = '';
 
+        // Normalizar el nombre del vuelo
         const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
 
         // Buscar el código IATA y el nombre de la aerolínea
@@ -97,12 +98,13 @@
             }
         }
 
-        // Extraer el número de vuelo
-        const numberMatch = normalizedFlightName.match(/\d+/);
+        // Extraer el número de vuelo, incluyendo códigos como "B6 631" o "F9 932"
+        const numberMatch = normalizedFlightName.match(/(\d+)/);
         if (numberMatch) {
             flightNumber = numberMatch[0];
         }
 
+        // Si se encontró el IATA y el número de vuelo, retornar ambos
         return { iataCode, flightNumber };
     }
 
