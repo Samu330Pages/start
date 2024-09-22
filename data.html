@@ -7,39 +7,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
-            color: #343a40;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             padding: 20px;
-        }
-        h2 {
-            color: #007bff;
-            text-align: center;
-        }
-        input[type="file"] {
-            display: block;
-            margin: 10px auto;
-        }
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            display: block;
-            margin: 10px auto;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
         }
         .service-info {
             background-color: #fff;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
         }
         .service-arrival {
@@ -48,22 +25,22 @@
         .flight-details {
             margin-top: 10px;
             padding: 10px;
-            border-top: 1px solid #ccc;
-            background-color: #f8f9fa;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #fafafa;
         }
         .status {
             font-weight: bold;
         }
         .error {
-            color: #dc3545;
+            color: red;
         }
         .delay {
-            color: #dc3545;
+            color: red;
             font-weight: bold;
         }
         .on-time {
-            color: #28a745;
+            color: green;
             font-weight: bold;
         }
     </style>
@@ -202,8 +179,9 @@
                         setTimeout(async () => {
                             const flightData = await fetchFlightData(formattedFlightNumber);
                             if (flightData) {
-                                const departureTime = flightData.schedule.actualGateDeparture; // Usar el tiempo de salida real
-                                const arrivalTime = flightData.schedule.actualGateArrival; // Usar el tiempo de llegada real
+                                // Usar las fechas y horas del servidor
+                                const departureTime = flightData.schedule.actualGateDeparture;
+                                const arrivalTime = flightData.schedule.actualGateArrival;
                                 const departureAirport = flightData.departureAirport.name;
                                 const arrivalAirport = flightData.arrivalAirport.name;
 
