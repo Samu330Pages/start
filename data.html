@@ -91,7 +91,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ flightNumber, date: selectedDate }),
+                body: JSON.stringify({ flightNumber, date: selectedDate }), // Enviar la fecha seleccionada
             });
 
             if (!response.ok) {
