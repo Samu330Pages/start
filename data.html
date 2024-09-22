@@ -202,18 +202,23 @@
                         setTimeout(async () => {
                             const flightData = await fetchFlightData(formattedFlightNumber);
                             if (flightData) {
-                                const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
-                                const arrivalDelay = flightData.arrival.delay ? `<span class="delay">Demora: ${flightData.arrival.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
+                                const departureTime = flightData.schedule.actualGateDeparture; // Usar el tiempo de salida real
+                                const arrivalTime = flightData.schedule.actualGateArrival; // Usar el tiempo de llegada real
+                                const departureAirport = flightData.departureAirport.name;
+                                const arrivalAirport = flightData.arrivalAirport.name;
+
+                                const departureDelay = flightData.status.delayStatus.minutes > 0 ? 
+                                    `<span class="delay">Demora: ${flightData.status.delayStatus.minutes} minutos</span>` : 
+                                    '<span class="on-time">A tiempo</span>';
 
                                 serviceDiv.innerHTML = `
                                     <p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p>
                                     <div class="flight-details">
-                                        <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${formattedFlightNumber}</p>
-                                        <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${new Date(flightData.departure.time).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
+                                        <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier.name} ${formattedFlightNumber}</p>
+                                        <p><strong>Salida:</strong> ${departureAirport} | <strong>Hora:</strong> ${new Date(departureTime).toLocaleString()} | <strong>Fecha:</strong> ${new Date(departureTime).toLocaleDateString()}</p>
                                         <p>${departureDelay}</p>
-                                        <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${new Date(flightData.arrival.time).toLocaleString()} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
-                                        <p>${arrivalDelay}</p>
-                                        <p><strong>Status:</strong> ${flightData.status}</p>
+                                        <p><strong>Llegada:</strong> ${arrivalAirport} | <strong>Hora:</strong> ${new Date(arrivalTime).toLocaleString()} | <strong>Fecha:</strong> ${new Date(arrivalTime).toLocaleDateString()}</p>
+                                        <p><strong>Status:</strong> ${flightData.status.status}</p>
                                     </div>
                                 `;
                             } else {
