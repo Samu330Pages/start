@@ -118,23 +118,22 @@
 
         const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
 
-        // Identificar el código IATA primero
-        for (const [code, name] of Object.entries(flightCodes)) {
-            const airlineNameWithoutSpaces = name.toUpperCase().replace(/\s+/g, '');
-            if (normalizedFlightName.startsWith(code) || normalizedFlightName.includes(airlineNameWithoutSpaces)) {
+        // Encontrar el código IATA primero
+        for (const code of Object.keys(flightCodes)) {
+            if (normalizedFlightName.startsWith(code)) {
                 iataCode = code;
                 break;
             }
         }
 
-        // Extraer el número de vuelo después del código IATA
+        // Si encontramos el código IATA, el resto es el número de vuelo
         if (iataCode) {
-            const codeLength = iataCode.length;
-            const flightNumberPart = normalizedFlightName.slice(codeLength);
-            const numberMatch = flightNumberPart.match(/^\d+/);
-            if (numberMatch) {
-                flightNumber = numberMatch[0];
-            }
+            flightNumber = normalizedFlightName.substring(iataCode.length);
+        }
+
+        // Verificar que el flightNumber es un número válido
+        if (!/^\d+$/.test(flightNumber)) {
+            flightNumber = ''; // Resetear si no es válido
         }
 
         return { iataCode, flightNumber };
