@@ -17,12 +17,12 @@
             margin: 10px 0;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
         }
         .service-arrival {
-            background-color: #d4edda; /* Color verde claro para llegadas */
+            background-color: #d4edda;
         }
         .flight-details {
-            display: none;
             margin-top: 10px;
             padding: 10px;
             border: 1px solid #ccc;
@@ -36,32 +36,15 @@
             color: red;
         }
         .delay {
-            color: red; /* Color para indicar demoras */
+            color: red;
             font-weight: bold;
         }
         .on-time {
-            color: green; /* Color para vuelos a tiempo */
+            color: green;
             font-weight: bold;
         }
-        .flight-summary {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .flight-status {
-            background-color: #f9f9f9; /* Fondo claro */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 15px;
-        }
-        .flight-detail-item {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-        }
         button {
-            background-color: #007bff; /* Color del botón */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
@@ -70,7 +53,7 @@
             font-size: 16px;
         }
         button:hover {
-            background-color: #0056b3; /* Color del botón al pasar el mouse */
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -82,33 +65,35 @@
 <div id="services-list"></div>
 
 <script>
-    // Mapa de códigos IATA
     const flightCodes = {
         "AA": "American Airlines",
         "UA": "United Airlines",
         "WN": "Southwest Airlines",
         "NK": "Spirit Airlines",
-        // Agrega más códigos IATA según sea necesario
     };
 
     async function fetchFlightData(flightNumber) {
         const now = new Date();
         const tomorrow = new Date();
-        tomorrow.setDate(now.getDate() + 1); // Incrementar un día
-        const dateFormatted = tomorrow.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        tomorrow.setDate(now.getDate() + 1);
+        const dateFormatted = tomorrow.toISOString().split('T')[0];
 
-        const targetUrl = `http://localhost:3000/flight?flightNumber=${flightNumber}&date=${dateFormatted}`; // Cambia esto a la URL de tu proxy
-
-        alert(`${targetUrl}`); // Imprimir la URL para depuración
+        const targetUrl = `http://localhost:3000/getFlightStatus`; // Cambia esto a la URL de tu servidor
 
         try {
-            const response = await fetch(targetUrl);
+            const response = await fetch(targetUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ flightNumber }),
+            });
+
             if (!response.ok) {
-                throw new Error('Error en la respuesta del proxy');
+                throw new Error('Error en la respuesta del servidor');
             }
             const flightData = await response.json();
-            console.log("Datos del vuelo recibidos:", flightData); // Imprimir datos recibidos
-            return flightData.flights[0]; // Retornar el primer vuelo
+            return flightData;
         } catch (error) {
             console.error('Error al cargar datos del vuelo:', error.message);
             return null;
@@ -116,11 +101,9 @@
     }
 
     function getIATAAndFlightNumber(flightName) {
-        // Buscar el código IATA en el nombre del vuelo, sin importar mayúsculas o minúsculas
         let iataCode = null;
         let flightNumber = '';
 
-        // Verificar si el vuelo contiene un código IATA
         for (const [code, name] of Object.entries(flightCodes)) {
             if (flightName.toUpperCase().includes(name.toUpperCase()) || flightName.toUpperCase().includes(code.toUpperCase())) {
                 iataCode = code;
@@ -128,7 +111,6 @@
             }
         }
 
-        // Extraer el número de vuelo (números al final del nombre)
         const numberMatch = flightName.match(/\d+/);
         if (numberMatch) {
             flightNumber = numberMatch[0];
@@ -153,107 +135,79 @@
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
 
-            // Leer los datos de los servicios
             const services = [];
-            const maxRow = sheet['!ref'].split(':')[1].replace(/[A-Z]/g, ''); // Obtener el número máximo de fila
+            const maxRow = sheet['!ref'].split(':')[1].replace(/[A-Z]/g, '');
             const totalRows = parseInt(maxRow);
 
-            for (let row = 4; row <= totalRows; row += 5) { // Empezar en la fila 4 y saltar cada 5 filas
-                const serviceRow = row + 1; // La fila con la información del servicio es la siguiente
+            for (let row = 4; row <= totalRows; row += 5) {
+                const serviceRow = row + 1;
                 const orderCell = sheet[`A${serviceRow}`];
                 const serviceCell = sheet[`G${serviceRow}`];
                 const timeCell = sheet[`B${serviceRow}`];
                 const flightCell = sheet[`I${serviceRow}`];
-                const typeCell = sheet[`C${serviceRow}`]; // Columna de tipo (LLEGADAS)
+                const typeCell = sheet[`C${serviceRow}`];
 
-                // Solo agregar si hay información
                 if (orderCell && serviceCell && flightCell) {
                     const order = orderCell.v;
                     const serviceNumber = serviceCell.v;
                     const time = timeCell.v;
-                    const flightName = flightCell.v.trim(); // Eliminar espacios
-                    const isArrival = typeCell && typeCell.v.includes('LLEGADA'); // Verificar si es llegada
+                    const flightName = flightCell.v.trim();
+                    const isArrival = typeCell && typeCell.v.includes('LLEGADA');
 
-                    // Obtener el código IATA y el número de vuelo
                     const { iataCode, flightNumber } = getIATAAndFlightNumber(flightName);
+                    const formattedFlightNumber = iataCode ? `${iataCode}${flightNumber}` : flightName;
 
-                    // Formar el nuevo flightNumber en el formato correcto (IATA + número de vuelo)
-                    const formattedFlightNumber = iataCode ? `${iataCode}${flightNumber}` : flightName; // Usar solo el IATA y el número
-
-                    if (formattedFlightNumber) { // Solo agregar si el IATA no está vacío
-                        console.log(`Agregando servicio: ${serviceNumber}, Vuelo: ${formattedFlightNumber}`); // Para depuración
+                    if (formattedFlightNumber) {
                         services.push({ order, serviceNumber, time, flightNumber: flightName, formattedFlightNumber, isArrival });
                     }
                 }
             }
 
-            // Mostrar los servicios en la página
             const servicesList = document.getElementById('services-list');
             servicesList.innerHTML = '';
+
             if (services.length === 0) {
                 servicesList.innerHTML = `<p class="error">No se encontraron servicios en el archivo.</p>`;
                 return;
             }
 
-            for (const service of services) {
-                const serviceDiv = document.createElement('div');
-                serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
-                serviceDiv.innerHTML = `
-                    <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
-                    <button onclick="showFlightDetails('${service.formattedFlightNumber}', this)">Ver Detalles del Vuelo</button>
-                    <div class="flight-details"></div>
-                `;
-                servicesList.appendChild(serviceDiv);
+            for (const [index, service] of services.entries()) {
+                setTimeout(async () => {
+                    const flightData = await fetchFlightData(service.formattedFlightNumber);
+                    const serviceDiv = document.createElement('div');
+                    serviceDiv.className = `service-info ${service.isArrival ? 'service-arrival' : ''}`;
+                    let flightDetailsHtml = '';
+
+                    if (flightData) {
+                        const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
+                        const arrivalDelay = flightData.arrival.delay ? `<span class="delay">Demora: ${flightData.arrival.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
+
+                        flightDetailsHtml = `
+                            <div class="flight-details">
+                                <p><strong>Aerolínea:</strong> ${flightData.carrier}</p>
+                                <p><strong>Vuelo (Excel):</strong> ${service.flightNumber}</p>
+                                <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${flightData.departure.time} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
+                                <p>${departureDelay}</p>
+                                <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${flightData.arrival.time} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
+                                <p>${arrivalDelay}</p>
+                                <p><strong>Status:</strong> ${flightData.status}</p>
+                            </div>
+                        `;
+                    } else {
+                        flightDetailsHtml = `<p class="error">No se encontró información del vuelo.</p>`;
+                    }
+
+                    serviceDiv.innerHTML = `
+                        <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
+                        ${flightDetailsHtml}
+                    `;
+                    servicesList.appendChild(serviceDiv);
+                }, index * 1000); // Espera un segundo entre cada solicitud
             }
         };
 
         reader.readAsArrayBuffer(file);
     };
-
-    async function showFlightDetails(flightNumber, button) {
-        const flightDetailsDiv = button.nextElementSibling;
-        if (flightDetailsDiv.innerHTML) {
-            // Si ya hay datos, ocultar o mostrar
-            flightDetailsDiv.style.display = flightDetailsDiv.style.display === 'none' ? 'block' : 'none';
-            return;
-        }
-
-        // Verificar si flightNumber está definido y no es vacío
-        if (!flightNumber) {
-            console.error('Número de vuelo no válido');
-            flightDetailsDiv.innerHTML = `<p class="error">Número de vuelo no válido.</p>`;
-            flightDetailsDiv.style.display = 'block';
-            return;
-        }
-
-        const flightData = await fetchFlightData(flightNumber);
-        if (flightData) {
-            const scheduledDeparture = new Date(flightData.scheduled_off);
-            const scheduledArrival = new Date(flightData.scheduled_on);
-            const departureDelay = flightData.departure_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.departure_delay / 60)} minutos</span>` : '<span class="on-time">A tiempo</span>';
-            const arrivalDelay = flightData.arrival_delay > 0 ? `<span class="delay">Demora: ${Math.ceil(flightData.arrival_delay / 60)} minutos</span>` : '<span class="on-time">A tiempo</span>';
-
-            flightDetailsDiv.innerHTML = `
-                <div class="flight-summary">
-                    <div class="flight-status">
-                        <p><strong>Origen:</strong> ${flightData.origin.city} (${flightData.origin.code_iata})</p>
-                        <p><strong>Hora de Salida:</strong> ${scheduledDeparture.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> ${scheduledDeparture.toLocaleDateString()}</p>
-                        <p>${departureDelay}</p>
-                        <p><strong>Destino:</strong> ${flightData.destination.city} (${flightData.destination.code_iata})</p>
-                        <p><strong>Hora de Llegada:</strong> ${scheduledArrival.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} <br> ${scheduledArrival.toLocaleDateString()}</p>
-                        <p>${arrivalDelay}</p>
-                    </div>
-                </div>
-            `;
-            flightDetailsDiv.style.display = 'block';
-        } else {
-            flightDetailsDiv.innerHTML = `<p class="error">No se encontró información del vuelo.</p>`;
-            flightDetailsDiv.style.display = 'block';
-        }
-    }
-
-    // Cargar los códigos de vuelo al inicio
-    loadFlightCodes();
 </script>
 
 </body>
