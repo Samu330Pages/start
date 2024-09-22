@@ -82,6 +82,30 @@
         "WS": "WestJet",
     };
 
+    function getIATAAndFlightNumber(flightName) {
+        let iataCode = null;
+        let flightNumber = '';
+
+        const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
+
+        // Buscar el código IATA y el nombre de la aerolínea
+        for (const [code, name] of Object.entries(flightCodes)) {
+            const normalizedName = name.toUpperCase().replace(/\s+/g, '');
+            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(normalizedName)) {
+                iataCode = code;
+                break;
+            }
+        }
+
+        // Extraer el número de vuelo
+        const numberMatch = normalizedFlightName.match(/\d+/);
+        if (numberMatch) {
+            flightNumber = numberMatch[0];
+        }
+
+        return { iataCode, flightNumber };
+    }
+
     async function fetchFlightData(flightNumber, selectedDate) {
         const targetUrl = `http://localhost:3000/getFlightStatus`;
 
@@ -103,27 +127,6 @@
             console.error('Error al cargar datos del vuelo:', error.message);
             return null;
         }
-    }
-
-    function getIATAAndFlightNumber(flightName) {
-        let iataCode = null;
-        let flightNumber = '';
-
-        const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
-
-        for (const [code, name] of Object.entries(flightCodes)) {
-            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(name.toUpperCase().replace(/\s+/g, ''))) {
-                iataCode = code;
-                break;
-            }
-        }
-
-        const numberMatch = normalizedFlightName.match(/\d+/);
-        if (numberMatch) {
-            flightNumber = numberMatch[0];
-        }
-
-        return { iataCode, flightNumber };
     }
 
     document.getElementById('process-button').onclick = async () => {
