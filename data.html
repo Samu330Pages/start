@@ -82,11 +82,6 @@
     };
 
     async function fetchFlightData(flightNumber) {
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setDate(now.getDate() + 1);
-        const dateFormatted = tomorrow.toISOString().split('T')[0];
-
         const targetUrl = `http://localhost:3000/getFlightStatus`;
 
         try {
@@ -116,7 +111,7 @@
         const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
 
         for (const [code, name] of Object.entries(flightCodes)) {
-            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(name.toUpperCase())) {
+            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(name.toUpperCase().replace(/\s+/g, ''))) {
                 iataCode = code;
                 break;
             }
@@ -168,7 +163,7 @@
                     const isArrival = typeCell && typeCell.v.includes('LLEGADA');
 
                     const { iataCode, flightNumber } = getIATAAndFlightNumber(flightName);
-                    const formattedFlightNumber = iataCode ? `${iataCode}${flightNumber}` : null;
+                    const formattedFlightNumber = iataCode && flightNumber ? `${iataCode}${flightNumber}` : null;
 
                     const serviceDiv = document.createElement('div');
                     serviceDiv.className = `service-info ${isArrival ? 'service-arrival' : ''}`;
@@ -197,7 +192,7 @@
                             } else {
                                 serviceDiv.innerHTML += `<p class="error">No se encontró información del vuelo.</p>`;
                             }
-                        }, index * 1000);
+                        }, row * 1000); // Utilizar `row` para el temporizador
                     } else {
                         serviceDiv.innerHTML = `<p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''}</p><p class="error">Vuelo no pudo ser formateado, requiere verificación manual.</p>`;
                         servicesList.appendChild(serviceDiv);
