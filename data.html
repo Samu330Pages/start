@@ -169,7 +169,7 @@
                     const isArrival = typeCell && typeCell.v.includes('LLEGADA');
 
                     const { iataCode, flightNumber } = getIATAAndFlightNumber(flightName);
-                    const formattedFlightNumber = iataCode && flightNumber ? `${iataCode}${flightNumber}` : null;
+                    const formattedFlightNumber = iataCode && flightNumber ? `${iataCode} ${flightNumber}` : null; // Espacio entre código y número
 
                     const serviceDiv = document.createElement('div');
                     serviceDiv.className = `service-info ${isArrival ? 'service-arrival' : ''}`;
@@ -179,7 +179,8 @@
                         servicesList.appendChild(serviceDiv);
 
                         try {
-                            const flightData = await fetchFlightData(formattedFlightNumber);
+                            // Envía el número de vuelo formateado sin espacio al servidor
+                            const flightData = await fetchFlightData(formattedFlightNumber.replace(/\s+/g, ''));
                             if (flightData) {
                                 const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
                                 const arrivalDelay = flightData.arrival.delay ? `<span class="delay">Demora: ${flightData.arrival.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
@@ -187,7 +188,7 @@
                                 serviceDiv.innerHTML = `
                                     <p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p>
                                     <div class="flight-details">
-                                        <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${formattedFlightNumber}</p>
+                                        <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${formattedFlightNumber.replace(/\s+/g, '')}</p>
                                         <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${flightData.departure.time} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
                                         <p>${departureDelay}</p>
                                         <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${flightData.arrival.time} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
