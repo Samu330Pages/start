@@ -6,7 +6,6 @@
     <title>Gestor de Servicios de Vuelo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
-        /* Tus estilos CSS aquí */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -43,6 +42,10 @@
         .on-time {
             color: green;
             font-weight: bold;
+        }
+        .debug-info {
+            font-size: 0.9em;
+            color: gray;
         }
     </style>
 </head>
@@ -179,7 +182,12 @@
                         servicesList.appendChild(serviceDiv);
 
                         try {
-                            // Envía el número de vuelo formateado sin espacio al servidor
+                            // Aquí mostramos el número de vuelo que se envía al servidor
+                            const debugInfo = document.createElement('p');
+                            debugInfo.className = 'debug-info';
+                            debugInfo.textContent = `Número de vuelo enviado al servidor: ${formattedFlightNumber.replace(/\s+/g, '')}`;
+                            serviceDiv.appendChild(debugInfo);
+
                             const flightData = await fetchFlightData(formattedFlightNumber.replace(/\s+/g, ''));
                             if (flightData) {
                                 const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
@@ -196,6 +204,7 @@
                                         <p><strong>Status:</strong> ${flightData.status}</p>
                                     </div>
                                 `;
+                                serviceDiv.appendChild(debugInfo); // Añadimos la info de depuración al final
                             } else {
                                 serviceDiv.innerHTML += `<p class="error">No se encontró información del vuelo.</p>`;
                             }
