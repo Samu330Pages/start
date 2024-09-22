@@ -118,6 +118,7 @@
 
         const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
 
+        // Identificar el código IATA primero
         for (const [code, name] of Object.entries(flightCodes)) {
             const airlineNameWithoutSpaces = name.toUpperCase().replace(/\s+/g, '');
             if (normalizedFlightName.startsWith(code) || normalizedFlightName.includes(airlineNameWithoutSpaces)) {
@@ -126,9 +127,14 @@
             }
         }
 
-        const numberMatch = normalizedFlightName.match(/\d+/);
-        if (numberMatch) {
-            flightNumber = numberMatch[0];
+        // Extraer el número de vuelo después del código IATA
+        if (iataCode) {
+            const codeLength = iataCode.length;
+            const flightNumberPart = normalizedFlightName.slice(codeLength);
+            const numberMatch = flightNumberPart.match(/^\d+/);
+            if (numberMatch) {
+                flightNumber = numberMatch[0];
+            }
         }
 
         return { iataCode, flightNumber };
@@ -182,7 +188,6 @@
                         servicesList.appendChild(serviceDiv);
 
                         try {
-                            // Aquí mostramos el número de vuelo que se envía al servidor
                             const debugInfo = document.createElement('p');
                             debugInfo.className = 'debug-info';
                             debugInfo.textContent = `Número de vuelo enviado al servidor: ${formattedFlightNumber.replace(/\s+/g, '')}`;
@@ -204,7 +209,7 @@
                                         <p><strong>Status:</strong> ${flightData.status}</p>
                                     </div>
                                 `;
-                                serviceDiv.appendChild(debugInfo); // Añadimos la info de depuración al final
+                                serviceDiv.appendChild(debugInfo);
                             } else {
                                 serviceDiv.innerHTML += `<p class="error">No se encontró información del vuelo.</p>`;
                             }
