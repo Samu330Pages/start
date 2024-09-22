@@ -43,18 +43,6 @@
             color: green;
             font-weight: bold;
         }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -66,10 +54,31 @@
 
 <script>
     const flightCodes = {
+        "AM": "Aeroméxico",
+        "AC": "Air Canada",
+        "UX": "Air Europa",
+        "TS": "Air Transat",
+        "AS": "Alaska Airlines",
         "AA": "American Airlines",
-        "UA": "United Airlines",
-        "WN": "Southwest Airlines",
+        "AV": "Avianca",
+        "AR": "Aerolíneas Argentinas",
+        "DE": "Condor",
+        "DL": "Delta Airlines",
+        "AF": "Air France",
+        "F9": "Frontier Airlines",
+        "B6": "JetBlue",
+        "LH": "Lufthansa",
+        "Y4": "Volaris",
+        "CM": "Copa Airlines",
         "NK": "Spirit Airlines",
+        "VB": "VivaAerobus",
+        "SY": "Sun Country Airlines",
+        "WG": "Sunwing Airlines",
+        "WN": "Southwest Airlines",
+        "BY": "Thomson Airways",
+        "UA": "United Airlines",
+        "BA": "British Airways",
+        "WS": "WestJet",
     };
 
     async function fetchFlightData(flightNumber) {
@@ -78,7 +87,7 @@
         tomorrow.setDate(now.getDate() + 1);
         const dateFormatted = tomorrow.toISOString().split('T')[0];
 
-        const targetUrl = `http://localhost:3000/getFlightStatus`; // Cambia esto a la URL de tu servidor
+        const targetUrl = `http://localhost:3000/getFlightStatus`;
 
         try {
             const response = await fetch(targetUrl, {
@@ -155,10 +164,16 @@
                     const isArrival = typeCell && typeCell.v.includes('LLEGADA');
 
                     const { iataCode, flightNumber } = getIATAAndFlightNumber(flightName);
-                    const formattedFlightNumber = iataCode ? `${iataCode}${flightNumber}` : flightName;
+                    const formattedFlightNumber = iataCode ? `${iataCode}${flightNumber}` : null;
 
                     if (formattedFlightNumber) {
                         services.push({ order, serviceNumber, time, flightNumber: flightName, formattedFlightNumber, isArrival });
+                    } else {
+                        const servicesList = document.getElementById('services-list');
+                        const serviceDiv = document.createElement('div');
+                        serviceDiv.className = `service-info error`;
+                        serviceDiv.innerHTML = `<p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''}</p><p class="error">Vuelo no pudo ser formateado, requiere verificación manual.</p>`;
+                        servicesList.appendChild(serviceDiv);
                     }
                 }
             }
@@ -184,8 +199,7 @@
 
                         flightDetailsHtml = `
                             <div class="flight-details">
-                                <p><strong>Aerolínea:</strong> ${flightData.carrier}</p>
-                                <p><strong>Vuelo (Excel):</strong> ${service.flightNumber}</p>
+                                <p><strong>Aerolínea y Vuelo:</strong> ${flightData.carrier} ${service.formattedFlightNumber}</p>
                                 <p><strong>Salida:</strong> ${flightData.departure.airport} | <strong>Hora:</strong> ${flightData.departure.time} | <strong>Fecha:</strong> ${new Date(flightData.departure.date).toLocaleDateString()}</p>
                                 <p>${departureDelay}</p>
                                 <p><strong>Llegada:</strong> ${flightData.arrival.airport} | <strong>Hora:</strong> ${flightData.arrival.time} | <strong>Fecha:</strong> ${new Date(flightData.arrival.date).toLocaleDateString()}</p>
@@ -198,11 +212,11 @@
                     }
 
                     serviceDiv.innerHTML = `
-                        <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | Vuelo: ${service.flightNumber}</p>
+                        <p><strong>Servicio ${service.order}:</strong> ${service.serviceNumber} a las ${service.time} | ${typeCell ? typeCell.v : ''}</p>
                         ${flightDetailsHtml}
                     `;
                     servicesList.appendChild(serviceDiv);
-                }, index * 1000); // Espera un segundo entre cada solicitud
+                }, index * 1000);
             }
         };
 
