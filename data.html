@@ -6,6 +6,7 @@
     <title>Gestor de Servicios de Vuelo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
+        /* Tus estilos CSS aquí */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -115,7 +116,8 @@
         const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
 
         for (const [code, name] of Object.entries(flightCodes)) {
-            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(name.toUpperCase().replace(/\s+/g, ''))) {
+            const airlineNameWithoutSpaces = name.toUpperCase().replace(/\s+/g, '');
+            if (normalizedFlightName.startsWith(code) || normalizedFlightName.includes(airlineNameWithoutSpaces)) {
                 iataCode = code;
                 break;
             }
@@ -176,7 +178,7 @@
                         serviceDiv.innerHTML = `<p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p><p>Buscando información de vuelo...</p>`;
                         servicesList.appendChild(serviceDiv);
 
-                        setTimeout(async () => {
+                        try {
                             const flightData = await fetchFlightData(formattedFlightNumber);
                             if (flightData) {
                                 const departureDelay = flightData.departure.delay ? `<span class="delay">Demora: ${flightData.departure.delay} minutos</span>` : '<span class="on-time">A tiempo</span>';
@@ -196,7 +198,9 @@
                             } else {
                                 serviceDiv.innerHTML += `<p class="error">No se encontró información del vuelo.</p>`;
                             }
-                        }, row * 1000);
+                        } catch (error) {
+                            serviceDiv.innerHTML += `<p class="error">Error al obtener información: ${error.message}</p>`;
+                        }
                     } else {
                         serviceDiv.innerHTML = `<p><strong>Servicio ${order}:</strong> ${serviceNumber} a las ${time} | ${typeCell ? typeCell.v : ''} | Vuelo Original: ${flightName}</p><p class="error">Vuelo no pudo ser formateado, requiere verificación manual.</p>`;
                         servicesList.appendChild(serviceDiv);
