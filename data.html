@@ -54,57 +54,57 @@
 <div id="services-list"></div>
 
 <script>
-    const flightCodes = {
-        "AM": "Aeroméxico",
-        "AC": "Air Canada",
-        "UX": "Air Europa",
-        "TS": "Air Transat",
-        "AS": "Alaska Airlines",
-        "AA": "American Airlines",
-        "AV": "Avianca",
-        "AR": "Aerolíneas Argentinas",
-        "DE": "Condor",
-        "DL": "Delta Airlines",
-        "AF": "Air France",
-        "F9": "Frontier Airlines",
-        "B6": "JetBlue",
-        "LH": "Lufthansa",
-        "Y4": "Volaris",
-        "CM": "Copa Airlines",
-        "NK": "Spirit Airlines",
-        "VB": "VivaAerobus",
-        "SY": "Sun Country Airlines",
-        "WG": "Sunwing Airlines",
-        "WN": "Southwest Airlines",
-        "BY": "Thomson Airways",
-        "UA": "United Airlines",
-        "BA": "British Airways",
-        "WS": "WestJet",
-    };
+    const flightCodes = [
+        { code: "AA", keywords: ["american", "american airlines", "aa"] },
+        { code: "AC", keywords: ["air canada", "ac"] },
+        { code: "AM", keywords: ["aeromexico", "aero mexico", "am"] },
+        { code: "AV", keywords: ["avianca", "av"] },
+        { code: "AS", keywords: ["alaska", "alaska airlines", "as"] },
+        { code: "UX", keywords: ["air europa", "ux"] },
+        { code: "TS", keywords: ["air transat", "ts"] },
+        { code: "DL", keywords: ["delta", "delta airlines", "dl"] },
+        { code: "AF", keywords: ["air france", "af"] },
+        { code: "F9", keywords: ["frontier", "frontier airlines", "f9"] },
+        { code: "B6", keywords: ["jetblue", "jet blue", "b6"] },
+        { code: "LH", keywords: ["lufthansa", "lh"] },
+        { code: "Y4", keywords: ["volaris", "y4"] },
+        { code: "CM", keywords: ["copa", "copa airlines", "cm"] },
+        { code: "NK", keywords: ["spirit", "spirit airlines", "nk"] },
+        { code: "VB", keywords: ["viva aerobus", "vb"] },
+        { code: "SY", keywords: ["sun country", "sun country airlines", "sy"] },
+        { code: "WN", keywords: ["southwest", "southwest airlines", "wn"] },
+        { code: "UA", keywords: ["united", "united airlines", "ua"] },
+        { code: "BA", keywords: ["british", "british airways", "ba"] },
+        { code: "WS", keywords: ["westjet", "ws"] },
+        { code: "DE", keywords: ["condor", "de"] },
+        { code: "AR", keywords: ["aerolineas argentinas", "ar"] },
+        { code: "WG", keywords: ["sunwing", "wg"] },
+    ];
 
     function getIATAAndFlightNumber(flightName) {
         let iataCode = null;
         let flightNumber = '';
 
         // Normalizar el nombre del vuelo
-        const normalizedFlightName = flightName.toUpperCase().replace(/\s+/g, '');
+        const normalizedFlightName = flightName.toLowerCase().replace(/\s+/g, ' ');
 
-        // Buscar el código IATA y el nombre de la aerolínea
-        for (const [code, name] of Object.entries(flightCodes)) {
-            const normalizedName = name.toUpperCase().replace(/\s+/g, '');
-            if (normalizedFlightName.includes(code) || normalizedFlightName.includes(normalizedName)) {
-                iataCode = code;
-                break;
+        // Buscar el código IATA en base a las palabras clave
+        for (const airline of flightCodes) {
+            for (const keyword of airline.keywords) {
+                if (normalizedFlightName.includes(keyword)) {
+                    iataCode = airline.code;
+                    break;
+                }
             }
+            if (iataCode) break; // Salir del bucle si se encuentra el código IATA
         }
 
-        // Extraer el número de vuelo, incluyendo códigos como "B6 631" o "F9 932"
+        // Extraer el número de vuelo
         const numberMatch = normalizedFlightName.match(/(\d+)/);
         if (numberMatch) {
             flightNumber = numberMatch[0];
         }
 
-        // Si se encontró el IATA y el número de vuelo, retornar ambos
         return { iataCode, flightNumber };
     }
 
