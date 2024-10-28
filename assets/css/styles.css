@@ -52,6 +52,9 @@
 }
 
 body {
+  overflow: hidden;
+  margin: 0;  
+  cursor: pointer;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   background-color: var(--body-color);
