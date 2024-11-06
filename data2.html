@@ -1,43 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Ruleta en GIF</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Flight Tracker</h1>
-    <input type="text" id="flightNumber" placeholder="Número de vuelo (ej: UA1020)">
-    <input type="date" id="flightDate" placeholder="Fecha de vuelo" format="YYYY-MM-DD">
-    <button id="checkStatus">Consultar Estado del Vuelo</button>
-    <pre id="result"></pre>
-
+    <div class="ruleta-container">
+        <canvas id="ruleta" width="300" height="300"></canvas>
+        <button id="girarBtn">Girar Ruleta</button>
+        <button id="descargarGifBtn">Descargar GIF</button>
+        <p id="resultado"></p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
     <script>
-        document.getElementById('checkStatus').addEventListener('click', async () => {
-            const flightNumber = document.getElementById('flightNumber').value;
-            const flightDate = document.getElementById('flightDate').value;
+        
+const canvas = document.getElementById('ruleta');
+const ctx = canvas.getContext('2d');
+const girarBtn = document.getElementById('girarBtn');
+const descargarGifBtn = document.getElementById('descargarGifBtn');
+const resultado = document.getElementById('resultado');
 
-            // Validar que la fecha y el número de vuelo no estén vacíos
-            if (!flightNumber || !flightDate) {
-                alert("Por favor, completa ambos campos.");
-                return;
-            }
+const colores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6', '#33FFF4'];
+const premios = ['Premio 1', 'Premio 2', 'Premio 3', 'Premio 4', 'Premio 5', 'Premio 6'];
 
-            // Construir la URL y los datos a enviar
-            const url = 'http://localhost:3000/api/flight-status'; // Asegúrate de que esta URL sea la correcta
-            const data = {
-                date: flightDate, // Fecha en formato YYYY-MM-DD
-                flightNumber: flightNumber // Número de vuelo
-            };
+let gif;
 
-            try {
-                const response = await axios.post(url, data);
-                document.getElementById('result').textContent = JSON.stringify(response.data, null, 2);
-            } catch (error) {
-                alert(error.response ? error.response.data.error : "Error desconocido");
-            }
-        });
+function iniciarGif() {
+    gif = new GIF({
+        workers: 2,
+        quality: 10
+    });
+
+    gif.on('finished', function(blob) {
+        window.open(URL.createObjectURL(blob));
+    });
+}
+
+function dibujarRuleta() {
+    const numSecciones = colores.length;
+    const anguloSeccion = (2 * Math.PI) / numSecciones;
+    
+    for (let i = 0; i < numSecciones; i++) {
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, i * anguloSeccion, (i + 1) * anguloSeccion);
+        ctx.fillStyle = colores[i];
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+function girarRuleta() {
+    iniciarGif();
+
+    let frames = 30;
+    let currentFrame = 0;
+    const anguloFinal = Math.random() * 2 * Math.PI;
+    const indicePremio = Math.floor((anguloFinal / (2 * Math.PI)) * premios.length);
+
+    function animar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((anguloFinal / frames) * currentFrame);
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+        
+        dibujarRuleta();
+        ctx.restore();
+
+        gif.addFrame(ctx, {copy: true, delay: 100});
+
+        currentFrame++;
+        if (currentFrame < frames) {
+            requestAnimationFrame(animar);
+        } else {
+            resultado.textContent = `Resultado: ${premios[indicePremio]}`;
+            gif.render();
+        }
+    }
+
+    animar();
+}
+
+girarBtn.addEventListener('click', girarRuleta);
+        
     </script>
 </body>
 </html>
