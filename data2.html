@@ -1,92 +1,114 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruleta en GIF</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .ruleta-container {
+            text-align: center;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            border-radius: 50%;
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="ruleta-container">
         <canvas id="ruleta" width="300" height="300"></canvas>
         <button id="girarBtn">Girar Ruleta</button>
-        <button id="descargarGifBtn">Descargar GIF</button>
+        <button id="descargarGifBtn" disabled>Descargar GIF</button>
         <p id="resultado"></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
     <script>
-        
-const canvas = document.getElementById('ruleta');
-const ctx = canvas.getContext('2d');
-const girarBtn = document.getElementById('girarBtn');
-const descargarGifBtn = document.getElementById('descargarGifBtn');
-const resultado = document.getElementById('resultado');
+        const canvas = document.getElementById('ruleta');
+        const ctx = canvas.getContext('2d');
+        const girarBtn = document.getElementById('girarBtn');
+        const descargarGifBtn = document.getElementById('descargarGifBtn');
+        const resultado = document.getElementById('resultado');
 
-const colores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6', '#33FFF4'];
-const premios = ['Premio 1', 'Premio 2', 'Premio 3', 'Premio 4', 'Premio 5', 'Premio 6'];
+        const colores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6', '#33FFF4'];
+        const premios = ['Premio 1', 'Premio 2', 'Premio 3', 'Premio 4', 'Premio 5', 'Premio 6'];
 
-let gif;
+        let gif;
 
-function iniciarGif() {
-    gif = new GIF({
-        workers: 2,
-        quality: 10
-    });
+        function iniciarGif() {
+            gif = new GIF({
+                workers: 2,
+                quality: 10
+            });
 
-    gif.on('finished', function(blob) {
-        window.open(URL.createObjectURL(blob));
-    });
-}
-
-function dibujarRuleta() {
-    const numSecciones = colores.length;
-    const anguloSeccion = (2 * Math.PI) / numSecciones;
-    
-    for (let i = 0; i < numSecciones; i++) {
-        ctx.beginPath();
-        ctx.moveTo(canvas.width / 2, canvas.height / 2);
-        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, i * anguloSeccion, (i + 1) * anguloSeccion);
-        ctx.fillStyle = colores[i];
-        ctx.fill();
-        ctx.closePath();
-    }
-}
-
-function girarRuleta() {
-    iniciarGif();
-
-    let frames = 30;
-    let currentFrame = 0;
-    const anguloFinal = Math.random() * 2 * Math.PI;
-    const indicePremio = Math.floor((anguloFinal / (2 * Math.PI)) * premios.length);
-
-    function animar() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate((anguloFinal / frames) * currentFrame);
-        ctx.translate(-canvas.width / 2, -canvas.height / 2);
-        
-        dibujarRuleta();
-        ctx.restore();
-
-        gif.addFrame(ctx, {copy: true, delay: 100});
-
-        currentFrame++;
-        if (currentFrame < frames) {
-            requestAnimationFrame(animar);
-        } else {
-            resultado.textContent = `Resultado: ${premios[indicePremio]}`;
-            gif.render();
+            gif.on('finished', function(blob) {
+                const url = URL.createObjectURL(blob);
+                descargarGifBtn.href = url;
+                descargarGifBtn.download = 'ruleta.gif';
+                descargarGifBtn.disabled = false;
+            });
         }
-    }
 
-    animar();
-}
+        function dibujarRuleta(anguloRotacion) {
+            const numSecciones = colores.length;
+            const anguloSeccion = (2 * Math.PI) / numSecciones;
+            
+            for (let i = 0; i < numSecciones; i++) {
+                ctx.beginPath();
+                ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, i * anguloSeccion + anguloRotacion, (i + 1) * anguloSeccion + anguloRotacion);
+                ctx.fillStyle = colores[i];
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
 
-girarBtn.addEventListener('click', girarRuleta);
-        
+        function girarRuleta() {
+            iniciarGif();
+            descargarGifBtn.disabled = true;
+
+            let frames = 60;
+            let currentFrame = 0;
+            const anguloFinal = Math.random() * 2 * Math.PI;
+            const indicePremio = Math.floor((anguloFinal / (2 * Math.PI)) * premios.length);
+            let velocidadActual = 0.2;
+            
+            function animar() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(velocidadActual * currentFrame);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                
+                dibujarRuleta(0);
+                ctx.restore();
+
+                gif.addFrame(ctx, {copy: true, delay: 60});
+
+                currentFrame++;
+                if (currentFrame < frames) {
+                    velocidadActual *= 0.97; // Disminuye la velocidad gradualmente
+                    requestAnimationFrame(animar);
+                } else {
+                    resultado.textContent = `Resultado: ${premios[indicePremio]}`;
+                    gif.render();
+                }
+            }
+
+            animar();
+        }
+
+        girarBtn.addEventListener('click', girarRuleta);
     </script>
 </body>
 </html>
