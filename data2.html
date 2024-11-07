@@ -1,173 +1,118 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruleta en GIF</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            flex-direction: column;
-        }
-
-        .ruleta-container {
-            text-align: center;
-            position: relative;
-        }
-
-        canvas {
-            border: 2px solid #333;
-            border-radius: 50%;
-            background-color: white;
-            position: relative;
-            z-index: 1;
-        }
-
-        #descargarGifBtn {
-            display: none; /* Ocultar inicialmente */
-            margin-top: 10px;
-        }
-
-        .flecha {
-            position: absolute;
-            top: -20px; /* Ajustar la posición de la flecha */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid red; /* Color de la flecha */
-            z-index: 2;
-        }
-
-        #gifDisplay {
-            display: none; /* Ocultar inicialmente el GIF */
-            margin-top: 20px;
-        }
-    </style>
+    <title>Ruleta</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="ruleta-container">
-        <canvas id="ruleta" width="300" height="300"></canvas>
-        <div class="flecha"></div> <!-• Flecha indicadora -->
-        <a id="descargarGifBtn" href="#">Descargar GIF</a>
-        <p id="resultado"></p>
-        <img id="gifDisplay" src="" alt="GIF de la ruleta" />
+        <div id="ruleta">
+            <div id="sectores">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div id="divisores">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div id="caras">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div id="triangulo"></div>
+        <button id="spin">Girar</button>
+        <canvas id="canvas" width="400" height="400" style="display:none;"></canvas> <!-- Lienzo oculto -->
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script>
-        const canvas = document.getElementById('ruleta');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true }); // Atributo para mejorar rendimiento
-        const descargarGifBtn = document.getElementById('descargarGifBtn');
-        const resultado = document.getElementById('resultado');
-        const gifDisplay = document.getElementById('gifDisplay');
+        const spinButton = document.getElementById('spin');
+const ruleta = document.getElementById('ruleta');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const frames = []; // Array para almacenar los frames
 
-        const colores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6', '#33FFF4'];
-        const premios = ['Premio 1', 'Premio 2', 'Premio 3', 'Premio 4', 'Premio 5', 'Premio 6'];
+spinButton.addEventListener('click', () => {
+    ruleta.style.transition = 'transform 10s cubic-bezier(0,0,0.3,1)';
+    const randomRotation = Math.floor(Math.random() * 360 + 720); // Rotación aleatoria
+    ruleta.style.transform = `rotate(${randomRotation}deg)`;
 
-        let gif;
+    // Captura cada frame de la animación
+    captureFrames();
+});
 
-        function iniciarGif() {
-            gif = new GIF({
-                workers: 2,
-                quality: 10,
-                width: canvas.width,
-                height: canvas.height
-            });
+function captureFrames() {
+    const captureDuration = 10000; // Duración total de la captura en ms
+    const frameDuration = 100; // Duración de cada frame en ms
+    const totalFrames = captureDuration / frameDuration;
 
-            gif.on('finished', function(blob) {
-                const url = URL.createObjectURL(blob);
-                gifDisplay.src = url;  // Mostrar el GIF en la página
-                gifDisplay.style.display = 'block'; // Hacer visible el GIF
-                descargarGifBtn.href = url;
-                descargarGifBtn.download = 'ruleta.gif';
-                descargarGifBtn.style.display = 'block'; // Mostrar el botón de descarga
-            });
-        }
+    let capturedFrames = 0;
 
-        function dibujarRuleta() {
-            const numSecciones = colores.length;
-            const anguloSeccion = (2 * Math.PI) / numSecciones;
-            
-            for (let i = 0; i < numSecciones; i++) {
-                ctx.beginPath();
-                ctx.moveTo(canvas.width / 2, canvas.height / 2);
-                ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, i * anguloSeccion, (i + 1) * anguloSeccion);
-                ctx.fillStyle = colores[i];
-                ctx.fill();
-                ctx.closePath();
+    const interval = setInterval(() => {
+        html2canvas(ruleta).then(canvas => {
+            frames.push(canvas.toDataURL('image/png')); // Almacena la imagen del canvas
+            capturedFrames++;
+
+            if (capturedFrames >= totalFrames) {
+                clearInterval(interval);
+                createGif();
             }
-        }
+        });
+    }, frameDuration);
+}
 
-        function girarRuleta() {
-            iniciarGif();
-            const frames = 180; // Aumentar el número de frames
-            let currentFrame = 0;
-            const tiempoGiro = 5; // Tiempo en segundos
-            const velocidadInicial = 1.5; // Velocidad inicial alta
-            const totalGiro = velocidadInicial * frames; // Total de grados de giro
-            const indicePremio = Math.floor((Math.random() * premios.length)); // Seleccionar un premio aleatorio
-            let velocidadActual = velocidadInicial; // Velocidad inicial
+function createGif() {
+    const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        width: canvas.width,
+        height: canvas.height
+    });
 
-            // Girar durante 5 segundos a alta velocidad
-            const animarGiroRapido = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.save();
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(velocidadActual * currentFrame);
-                ctx.translate(-canvas.width / 2, -canvas.height / 2);
-                
-                dibujarRuleta();
-                ctx.restore();
+    frames.forEach(frame => {
+        const img = new Image();
+        img.src = frame;
+        img.onload = () => {
+            gif.addFrame(img, { delay: 100 });
+        };
+    });
 
-                gif.addFrame(ctx, {copy: true, delay: 50});
+    gif.on('finished', function(blob) {
+        const url = URL.createObjectURL(blob);
+        downloadGif(url);
+    });
 
-                currentFrame++;
-                if (currentFrame < (tiempoGiro * 60)) { // Animar a alta velocidad durante 5 segundos
-                    requestAnimationFrame(animarGiroRapido);
-                } else {
-                    // Comenzar la disminución de la velocidad
-                    animar();
-                }
-            };
+    gif.render();
+}
 
-            // Comenzar la animación de alta velocidad
-            animarGiroRapido();
-
-            // Animación de disminución de velocidad
-            const animar = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.save();
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(velocidadActual * currentFrame);
-                ctx.translate(-canvas.width / 2, -canvas.height / 2);
-                
-                dibujarRuleta();
-                ctx.restore();
-
-                gif.addFrame(ctx, {copy: true, delay: 50});
-
-                currentFrame++;
-                if (currentFrame < frames) {
-                    // Disminuir la velocidad gradualmente
-                    velocidadActual *= 0.97; // Cambiar este valor para ajustar la rapidez de la disminución
-                    requestAnimationFrame(animar);
-                } else {
-                    resultado.textContent = `Resultado: ${premios[indicePremio]}`;
-                    gif.render();
-                }
-            };
-        }
-
-        // Iniciar la ruleta al cargar la página
-        window.onload = girarRuleta;
+function downloadGif(url) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ruleta.gif';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
     </script>
 </body>
 </html>
