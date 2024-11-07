@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,20 +24,23 @@
             border-radius: 50%;
             background-color: white;
         }
+
+        #descargarGifBtn {
+            display: none; /* Ocultar inicialmente */
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="ruleta-container">
         <canvas id="ruleta" width="300" height="300"></canvas>
-        <button id="girarBtn">Girar Ruleta</button>
-        <button id="descargarGifBtn" disabled>Descargar GIF</button>
+        <a id="descargarGifBtn" href="#">Descargar GIF</a>
         <p id="resultado"></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
     <script>
         const canvas = document.getElementById('ruleta');
         const ctx = canvas.getContext('2d');
-        const girarBtn = document.getElementById('girarBtn');
         const descargarGifBtn = document.getElementById('descargarGifBtn');
         const resultado = document.getElementById('resultado');
 
@@ -48,14 +52,16 @@
         function iniciarGif() {
             gif = new GIF({
                 workers: 2,
-                quality: 10
+                quality: 10,
+                width: canvas.width,
+                height: canvas.height
             });
 
             gif.on('finished', function(blob) {
                 const url = URL.createObjectURL(blob);
                 descargarGifBtn.href = url;
                 descargarGifBtn.download = 'ruleta.gif';
-                descargarGifBtn.disabled = false;
+                descargarGifBtn.style.display = 'block'; // Mostrar el botón de descarga
             });
         }
 
@@ -75,14 +81,13 @@
 
         function girarRuleta() {
             iniciarGif();
-            descargarGifBtn.disabled = true;
-
-            let frames = 60;
+            const frames = 60;
             let currentFrame = 0;
-            const anguloFinal = Math.random() * 2 * Math.PI;
-            const indicePremio = Math.floor((anguloFinal / (2 * Math.PI)) * premios.length);
-            let velocidadActual = 0.2;
-            
+            const totalGiro = Math.random() * 10 * Math.PI; // Gira entre 0 y 10 vueltas
+            const anguloFinal = totalGiro + Math.PI; // Añadir un pequeño giro extra
+            const indicePremio = Math.floor(((anguloFinal % (2 * Math.PI)) / (2 * Math.PI)) * premios.length);
+            let velocidadActual = 0.5;
+
             function animar() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
@@ -93,11 +98,11 @@
                 dibujarRuleta(0);
                 ctx.restore();
 
-                gif.addFrame(ctx, {copy: true, delay: 60});
+                gif.addFrame(ctx, {copy: true, delay: 50});
 
                 currentFrame++;
                 if (currentFrame < frames) {
-                    velocidadActual *= 0.97; // Disminuye la velocidad gradualmente
+                    velocidadActual *= 0.98; // Disminuye la velocidad gradualmente
                     requestAnimationFrame(animar);
                 } else {
                     resultado.textContent = `Resultado: ${premios[indicePremio]}`;
@@ -108,7 +113,8 @@
             animar();
         }
 
-        girarBtn.addEventListener('click', girarRuleta);
+        // Iniciar la ruleta al cargar la página
+        window.onload = girarRuleta;
     </script>
 </body>
 </html>
