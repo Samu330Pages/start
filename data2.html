@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,6 +13,7 @@
             height: 100vh;
             background-color: #f0f0f0;
             margin: 0;
+            flex-direction: column;
         }
 
         .ruleta-container {
@@ -44,6 +46,11 @@
             border-bottom: 20px solid red; /* Color de la flecha */
             z-index: 2;
         }
+
+        #gifDisplay {
+            display: none; /* Ocultar inicialmente el GIF */
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -52,13 +59,15 @@
         <div class="flecha"></div> <!-• Flecha indicadora -->
         <a id="descargarGifBtn" href="#">Descargar GIF</a>
         <p id="resultado"></p>
+        <img id="gifDisplay" src="" alt="GIF de la ruleta" />
     </div>
     <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
     <script>
         const canvas = document.getElementById('ruleta');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true }); // Atributo para mejorar rendimiento
         const descargarGifBtn = document.getElementById('descargarGifBtn');
         const resultado = document.getElementById('resultado');
+        const gifDisplay = document.getElementById('gifDisplay');
 
         const colores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6', '#33FFF4'];
         const premios = ['Premio 1', 'Premio 2', 'Premio 3', 'Premio 4', 'Premio 5', 'Premio 6'];
@@ -75,6 +84,8 @@
 
             gif.on('finished', function(blob) {
                 const url = URL.createObjectURL(blob);
+                gifDisplay.src = url;  // Mostrar el GIF en la página
+                gifDisplay.style.display = 'block'; // Hacer visible el GIF
                 descargarGifBtn.href = url;
                 descargarGifBtn.download = 'ruleta.gif';
                 descargarGifBtn.style.display = 'block'; // Mostrar el botón de descarga
@@ -106,39 +117,11 @@
             let velocidadActual = velocidadInicial; // Velocidad inicial
 
             // Girar durante 5 segundos a alta velocidad
-            setTimeout(() => {
-                // Comenzar la disminución de la velocidad después de 5 segundos
-                function animar() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.save();
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.rotate(velocidadActual * currentFrame);
-                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
-                    
-                    dibujarRuleta();
-                    ctx.restore();
-
-                    gif.addFrame(ctx, {copy: true, delay: 50});
-
-                    currentFrame++;
-                    if (currentFrame < frames) {
-                        // Disminuir la velocidad gradualmente
-                        velocidadActual *= 0.97; // Cambiar este valor para ajustar la rapidez de la disminución
-                        requestAnimationFrame(animar);
-                    } else {
-                        resultado.textContent = `Resultado: ${premios[indicePremio]}`;
-                        gif.render();
-                    }
-                }
-                animar();
-            }, tiempoGiro * 1000); // Esperar 5 segundos antes de empezar a disminuir la velocidad
-
-            // Animación de alta velocidad durante 5 segundos
-            function animarGiroRapido() {
+            const animarGiroRapido = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
                 ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(velocidadInicial * currentFrame);
+                ctx.rotate(velocidadActual * currentFrame);
                 ctx.translate(-canvas.width / 2, -canvas.height / 2);
                 
                 dibujarRuleta();
@@ -147,15 +130,40 @@
                 gif.addFrame(ctx, {copy: true, delay: 50});
 
                 currentFrame++;
-                if (currentFrame < (tiempoGiro * 60)) { // Animar a alta velocidad
+                if (currentFrame < (tiempoGiro * 60)) { // Animar a alta velocidad durante 5 segundos
                     requestAnimationFrame(animarGiroRapido);
                 } else {
-                    // Luego, iniciar la animación de disminución de velocidad
+                    // Comenzar la disminución de la velocidad
                     animar();
                 }
-            }
+            };
 
+            // Comenzar la animación de alta velocidad
             animarGiroRapido();
+
+            // Animación de disminución de velocidad
+            const animar = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(velocidadActual * currentFrame);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                
+                dibujarRuleta();
+                ctx.restore();
+
+                gif.addFrame(ctx, {copy: true, delay: 50});
+
+                currentFrame++;
+                if (currentFrame < frames) {
+                    // Disminuir la velocidad gradualmente
+                    velocidadActual *= 0.97; // Cambiar este valor para ajustar la rapidez de la disminución
+                    requestAnimationFrame(animar);
+                } else {
+                    resultado.textContent = `Resultado: ${premios[indicePremio]}`;
+                    gif.render();
+                }
+            };
         }
 
         // Iniciar la ruleta al cargar la página
