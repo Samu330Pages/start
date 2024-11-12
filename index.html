@@ -1,204 +1,565 @@
 <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!--=============== FAVICON ===============-->
-        <link rel="shortcut icon" href="./assets/img/icon.png" type="image/x-icon">
-        
-        <!--=============== REMIX ICONS ===============-->
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-
-        <!--=============== CSS ===============-->
-        <link rel="stylesheet" href="./assets/css/styles.css">
-
-        <title>NyanV2 | Samu330</title>
-
-        <script>
-document.oncontextmenu = function() {
-    return false
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Andev Web</title>
+  <style>
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", "Quicksand", sans-serif;
+  transition: background-color 0.2s;
+  will-change: background-color;
 }
-document.addEventListener("dragstart", function(event) {
-    event.preventDefault();
-});
 
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-        event.preventDefault();
+.wrapper {
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  display: block;
+  position: absolute;
+  top: 25px;
+  margin: 0 auto;
+  width: 350px;
+  background-color: #fff;
+  border-radius: 15px;
+
+  box-shadow: 0 30 50 rgba(0, 0, 0, 0.2);
+
+  transform: translateX(-50%);
+  transition: left 0.5s ease-out;
+  will-change: left;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.card--19 {
+  left: 50%;
+}
+
+.card--solstice,
+.card--huarache {
+  left: 150%;
+}
+
+.card__header {
+  position: relative;
+  height: 170px;
+  padding: 30px 30px 300px;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  color: #fff;
+}
+
+.card__header--19 {
+  background-color: #F72648;
+  background-image: linear-gradient(#F72648, #FCCB3C);
+
+  background: #F72648;
+  background: linear-gradient(#F72648, #FCCB3C);
+}
+
+.card__header--solstice {
+  background-color: #3CA3FC;
+  background-image: linear-gradient(#3CA3FC, #FFD300);
+
+  background: #3CA3FC;
+  background: linear-gradient(#3CA3FC, #FFD300);
+}
+
+.card__header--huarache {
+  background-color: #26C9F7;
+  background-image: linear-gradient(#26C9F7, #DFFC3C);
+
+  background: #26C9F7;
+  background: linear-gradient(#26C9F7, #DFFC3C);
+}
+
+.card__watermark {
+  overflow: hidden;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+}
+
+.card__watermark::after {
+  content: attr(data-watermark);
+  position: relative;
+  left: -20px;
+  color: rgba(0, 0, 0, .3);
+  font-size: 240px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.card__logo {
+  width: 50px;
+  height: auto;
+}
+.card__price {
+  float: right;
+  font-size: 16px;
+  font-weight: 300;
+}
+.card__title {
+  margin: 35px 0 20px;
+  font-size: 15px;
+  line-height: 1.1em;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.card__subtitle {
+  display: block;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.card__body {
+  position: relative;
+  padding: 40px 30px 20px;
+}
+
+.card__image {
+  z-index: 1;
+  position: absolute;
+  top: -290px;
+  left: -30px;
+  width: 125%;
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.card__wish-list {
+  display: block;
+  width: 50%;
+  margin: 0 auto 15px;
+  padding: 15px;
+  border: 2px solid #fff;
+  border-radius: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.card__wish-list--19 {
+  color: #8850FF;
+  border-color: #8850FF;
+}
+
+.card__wish-list--solstice {
+  color: #FFBA00;
+  border-color: #FFBA00;
+}
+
+.card__wish-list--huarache {
+  color: #26C9F7;
+  border-color: #26C9F7;
+}
+
+.card__category {
+  display: block;
+  font-size: 12px;
+  color: #AEAEAE;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.card__will-animate {
+  will-change: transform;
+}
+
+.cards-placeholder {
+  display: block;
+  position: relative;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.cards-placeholder__item {
+  opacity: 0.3;
+  display: inline-block;
+  margin-right: 10px;
+  background-color: #fff;
+  width: 30px;
+  height: 5px;
+  border-radius: 5px;
+
+  transition: opacity 0.2s;
+  will-change: opacity;
+}
+
+.cards-placeholder__item--active {
+  opacity: 1;
+}
+  </style>
+
+</head>
+<body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Nike Parallax Cards</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Quicksand:wght@300;400;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="wrapper">
+
+      <div class="card card--19">
+        <div class="card__header card__header--19">
+          <div class="card__watermark" data-watermark="Air"></div>
+
+          <img src="https://png.pngtree.com/png-clipart/20230114/original/pngtree-diamond-logo-png-image_8909303.png" alt="Samu330" class="card__logo card__will-animate">
+
+          <span class="card__price card__will-animate">FREE</span>
+
+          <h1 class="card__title card__will-animate">NyanBot-V2</h1>
+          <span class="card__subtitle card__will-animate">Nyan is a whatsapp bot powerful, used for download any multimedia of all social media, group settings, games... and more!</span>
+
+        </div>
+
+        <div class="card__body">
+          <img src="https://woztell.com/wp-content/uploads/2023/10/ChatGPT-whatsapp-woztell.png" alt="NyanV2" class="card__image card__will-animate">
+          <div class="card__wish-list card__wish-list--19 card__will-animate">Wish List</div>
+
+          <span class="card__category card__will-animate">Samu330</span>
+        </div>
+      </div>
+
+      <!-- Nike Solstice -->
+      <div class="card card--solstice">
+        <div class="card__header card__header--solstice">
+          <div class="card__watermark" data-watermark="Classic"></div>
+
+          <img src="https://png.pngtree.com/png-clipart/20230114/original/pngtree-diamond-logo-png-image_8909303.png" alt="Samu330" class="card__logo card__will-animate">
+
+          <span class="card__price card__will-animate">$129</span>
+
+          <h1 class="card__title card__will-animate">Air Solstice QS</h1>
+          <span class="card__subtitle card__will-animate">The Nike Air Solstice draws inspiration from the swoosh's classic running shoes of the 1980's updating the style with premium materials and impressive production quality.</span>
+
+        </div>
+
+        <div class="card__body">
+          <img src="https://i.ibb.co/ZMVHp6x/nike-air-solstice.png" alt="Nike Solstice" class="card__image card__will-animate">
+          <div class="card__wish-list card__wish-list--solstice card__will-animate">Wish List</div>
+
+          <span class="card__category card__will-animate">Samu330</span>
+        </div>
+      </div>
+
+      <div class="card card--huarache">
+        <div class="card__header card__header--huarache">
+          <div class="card__watermark" data-watermark="Safari"></div>
+
+          <img src="https://png.pngtree.com/png-clipart/20230114/original/pngtree-diamond-logo-png-image_8909303.png" alt="Samu330" class="card__logo card__will-animate">
+
+          <span class="card__price card__will-animate">$140</span>
+
+          <h1 class="card__title card__will-animate">Air Huarache Utility</h1>
+          <span class="card__subtitle card__will-animate">The Nike Air Huarache Utility Men's Shoe toughens up a famous running shoe with a nylon upper, fused mudguard and vibrant detail.</span>
+
+        </div>
+
+        <div class="card__body">
+          <img src="https://i.ibb.co/9bc3SYK/nike-safari.png" alt="Nike Huarache" class="card__image card__will-animate">
+          <div class="card__wish-list card__wish-list--solstice card__will-animate">Wish List</div>
+
+          <span class="card__category card__will-animate">Samu330</span>
+        </div>
+      </div>
+
+    </div> <!-- /wrapper -->
+
+    <div class="cards-placeholder">
+      <div class="cards-placeholder__item"></div>
+      <div class="cards-placeholder__item"></div>
+      <div class="cards-placeholder__item"></div>
+    </div>
+
+  </body>
+</html>
+  <script>
+      (function () {
+  'use strict';
+
+  var BODY_BACKGROUNDS = [
+    '#8850FF',
+    '#FFBA00',
+    '#4054FF'
+  ];
+
+  function Slider () {
+    this.cards = document.querySelectorAll('.card');
+    this.currentIndex = 0;
+
+    this.isDragging = false;
+    this.startX = 0;
+    this.currentX = 0;
+
+    this.initEvents();
+    this.setActivePlaceholder();
+  }
+
+  // initialize drag events
+  Slider.prototype.initEvents = function () {
+    document.addEventListener('touchstart', this.onStart.bind(this));
+    document.addEventListener('touchmove', this.onMove.bind(this));
+    document.addEventListener('touchend', this.onEnd.bind(this));
+
+    document.addEventListener('mousedown', this.onStart.bind(this));
+    document.addEventListener('mousemove', this.onMove.bind(this));
+    document.addEventListener('mouseup', this.onEnd.bind(this));
+
+  };
+
+  // set active placeholder
+  Slider.prototype.setActivePlaceholder = function () {
+    var placeholders = document.querySelectorAll('.cards-placeholder__item');
+    var activePlaceholder = document.querySelector('.cards-placeholder__item--active')
+
+    if (activePlaceholder) {
+      activePlaceholder.classList.remove('cards-placeholder__item--active');
     }
-});
-        </script>
-    </head>
-    <body>
-        <!--=============== HEADER ===============-->
-        <header class="profile container">
-            <!-- Theme button -->
-            <i class="ri-moon-line change-theme" id="theme-button"></i>
 
-            <div class="profile__container grid">
-                <div class="profile__data">
-                    <div class="profile__border">
-                        <div class="profile__perfil">
-                            
-                            <img src="./assets/img/pic.png" alt="">
-                        </div>
-                    </div>
+    placeholders[this.currentIndex].classList.add('cards-placeholder__item--active');
 
-                    <h2 class="profile__name">Samu330</h2>
-                    <h3 class="profile__profession">Aspiring  Developer</h3>
+    var bodyEl = document.querySelector('body');
+    bodyEl.style.backgroundColor = BODY_BACKGROUNDS[this.currentIndex];
+  };
 
-                    <ul class="profile__social">
-                        <a href="https://www.instagram.com/sm330.io" target="_blank" class="profile__social-link">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="https://github.com/Samu330" target="_blank" class="profile__social-link">
-                            <i class="ri-github-line"></i>
-                        </a>
-                    </ul>
-                </div>
+  // mousedown event
+  Slider.prototype.onStart = function (evt) {
+    this.isDragging = true;
 
-                <div class="profile__info grid">
-                    <div class="profile__info-group">
-                        <h3 class="profile__info-number">1</h3>
-                        <p class="profile__info-description">
-                            Years of <br> work
-                        </p>
-                    </div>
-                    <div class="profile__info-group">
-                        <h3 class="profile__info-number">0</h3>
-                        <p class="profile__info-description">
-                            Completed <br> projects
-                        </p>
-                    </div>
-                    <div class="profile__info-group">
-                        <h3 class="profile__info-number">0</h3>
-                        <p class="profile__info-description">Satisfied <br> customers</p>
-                    </div>
-                </div>
+    this.currentX = evt.pageX || evt.touches[0].pageX;
+    this.startX = this.currentX;
 
-                <div class="profile__buttons">
-                    <!-- Insert your CV -->
-                    <a download="" href="./assets/pdf/samu330.pdf" class="button">
-                        Download CV <i class="ri-download-line"></i>
-                    </a>
+    var card = this.cards[this.currentIndex];
 
-                    <div class="profile__buttons-small">
-                        <!-- Insert a real number plus country code -->
-                        
-                            <a href="https://api.whatsapp.com/send?phone=+5219984907794&text=.menu" target="_blank" class="button button__small button__gray">
-                            <i class="ri-whatsapp-line"></i>
-                        </a>
-                        <!-- Insert your brand name or profile -->
-                        <a href="https://m.me/sm330.io" target="_blank" class="button button__small button__gray">
-                            <i class="ri-messenger-line"></i>
-                        </a>
-                        
-                    </div>
-                </div>
-            </div>
-        </header>
+    // calculate ration to use in parallax effect
+    this.windowWidth = window.innerWidth;
+    this.cardWidth = card.offsetWidth;
+    this.ratio = this.windowWidth / (this.cardWidth / 4);
+  };
 
-        <!--=============== MAIN ===============-->
-        <main class="main">
-            <section class="filters container">
-                <!--=============== FILTERS TABS ===============-->
-                <ul class="filters__content">
-                    <button class="filters__button filter-tab-active" data-target="#projects">
-                        Projects
-                    </button>
-                    <button class="filters__button" data-target="#skills">
-                        Skills
-                    </button>
-                </ul>
+  // mouseup event
+  Slider.prototype.onEnd = function (evt) {
+    this.isDragging = false;
 
-                <div class="filters__sections">
-                    <!--=============== PROJECTS ===============-->
-                    <div class="projects__content grid filters__active" data-content id="projects">
-                        <article class="projects__card">
-                            <!-- Insert your image in a rectangular format (Ex: 600 x 400, 1000 x 800, 1200 x 1000, etc) -->
-                            <img src="./assets/img/project1.jpg" alt="" class="projects__img">
+    var diff = this.startX - this.currentX;
+    var direction = (diff > 0) ? 'left' : 'right';
+    this.startX = 0;
 
-                            <div class="projects__modal">
-                                <div>
-                                    <span class="projects__subtitle">NyanV2</span>
-                                    <h3 class="projects__title">Basic WhatsApp Bot</h3>
-                                    <a href="https://whatsapp.com/channel/0029VaDVQFVL7UVd71R7bY23" class="projects__button button button__small">
-                                        <i class="ri-link"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
+    if (Math.abs(diff) > this.windowWidth / 4) {
+      if (direction === 'left') {
+        this.slideLeft();
+      } else if (direction === 'right') {
+        this.slideRight();
+      } else {
+        this.cancelMoveCard();
+      }
 
-                    <!--=============== SKILLS ===============-->
-                    <div class="skills__content grid" data-content id="skills">
-                        <div class="skills__area">
-                            <h3 class="skills__title">Frontend Developer</h3>
-    
-                            <div class="skills__box">
-                                <div class="skills__group">
-                                    <div class="skills__data">
-                                        <i class="ri-checkbox-circle-line"></i>
-        
-                                        <div>
-                                            <h3 class="skills__name">HTML</h3>
-                                            <span class="skills__level">Advance</span>
-                                        </div>
-                                    </div>
-        
-                                    <div class="skills__data">
-                                        <i class="ri-checkbox-circle-line"></i>
-        
-                                        <div>
-                                            <h3 class="skills__name">CSS</h3>
-                                            <span class="skills__level">Intermediate</span>
-                                        </div>
-                                    </div>
-        
-                                    <div class="skills__data">
-                                        <i class="ri-checkbox-circle-line"></i>
-        
-                                        <div>
-                                            <h3 class="skills__name">JavaScript</h3>
-                                            <span class="skills__level">Advance</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    } else {
+      this.cancelMoveCard();
 
-                        <div class="skills__area">
-                            <h3 class="skills__title">Backend Developer</h3>
-    
-                            <div class="skills__box">
-                                <div class="skills__group">
-                                    <div class="skills__data">
-                                        <i class="ri-checkbox-circle-line"></i>
-        
-                                        <div>
-                                            <h3 class="skills__name">Node Js</h3>
-                                            <span class="skills__level">Advance</span>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    }
 
-        <!--=============== FOOTER ===============-->
-        <footer class="footer container">
-            <span class="footer__copy">
-                &#169; Samu330. All rigths reserved
-            </span>
-        </footer>
+  };
 
-        <!--=============== SCROLLREVEAL ===============-->
-        <script src="./assets/js/scrollreveal.min.js"></script>
+  // mousemove event
+  Slider.prototype.onMove = function (evt) {
+    if (!this.isDragging) return;
 
-        <!--=============== MAIN JS ===============-->
-        <script src="./assets/js/main.js"></script>
-    </body>
-    </html>
+    this.currentX = evt.pageX || evt.touches[0].pageX;
+    var diff = this.startX - this.currentX;
+    diff *= -1;
+
+    // don't let drag way from the center more than quarter of window
+    if (Math.abs(diff) > this.windowWidth / 4) {
+      if (diff > 0) {
+        diff = this.windowWidth / 4;
+      } else {
+        diff = - this.windowWidth / 4;
+      }
+    }
+
+    this.moveCard(diff);
+  };
+
+  // slide to left direction
+  Slider.prototype.slideLeft = function () {
+    // if last don't do nothing
+    if (this.currentIndex === this.cards.length - 1) {
+      this.cancelMoveCard();
+      return;
+    }
+
+    var self = this;
+    var card = this.cards[this.currentIndex];
+    var cardWidth = this.windowWidth / 2;
+
+    card.style.left = '-50%';
+
+    this.resetCardElsPosition();
+
+    this.currentIndex += 1;
+    this.setActivePlaceholder();
+    card = this.cards[this.currentIndex];
+
+    card.style.left = '50%';
+
+    this.moveCardEls(cardWidth * 3);
+
+    // add delay to resetting position
+    setTimeout(function () {
+      self.resetCardElsPosition();
+    }, 50);
+  };
+
+  // slide to right direction
+  Slider.prototype.slideRight = function () {
+    // if last don't do nothing
+    if (this.currentIndex === 0) {
+      this.cancelMoveCard();
+      return;
+    }
+
+    var self = this;
+    var card = this.cards[this.currentIndex];
+    var cardWidth = this.windowWidth / 2;
+
+    card.style.left = '150%';
+
+    this.resetCardElsPosition();
+
+    this.currentIndex -= 1;
+    this.setActivePlaceholder();
+    card = this.cards[this.currentIndex];
+
+    card.style.left = '50%';
+
+    this.moveCardEls(-cardWidth * 3);
+
+    // add delay to resetting position
+    setTimeout(function () {
+      self.resetCardElsPosition();
+    }, 50);
+  };
+
+  // put active card in original position (center)
+  Slider.prototype.cancelMoveCard = function () {
+    var self = this;
+    var card = this.cards[this.currentIndex];
+
+    card.style.transition = 'transform 0.5s ease-out';
+    card.style.transform = '';
+
+    this.resetCardElsPosition();
+  };
+
+  // reset to original position elements of card
+  Slider.prototype.resetCardElsPosition = function () {
+    var self = this;
+    var card = this.cards[this.currentIndex];
+
+    var cardLogo = card.querySelector('.card__logo');
+    var cardPrice = card.querySelector('.card__price');
+    var cardTitle = card.querySelector('.card__title');
+    var cardSubtitle = card.querySelector('.card__subtitle');
+    var cardImage = card.querySelector('.card__image');
+    var cardWishList = card.querySelector('.card__wish-list');
+    var cardCategory = card.querySelector('.card__category');
+    var cardWillAnimate = card.querySelectorAll('.card__will-animate');
+
+    // move card elements to original position
+    cardWillAnimate.forEach(function (el) {
+      el.style.transition = 'transform 0.5s ease-out';
+    });
+
+    cardLogo.style.transform = '';
+    cardPrice.style.transform = '';
+
+    cardTitle.style.transform = '';
+    cardSubtitle.style.transform = '';
+
+    cardImage.style.transform = '';
+    cardWishList.style.transform = '';
+    cardCategory.style.transform = '';
+
+    // clear transitions
+    setTimeout(function () {
+      card.style.transform = '';
+      card.style.transition = '';
+
+      cardWillAnimate.forEach(function (el) {
+        el.style.transition = '';
+      });
+    }, 500);
+
+  };
+
+  // slide card while dragging
+  Slider.prototype.moveCard = function (diff) {
+
+    var card = this.cards[this.currentIndex];
+
+    card.style.transform = 'translateX(calc(' + diff + 'px - 50%))';
+    diff *= -1;
+
+    this.moveCardEls(diff);
+  };
+
+  // create parallax effect on card elements sliding them
+  Slider.prototype.moveCardEls = function (diff) {
+    var card = this.cards[this.currentIndex];
+
+    var cardLogo = card.querySelector('.card__logo');
+    var cardPrice = card.querySelector('.card__price');
+    var cardTitle = card.querySelector('.card__title');
+    var cardSubtitle = card.querySelector('.card__subtitle');
+    var cardImage = card.querySelector('.card__image');
+    var cardWishList = card.querySelector('.card__wish-list');
+    var cardCategory = card.querySelector('.card__category');
+    var cardWillAnimate = card.querySelectorAll('.card__will-animate');
+
+    cardLogo.style.transform = 'translateX(' + (diff / this.ratio) + 'px)';
+    cardPrice.style.transform = 'translateX(' + (diff / this.ratio) + 'px)';
+
+    cardTitle.style.transform = 'translateX(' + (diff / (this.ratio * 0.90)) + 'px)';
+    cardSubtitle.style.transform = 'translateX(' + (diff / (this.ratio * 0.85)) + 'px)';
+
+    cardImage.style.transform = 'translateX(' + (diff / (this.ratio * 0.35)) + 'px)';
+
+    cardWishList.style.transform = 'translateX(' + (diff / (this.ratio * 0.85)) + 'px)';
+    cardCategory.style.transform = 'translateX(' + (diff / (this.ratio * 0.65)) + 'px)';
+
+  };
+
+
+  // create slider
+  var slider = new Slider();
+
+})();
+  </script>
+
+</body>
+</html>
