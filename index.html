@@ -56,7 +56,13 @@
       }
 
       button:focus {
-        outline: none;
+            outline: none;
+      }
+
+      span {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
       }
 
       body.gold .header h2,
@@ -1019,9 +1025,7 @@ inherits: false;
       <div class="mid-spot" onclick="document.body.classList.toggle('gold');"></div>
       <button class="contact-btn">
         <span class="glow"></span>
-        <a href="https://chat.whatsapp.com/GtG0Q6rBVTTGAz8GmfS3e1" target="_blank">
-        <span class="contact-btn-content">NyanBot</span>
-        </a>
+        <span class="contact-btn-content" onclick="window.location='https://chat.whatsapp.com/GtG0Q6rBVTTGAz8GmfS3e1';">NyanBot</span>
       </button>
       <div class="spotlight">
         <div></div>
@@ -1160,18 +1164,19 @@ inherits: false;
       });
 
       function openFullscreen() {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-          elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-          elem.msRequestFullscreen();
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
         }
-      }
-      window.onload = openFullscreen;
+
+        window.onload = openFullscreen;
     </script>
   </body>
 </html>
