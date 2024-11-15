@@ -3,6 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Samu330 🪅</title>
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
+  <meta property="og:image" content="https://wallpapercave.com/wp/2HXC2I9.jpg" />
+  <meta name="description" content= "NyanBot-V2 update" >
+  <meta name="author" content="Samu330" />
+  <meta name="copyright" content="NyanBot-V2" />
+  <meta name="keywords" content="whatsapp bot, bot whatsapp, github bot, samu330 bot"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+  /* Bloquear click derecho */
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>
   <style>
 @import url('https://fonts.cdnfonts.com/css/hubot-sans');
 *{ box-sizing: border-box; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth;}
@@ -816,6 +835,24 @@ window.addEventListener('resize', onResize);
 
 initParticles();
 animate();
+
+document.oncontextmenu = function() {
+    return false
+}
+document.addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
+        event.preventDefault();
+        Swal.fire(
+            'Sin acceso?',
+            'Lo Siento pero no tienes permiso',
+            'question'
+        )
+    }
+});
   </script>
 
 </body>
