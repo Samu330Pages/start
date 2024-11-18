@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #b0b0b0;
+            background-color: #ffffff;
             padding: 20px;
         }
         h1 {
@@ -16,7 +16,16 @@
         }
         .content {
             text-align: center;
-            background-color: #fff;
+            background: linear-gradient(to bottom right, #99d9f4, #c8a2c8);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        .content1 {
+            text-align: center;
+            background: linear-gradient(to bottom right, #a5ff55, #8083ff);
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
@@ -26,43 +35,93 @@
         .content2 {
             text-align: left;
         }
+        .azul {
+            color: #16005d;
+        }
+        .align {
+            text-align: center;
+        }
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Ajusta la altura según tus necesidades */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-images {
+    display: flex;
+    animation: slide 21s infinite; /* Ajusta el tiempo total del ciclo */
+}
+
+.carousel-images img {
+    max-width: 100%;
+    max-height: 100%;
+    flex-shrink: 0;
+    margin: auto; /* Centra la imagen dentro de su contenedor */
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    14.2857% { transform: translateX(-100%); } /* 100% / 7 */
+    28.5714% { transform: translateX(-200%); } /* 200% / 7 */
+    42.8571% { transform: translateX(-300%); } /* 300% / 7 */
+    57.1429% { transform: translateX(-400%); } /* 400% / 7 */
+    71.4286% { transform: translateX(-500%); } /* 500% / 7 */
+    85.7143% { transform: translateX(-600%); } /* 600% / 7 */
+    100% { transform: translateX(0); }
+}
     </style>
 </head>
 <body>
-    <div class="content">
-    <h1>RAFAEL BELLO REYES</h1>
-    <h2>Participación y denuncia activa de la ciudadanía para disminuir la violencia y el desorden social originada por la inseguridad en mi comunidad</h2>
-    <h3>Objetivo del proyecto</h3>
-    <p>La elaboración de este proyecto está pensado y dirigido a los vecinos de  mi comunidad en cancún, Quintana Roo y contiene la idea  principal de exponer la inseguridad como una creciente amenaza social en mi comunidad evidenciando con datos sólidos y comprobados la difícil situación que enfrentamos en mi municipio.<br><br>
-
+    <div>
+    <h3 class='azul'>Objetivo del proyecto</h3>
+    <h1 class='azul'>RAFAEL BELLO REYES</h1>
+    <p class='azul'>La elaboración de este proyecto está pensado y dirigido a los vecinos de  mi comunidad en cancún, Quintana Roo y contiene la idea  principal de exponer la inseguridad como una creciente amenaza social en mi comunidad evidenciando con datos sólidos y comprobados la difícil situación que enfrentamos en mi municipio.<br><br>
 El objetivo general de mi proyecto se basa en generar acciones que permitan una mayor participación social en mi comunidad contra la inseguridad con el fin de disminuir la violencia, corrupción y descomposición social, por lo que en este proyecto  se proponen objetivos específicos y metas en los tres ámbitos más relevantes como lo son el económico, social y político, lo anterior con el fin de establecer una perspectiva más efectiva para combatir y prevenir la inseguridad y sus consiguientes efectos negativos más frecuentes como el alza a la violencia y homicidios, descomposición social, corrupción, entre otros
-
 </p>
-<img src="https://static.wixstatic.com/media/d74f08_84438bc8b4604197a54409704ddc410b~mv2.jpg/v1/crop/x_121,y_0,w_1079,h_720/fill/w_560,h_360,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/image_edited.jpg" alt="imagen1" width="200vh">
-<h2>Organigrama del comité vecinal</h2>
-<img src="https://static.wixstatic.com/media/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png/v1/fill/w_560,h_286,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png" alt="imagen2" width="200vh">
+<div class="carousel">
+    <div class="carousel-images">
+        <img src="https://i.ibb.co/dpbX8yp/IMG-20241116-WA0096.jpg" alt="Imagen 1">
+        <img src="https://i.ibb.co/j3sL2gj/IMG-20241116-WA0097.jpg" alt="Imagen 2">
+        <img src="https://i.ibb.co/n7qjsVJ/IMG-20241116-WA0098.jpg" alt="Imagen 3">
+        <img src="https://i.ibb.co/rkkdRw6/IMG-20241116-WA0099.jpg" alt="Imagen 4">
+        <img src="https://i.ibb.co/ydsZS7q/IMG-20241117-WA0044.jpg" alt="Imagen 5">
+        <img src="https://i.ibb.co/Xtn3H22/IMG-20241117-WA0045.jpg" alt="Imagen 6">
+        <img src="https://i.ibb.co/LtS5515/IMG-20241117-WA0046.jpg" alt="Imagen 7">
+    </div>
+</div>
+<div class='align'>
+<h2>Participación y denuncia activa de la ciudadanía para disminuir la violencia y el desorden social originada por la inseguridad en mi comunidad</h2>
+<img src="https://static.wixstatic.com/media/d74f08_84438bc8b4604197a54409704ddc410b~mv2.jpg/v1/crop/x_121,y_0,w_1079,h_720/fill/w_560,h_360,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/image_edited.jpg" alt="imagen1" width="300vh">
+</div>
+</div>
+<div class='content'>
+<img src="https://static.wixstatic.com/media/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png/v1/fill/w_560,h_286,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png" alt="imagen2" width="300vh">
 <h2>Objetivos específicos</h2>
 <div class="content2">
 <p>● Involucrar a mi comunidad más activamente en temas de seguridad conformando comités vecinales.<br><br>
-
 ●	 Informar y concientizar a mi comunidad de las principales causas y efectos que provoca la inseguridad  apoyado de volantes, páginas en redes sociales<br>
-
 ●	 Enfocadas a disminuir la inseguridad que se vive día a día.</p>
 </div>
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_mEvWBoj2htmhl7RYOlfrumTxhk31jFTTmNZHCMSGy2p5CVX752o4pzk&s=10" alt="imagen3" width="200vh">
 <h2>Metas</h2>
 <p>Integrar a mi comunidad al centro estatal de prevención y bienestar, instauración de centros municipales de prevención y bienestar, alineando así los esfuerzos de los diferentes órdenes de gobierno, sociedad civil y ciudadanía.</p>
 <p>Generar reuniones vecinales que nos permitan un mayor acercamiento y cohesión social, integrar comités vecinales que nos permita una mejor coordinación e incentivar las denuncias ciudadanas en mi comunidad.</p>
 <p>Generar los canales necesarios con las instituciones encargadas al combate ala inseguridad  como la Marina, Ejército, Guardia Nacional que permitan canalizar las denuncias ciudadanas de una manera segura y anónima.</p>
-<img src="https://static.wixstatic.com/media/d74f08_9b77f761cab940f3afb6f2441635d84d~mv2.png/v1/fill/w_500,h_500,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_9b77f761cab940f3afb6f2441635d84d~mv2.png" alt="imagen4" width="200vh">
 <h2>Estrategia</h2>
 <p>Integrar a los comités vecinales de mi comunidad al Centro Estatal de Prevención y Bienestar de Quintana Roo.</p>
-<img src="https://static.wixstatic.com/media/d74f08_5063be9c1a9c4d84a8352dbe2c62c5ed~mv2.png/v1/fill/w_560,h_328,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_5063be9c1a9c4d84a8352dbe2c62c5ed~mv2.png" alt="imagen5" width="200vh">
+</div>
+<div class='content1'>
+<h2>Organigrama del comité vecinal</h2>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_mEvWBoj2htmhl7RYOlfrumTxhk31jFTTmNZHCMSGy2p5CVX752o4pzk&s=10" alt="imagen3" width="300vh">
 <p>En el ámbito económico me refiero cómo repercute negativamente en mi comunidad, es por ello que debemos de dimensionar el problema identificando y publicando montos del flujo del dinero ilegal obtenido por el narcotráfico, ya que al publicar datos estadísticos que involucran al creciente poder económico del narcotráfico evidenciamos su proporcional relación con homicidios, violencia, descomposición social y corrupción, ya que mi comunidad estaría en una posición de vulnerabilidad a consecuencia de la negligencia o indiferencia por parte de los habitantes, instituciones de seguridad y gobierno, lo cual se reflejaría en problemas más serios que se unirían a los ya existentes, como por ejemplo la afectación a la percepción del destino turístico como un lugar seguro de visitar, con ello la pérdida de empleos por falta de turismo, así como falta de ingresos en el Estado, ya que se considera como la principal actividad económica, lo cual repercutirá gravemente en el tejido social.</p>
+<img src="https://static.wixstatic.com/media/d74f08_9b77f761cab940f3afb6f2441635d84d~mv2.png/v1/fill/w_500,h_500,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_9b77f761cab940f3afb6f2441635d84d~mv2.png" alt="imagen4" width="300vh">
 <p>Respecto al ámbito social los efectos de la inseguridad  en mi comunidad podemos resaltar una descomposición social desbordada, un mayor índice de violencia y homicidios y corrupción, debido a la poca planeación e involucramiento de mi comunidad en la prevención y combate al narcotráfico y la inseguridad que se vive en Cancun Qroo, es por ello que debemos implementar lineamientos y acciones encaminadas a mejorar el acercamiento social en mi comunidad, incentivando la participación ciudadana y la denuncia, estrechando la comunicación con las instituciones encargadas de la seguridad pública, debemos crear grupos de WhatsApp que nos permita medir el número de participantes, además de mantener una comunicación más rápida y efectiva, también debemos  generar reuniones vecinales que coadyuve a un mayor acercamiento y cohesión social, con el fin de integrar comités vecinales, generando una mejor coordinación e incentivando las denuncias ciudadanas en mi comunidad.</p>
+<img src="https://static.wixstatic.com/media/d74f08_5063be9c1a9c4d84a8352dbe2c62c5ed~mv2.png/v1/fill/w_560,h_328,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_5063be9c1a9c4d84a8352dbe2c62c5ed~mv2.png" alt="imagen5" width="300vh">
 <p>En el ámbito político debemos Implementar políticas públicas encaminadas a la prevención de delitos como el narcotráfico, informar a mi comunidad acerca de nuevas políticas que establezcan no tan solo el combatir, sino prevenir delitos de inseguridad, además de estimular la participación ciudadana en el combate y prevención del delito y, creando comités vecinales debidamente establecidos y reconocidos por las autoridades de mi comunidad y Estado, integrando a mi comunidad al centro estatal de prevención y bienestar, el cual funge como órgano rector de la política pública de prevención en el Estado de Quintana Roo, logrando así la instauración de centros municipales de prevención y bienestar, “cuya finalidad es fomentar la institucionalización de la política de prevención a nivel municipal” a través de acciones como la retroalimentación, planeación, ejecución y evaluación de la política pública, alineando así los esfuerzos de los diferentes órdenes de gobierno, sociedad civil y ciudadanía, con la finalidad de lograr un cambio positivo sostenible con el tiempo.</p>
-<br>
-<p>Una difusión adecuada de este proyecto en mi pagina web, redes sociales y otros medios de comunicación a nivel municipal, como difusoras de radio, televisión y periódicos locales, es por ello que mi estrategia de proyecto  toma como base un ámbito local en donde se gestionarán e implementarán los objetivos y metas iniciales, logrando así resultados en un periodo más corto de tiempo, lo que permitirá acrecentar recursos materiales, humanos, económicos y con ello se habrá logrado desarrollar exitosamente la base de mi proyecto al que entenderemos como el primer comité vecinal establecido en mi colonia y con lo cual buscaremos ser replicados en las otras colonias de mi municipio, con el fin de integrarnos al Centro Estatal de Prevención y Bienestar del Estado de Quintana Roo, una vez integrados buscaremos que este modelo de comité ciudadano sea replicado en los otros municipios de mi Estado con la ayuda del gobierno estatal y redes sociales,, logrando crear un modelo único en la estrategia de  prevención y combate al narcotráfico y sus efectos y tendrá la finalidad de ser un modelo único estatal para su difusión en medios masivos de comunicación para buscar ser replicado en mediano y largo plazo en otros estados del país.</p>
-    </div>
+</div>
+<p class='azul'>Una difusión adecuada de este proyecto en mi pagina web, redes sociales y otros medios de comunicación a nivel municipal, como difusoras de radio, televisión y periódicos locales, es por ello que mi estrategia de proyecto  toma como base un ámbito local en donde se gestionarán e implementarán los objetivos y metas iniciales, logrando así resultados en un periodo más corto de tiempo, lo que permitirá acrecentar recursos materiales, humanos, económicos y con ello se habrá logrado desarrollar exitosamente la base de mi proyecto al que entenderemos como el primer comité vecinal establecido en mi colonia y con lo cual buscaremos ser replicados en las otras colonias de mi municipio, con el fin de integrarnos al Centro Estatal de Prevención y Bienestar del Estado de Quintana Roo, una vez integrados buscaremos que este modelo de comité ciudadano sea replicado en los otros municipios de mi Estado con la ayuda del gobierno estatal y redes sociales,, logrando crear un modelo único en la estrategia de  prevención y combate al narcotráfico y sus efectos y tendrá la finalidad de ser un modelo único estatal para su difusión en medios masivos de comunicación para buscar ser replicado en mediano y largo plazo en otros estados del país.</p>
 </body>
 </html>
