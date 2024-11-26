@@ -113,7 +113,7 @@
         </div>
     </div>
     <div class='content'>
-        <img src="https://static.wixstatic.com/media/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png/v1/fill/w_560,h_286,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/d74f08_8bbf8505939d4d31ac76cf203f96965b~mv2.png" alt="imagen2" width="300vh">
+        <img src="https://i.ibb.co/rF3nC8y/Picsart-24-11-26-14-34-44-665.png" alt="imagen2" width="300vh">
         <h2>Objetivos específicos</h2>
         <div class="content2">
             <p>● Involucrar a mi comunidad más activamente en temas de seguridad conformando comités vecinales.<br><br>
@@ -157,18 +157,18 @@
 
         function showImage(index) {
             images.forEach((img, i) => {
-                img.classList.remove('active'); // Elimina la clase activa de todas las imágenes
+                img.classList.remove('active');
             });
-            images[index].classList.add('active'); // Agrega la clase activa a la imagen actual
+            images[index].classList.add('active');
         }
 
         function nextImage() {
-            currentIndex = (currentIndex + 1) % images.length; // Cicla al siguiente índice
+            currentIndex = (currentIndex + 1) % images.length;
             showImage(currentIndex);
         }
 
-        setInterval(nextImage, 3000); // Cambia la imagen cada 3 segundos
-        showImage(currentIndex); // Muestra la primera imagen al cargar
+        setInterval(nextImage, 3000);
+        showImage(currentIndex);
     </script>
 </body>
 </html>
