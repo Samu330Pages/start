@@ -1,0 +1,18 @@
+
+[
+    {
+        "name": "Recompensa 1",
+        "points": 100,
+        "date": "2024-11-30"
+    },
+    {
+        "name": "Recompensa 2",
+        "points": 200,
+        "date": "2024-11-30"
+    },
+    {
+        "name": "Recompensa 3",
+        "points": 300,
+        "date": "2024-11-30"
+    }
+]
