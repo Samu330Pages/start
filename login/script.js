@@ -30,7 +30,6 @@ firebase.initializeApp(config);
 
 
 //////////////////////////
-// Función para mostrar el input de restablecimiento de contraseña
 function showResetPasswordInput() {
   Swal.fire({
     title: 'Restablecer contraseña',
@@ -80,15 +79,13 @@ function showResetPasswordInput() {
   });
 }
 
-// Validación de formato de correo electrónico
 function validateEmail(email) {
   const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
   return emailRegex.test(email);
 }
 //////////////////////////
-// Función para iniciar sesión
 function login() {
-    event.preventDefault(); // Evita la recarga de la página por defecto
+    event.preventDefault();
     var email = document.getElementById("login-email").value;
     var password = document.getElementById("login-password").value;
 
@@ -107,7 +104,6 @@ function login() {
         });
 }
 ////
-// Función para registrarse
 function signup() {
   var email = document.getElementById("signup-email").value;
   var password = document.getElementById("signup-password").value;
@@ -118,16 +114,14 @@ function signup() {
 
   if (password !== confirmPassword) {
     Swal.fire("Las contraseñas no coinciden");
-    return false; // Detiene el envío del formulario
+    return false;
   }
 
-  // Verificar si el nombre de usuario tiene más de 5 caracteres
   if (username.length < 5) {
     Swal.fire("El nombre de usuario debe tener al menos 5 caracteres");
-    return false; // Detiene el envío del formulario
+    return false;
   }
 
-  // Verificar si el correo ya está registrado
   fetch(checkEmailUrl)
     .then(function(response) {
       return response.json();
@@ -136,22 +130,20 @@ function signup() {
       if (data.IsEmailRegistered === true) {
         Swal.fire("Ya existe un usuario con ese correo", `Usuario: ${data.User}`, "error");
       } else {
-        // Registrar usuario y mostrar mensaje de éxito
         fetch(createUserUrl)
         Swal.fire({
           title: "Registro exitoso",
           text: `Usuario: ${username}\nIniciando sesion...`,
           icon: "success",
           showLoaderOnConfirm: true,
-          timer: 4000, // Cerrar automáticamente después de 4 segundos
+          timer: 4000,
           timerProgressBar: true,
           allowEscapeKey: false,
           allowOutsideClick: false
         }).then(function() {
-          // Registrar usuario en Firebase y redirigir a gz330 después de 8 segundos
           firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(function() {
-              window.location.href = "https://wa.me/samu330";
+              window.location.href = "https://samu330.com/nyan/rewards";
             })
             .catch(function(error) {
               Swal.fire(`Error durante la creación del usuario ${error}`);
@@ -166,10 +158,8 @@ function signup() {
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    // El usuario ha iniciado sesión, redirigir a gz330.html
-    window.location.href = "https://wa.me/samu330";
+    window.location.href = "https://samu330.com/nyan/rewards";
   } else {
-    // El usuario no ha iniciado sesión
   }
 });
 ////
