@@ -16,14 +16,20 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            transition: background-color 0.5s;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
+        }
+        #visualizer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Poner el canvas detrás del contenido */
         }
         .container {
             text-align: center;
-            width: 90%;
-            max-width: 600px;
+            z-index: 1; /* Asegurarnos de que el contenido esté por encima del canvas */
         }
         h1 {
             color: #333;
@@ -81,29 +87,6 @@
         button:hover {
             transform: scale(1.1);
         }
-        .dark-theme {
-            background-color: #121212;
-        }
-        .dark-theme .rewards-list {
-            background: #1e1e1e;
-            color: #fff;
-        }
-        .dark-theme .reward {
-            background: #424242;
-            color: #fff;
-        }
-        .dark-theme h1 {
-            color: #fff;
-        }
-        .dark-theme .instructions {
-            color: #ddd;
-        }
-        .dark-theme button {
-            background-color: #bb86fc;
-        }
-        .dark-theme button:hover {
-            background-color: #3700b3;
-        }
         .footer {
             margin-top: 20px;
             padding: 20px;
@@ -128,12 +111,6 @@
             transition: color 0.3s;
             color: #6200ea;
         }
-        .dark-theme .footer {
-            background: #1e1e1e;
-        }
-        .dark-theme .social-icons a {
-            color: #ffffff;
-        }
         .social-icons a:hover {
             color: #3700b3;
         }
@@ -144,54 +121,23 @@
             margin: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        .redeem-button {
-            margin: 20px 0;
+        #play-button {
+            margin-top: 20px;
             padding: 10px 20px;
-            border: 2px solid #6200ea;
-            border-radius: 20px;
-            background: transparent;
-            color: #6200ea;
-            font-size: 16px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-            transition: color 0.5s, border-color 0.5s, background 0.5s;
-        }
-        .redeem-button:hover {
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
             color: white;
-            background: #6200ea;
-            border-color: #3700b3;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .redeem-button:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: rgba(98, 0, 234, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            animation: ripple 0.6s linear;
-            z-index: 0;
-        }
-        @keyframes ripple {
-            to {
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        
-        #visualizer {
-            width: 100%;
-            height: 300px;
-            background-color: #f0f0f0;
-            display: block;
-            margin-bottom: 20px;
+        #play-button:hover {
+            background-color: #3700b3;
         }
     </style>
 </head>
 <body>
+    <canvas id="visualizer"></canvas>
     <div class="container">
         <img src="https://cdn3.emoji.gg/emojis/97903-anime-dance.gif" alt="Imagen de perfil" class="profile-image">
         <h1>Recompensas Disponibles <i class="fas fa-gift"></i></h1>
@@ -199,9 +145,7 @@
         <button class="redeem-button" onclick="window.open('https://chat.whatsapp.com/GtG0Q6rBVTTGAz8GmfS3e1', '_blank');">Canjear Recompensas <i class="fas fa-truck-fast fa-beat-fade"></i></button>
         <div id="rewards-list" class="rewards-list"></div>
         <button id="theme-toggle"><i class="fas fa-moon"></i></button>
-        <canvas id="visualizer"></canvas>
-        <audio id="audio-player" src="https://s19.aconvert.com/convert/p3r68-cdx67/8qanf-pk6aq.mp3"></audio>
-        <button id="play-button">Play Music</button>
+        <button id="play-button">Reproducir Música</button>
     </div>
 
     <div id="json-data" style="display:none;">
@@ -257,14 +201,16 @@
         });
 
         displayRewards();
-        
-        const audioCtx = new AudioContext();
-        const audioElement = document.getElementById('audio-player');
+
+        // Visualizador de audio
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioElement = new Audio('https://s19.aconvert.com/convert/p3r68-cdx67/8qanf-pk6aq.mp3');
         const audioSource = audioCtx.createMediaElementSource(audioElement);
         const analyser = audioCtx.createAnalyser();
+
         audioSource.connect(analyser);
         analyser.connect(audioCtx.destination);
-
+        
         const canvas = document.getElementById('visualizer');
         const ctx = canvas.getContext('2d');
 
@@ -287,8 +233,11 @@
         }
 
         document.getElementById('play-button').addEventListener('click', () => {
-            audioElement.play();
-            renderFrame();
+            audioElement.play().then(() => {
+                renderFrame();
+            }).catch((error) => {
+                console.error('Error al iniciar la reproducción:', error);
+            });
         });
     </script>
 </body>
