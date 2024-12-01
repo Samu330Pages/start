@@ -47,8 +47,15 @@ function handleRewardClick(reward) {
     rewardDiv.classList.toggle('clicked');
     const icon = rewardDiv.querySelector('i');
     if (rewardDiv.classList.contains('clicked')) {
-        navigator.clipboard.writeText('.rw' + reward.code).then(() => {
+        navigator.clipboard.writeText('.rw ' + reward.code).then(() => {
             icon.style.display = 'inline';
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Copiaste el código!",
+                showConfirmButton: false,
+                timer: 1500
+            });
         });
     } else {
         icon.style.display = 'none';
