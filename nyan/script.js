@@ -18,7 +18,7 @@ firebase.auth().onAuthStateChanged((user) => {
             title: 'Sin acceso',
             text: 'Debes iniciar sesión primero!',
             icon: 'warning',
-            timer: 3000,
+            timer: 5000,
             showCancelButton: false,
             showConfirmButton: false
         }).then(() => {
