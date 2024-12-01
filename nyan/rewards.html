@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento de Recompensas</title>
+    <title>Recompensas Nyan 🎁</title>
+    <link rel="shortcut icon" href="https://cdn3.emoji.gg/emojis/69900-booster.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -199,7 +200,8 @@
     <div class="container">
         <img src="https://cdn3.emoji.gg/emojis/97903-anime-dance.gif" alt="Imagen de perfil" class="profile-image">
         <h1>Recompensas Disponibles <i class="fas fa-gift"></i></h1>
-        <div class="instructions">Haz clic en una recompensa para copiar el código al portapapeles.</div>
+        <div class="instructions">Haz clic en una recompensa para copiar el código al portapapeles, para canjear tu premio pega el código en el grupo de Nyan!.
+Atento a la página para próximas recompensas! <i class="fas fa-mobile-screen-button"></div>
         <button class="redeem-button" onclick="window.open('https://chat.whatsapp.com/GtG0Q6rBVTTGAz8GmfS3e1', '_blank');">Canjear Recompensas <i class="fas fa-truck-fast fa-beat-fade"></i></button>
         <div id="rewards-list" class="rewards-list"></div>
         <button id="theme-toggle"><i class="fas fa-moon"></i></button>
@@ -208,7 +210,7 @@
     <div id="json-data" style="display:none;">
         <script type="application/json">
             [
-                { "name": "Recompensa de Navidad", "points": 100, "code": "#REWARD1" }
+                { "name": "Inicio diciembre! ❄️", "points": 500, "code": "#diciembre" }
             ]
         </script>
     </div>
@@ -221,53 +223,6 @@
             <a href="https://github.com/tu-perfil" target="_blank"><i class="fab fa-github"></i></a>
         </div>
     </div>
-
-    <script>
-        const rewardsList = document.getElementById('rewards-list');
-        const jsonData = document.getElementById('json-data').querySelector('script').innerHTML;
-        const rewards = JSON.parse(jsonData);
-
-        function displayRewards() {
-            rewardsList.innerHTML = '';
-            rewards.forEach(reward => {
-                const rewardDiv = document.createElement('div');
-                rewardDiv.className = 'reward';
-                rewardDiv.innerHTML = `${reward.name} <span>${reward.points} puntos</span><i class="fas fa-check" style="display: none;"></i>`;
-                rewardDiv.onclick = () => handleRewardClick(reward);
-                rewardsList.appendChild(rewardDiv);
-            });
-        }
-
-        function handleRewardClick(reward) {
-            const rewardDiv = Array.from(rewardsList.children).find(div => div.innerText.includes(reward.name));
-            rewardDiv.classList.toggle('clicked');
-            const icon = rewardDiv.querySelector('i');
-            if (rewardDiv.classList.contains('clicked')) {
-                navigator.clipboard.writeText(reward.code).then(() => {
-                    icon.style.display = 'inline';
-                });
-            } else {
-                icon.style.display = 'none';
-            }
-        }
-
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            const icon = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
-            document.getElementById('theme-toggle').innerHTML = `<i class="${icon}"></i>`;
-        });
-
-        displayRewards();
-
-        document.addEventListener("dragstart", function(event) {
-        event.preventDefault();
-      });
-      document.addEventListener('keydown', function(event) {
-        if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-          event.preventDefault();
-          Swal.fire('Sin acceso?', 'Lo Siento pero no tienes permiso', 'question')
-        }
-      });
-    </script>
+    <script src="../nyan/script.js"></script>
 </body>
 </html>
