@@ -19,7 +19,7 @@
 <body>
   <canvas id="canvas"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -32,11 +32,8 @@
     const light = new THREE.AmbientLight(0xffffff, 1);
     scene.add(light);
 
-    // Carga la clase OBJLoader
-    const OBJLoader = window.THREE.OBJLoader;
-
     // Carga el modelo OBJ
-    const loader = new OBJLoader();
+    const loader = new THREE.OBJLoader2(); // Utiliza OBJLoader2 en lugar de OBJLoader
     loader.load('./nyan/medieval house.obj', (obj) => {
       // Ajusta el tamaño del objeto
       obj.scale.x = 1;
