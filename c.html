@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicker Cactus</title>
+  <style>
+  .contenedor {
+  width: 80%;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.cactus {
+  width: 200px;
+  height: 200px;
+  margin: 20px auto;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.cactus img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.puntos {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tienda {
+  margin-top: 40px;
+}
+
+.tienda ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tienda li {
+  margin-bottom: 10px;
+}
+
+.tienda button {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tienda button:hover {
+  background-color: #3e8e41;
+}
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <div class="cactus">
+      <img src="./cactus/1.png" alt="Cactus" id="cactus-imagen">
+    </div>
+    <div class="puntos">
+      <p id="puntos-texto">0 puntos</p>
+    </div>
+    <div class="tienda">
+      <h2>Tienda</h2>
+      <ul>
+        <li><button id="comprar-multiplicador">Multiplicador x2 (100 puntos)</button></li>
+        <li><button id="comprar-boost">Boost x3 (500 puntos)</button></li>
+        <li><button id="comprar-cactus-grande">Cactus grande (1000 puntos)</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+  let puntos = 0;
+let multiplicador = 1;
+let boost = 1;
+let cactusGrande = false;
+
+const cactusImagen = document.getElementById('cactus-imagen');
+const puntosTexto = document.getElementById('puntos-texto');
+const comprarMultiplicador = document.getElementById('comprar-multiplicador');
+const comprarBoost = document.getElementById('comprar-boost');
+const comprarCactusGrande = document.getElementById('comprar-cactus-grande');
+
+cactusImagen.addEventListener('click', () => {
+  puntos += multiplicador * boost;
+  puntosTexto.textContent = `${puntos} puntos`;
+});
+
+comprarMultiplicador.addEventListener('click', () => {
+  if (puntos >= 100) {
+    puntos -= 100;
+    multiplicador *= 2;
+    puntosTexto.textContent = `${puntos} puntos`;
+  }
+});
+
+comprarBoost.addEventListener('click', () => {
+  if (puntos >= 500) {
+    puntos -= 500;
+    boost *= 3;
+    puntosTexto.textContent = `${puntos} puntos`;
+  }
+});
+
+comprarCactusGrande.addEventListener('click', () => {
+  if (puntos >= 1000) {
+    puntos -= 1000;
+    cactusGrande = true;
+    cactusImagen.src = 'cactus-grande.png';
+    puntosTexto.textContent = `${puntos} puntos`;
+  }
+});
+</script>
+</body>
+</html>
