@@ -31,11 +31,11 @@
 
     // Carga el archivo MTL
     const mtloader = new THREE.MTLLoader();
-    mtloader.load('./medieval house.mtl', (materials) => {
+    mtloader.load('./nyan/medieval house.mtl', (materials) => {
       materials.preload();
       const loader = new THREE.OBJLoader();
       loader.setMaterials(materials);
-      loader.load('./medieval house.obj', (obj) => {
+      loader.load('./nyan/medieval house.obj', (obj) => {
         scene.add(obj);
       });
     });
