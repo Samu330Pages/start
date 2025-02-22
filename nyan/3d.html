@@ -28,7 +28,7 @@
     });
 
     const loader = new THREE.ColladaLoader();
-    loader.load('./nyan/3d.dae', (collada) => {
+    loader.load('../nyan/3d.dae', (collada) => {
       const mesh = collada.scene;
       scene.add(mesh);
     });
