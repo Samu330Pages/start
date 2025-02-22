@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🥰</title>
+  <title>💥</title>
   <style>
     body {
       margin: 0;
@@ -20,6 +20,7 @@
   <canvas id="canvas"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,26 +29,22 @@
       antialias: true
     });
 
-    // Agrega iluminación a la escena
+    // Carga el archivo MTL
+    const mtloader = new THREE.MTLLoader();
+    mtloader.load('./medieval house.mtl', (materials) => {
+      materials.preload();
+      const loader = new THREE.OBJLoader();
+      loader.setMaterials(materials);
+      loader.load('./medieval house.obj', (obj) => {
+        scene.add(obj);
+      });
+    });
+
+    // Configura la iluminación
     const light = new THREE.AmbientLight(0xffffff, 1);
     scene.add(light);
 
-    // Crea un administrador de carga
-    const manager = new THREE.LoadingManager();
-
-    // Carga el modelo OBJ
-    const loader = new THREE.OBJLoader(manager);
-    loader.load('./nyan/medieval house.obj', (obj) => {
-      // Ajusta el tamaño del objeto
-      obj.scale.x = 1;
-      obj.scale.y = 1;
-      obj.scale.z = 1;
-      scene.add(obj);
-    });
-
-    // Ajusta la posición de la cámara
-    camera.position.x = 0;
-    camera.position.y = 0;
+    // Configura la cámara
     camera.position.z = 5;
 
     function animate() {
