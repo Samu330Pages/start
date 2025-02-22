@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Modelo 3D con DAE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
   <style>
     body {
       margin: 0;
@@ -18,7 +19,8 @@
 <body>
   <canvas id="canvas"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/ColladaLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -27,12 +29,22 @@
       antialias: true
     });
 
-    const loader = new THREE.ColladaLoader();
-    loader.load('../nyan/3d.dae', (collada) => {
-      const mesh = collada.scene;
-      scene.add(mesh);
+    // Carga el archivo MTL
+    const mtloader = new THREE.MTLLoader();
+    mtloader.load('../nyan/medieval house.mtl', (materials) => {
+      materials.preload();
+      const loader = new THREE.OBJLoader();
+      loader.setMaterials(materials);
+      loader.load('../nyan/medieval house.obj', (obj) => {
+        scene.add(obj);
+      });
     });
 
+    // Configura la iluminación
+    const light = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(light);
+
+    // Configura la cámara
     camera.position.z = 5;
 
     function animate() {
@@ -41,6 +53,12 @@
     }
 
     animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
