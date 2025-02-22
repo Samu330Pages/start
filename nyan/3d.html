@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>🥰</title>
   <style>
     body {
       margin: 0;
@@ -32,8 +32,11 @@
     const light = new THREE.AmbientLight(0xffffff, 1);
     scene.add(light);
 
+    // Crea un administrador de carga
+    const manager = new THREE.LoadingManager();
+
     // Carga el modelo OBJ
-    const loader = new THREE.OBJLoader2(); // Utiliza OBJLoader2 en lugar de OBJLoader
+    const loader = new THREE.OBJLoader(manager);
     loader.load('./nyan/medieval house.obj', (obj) => {
       // Ajusta el tamaño del objeto
       obj.scale.x = 1;
