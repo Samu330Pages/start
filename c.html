@@ -1,11 +1,16 @@
+¡Claro! Aquí te dejo un ejemplo de código HTML, CSS y JS que cumple con tus requisitos:
+
+*HTML*
+```
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clicker Cactus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
-  .contenedor {
+.contenedor {
   width: 80%;
   margin: 40px auto;
   text-align: center;
@@ -38,17 +43,34 @@
   margin-top: 40px;
 }
 
-.tienda ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.tienda .celdas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.tienda li {
+.tienda .celda {
+  width: 200px;
+  height: 150px;
+  margin: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.tienda .celda h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.tienda .celda p {
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
-.tienda button {
+.tienda .celda button {
   background-color: #4CAF50;
   color: #fff;
   padding: 10px 20px;
@@ -57,10 +79,16 @@
   cursor: pointer;
 }
 
-.tienda button:hover {
-  background-color: #3e8e41;
+.decoraciones {
+  margin-top: 40px;
 }
-  </style>
+
+.decoraciones .celdas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+</style>
 </head>
 <body>
   <div class="contenedor">
@@ -68,59 +96,108 @@
       <img src="./cactus/1.png" alt="Cactus" id="cactus-imagen">
     </div>
     <div class="puntos">
-      <p id="puntos-texto">0 puntos</p>
+      <p id="puntos-texto"><i class="fas fa-coins"></i> 0 puntos</p>
     </div>
     <div class="tienda">
       <h2>Tienda</h2>
-      <ul>
-        <li><button id="comprar-multiplicador">Multiplicador x2 (100 puntos)</button></li>
-        <li><button id="comprar-boost">Boost x3 (500 puntos)</button></li>
-        <li><button id="comprar-cactus-grande">Cactus grande (1000 puntos)</button></li>
-      </ul>
+      <div class="celdas">
+        <div class="celda">
+          <h3>Multiplicador</h3>
+          <p id="multiplicador-precio">100 puntos</p>
+          <button id="comprar-multiplicador">Comprar</button>
+        </div>
+        <div class="celda">
+          <h3>Boost</h3>
+          <p id="boost-precio">500 puntos</p>
+          <button id="comprar-boost">Comprar</button>
+        </div>
+        <div class="celda">
+          <h3>Crecimiento</h3>
+          <p id="crecimiento-precio">1000 puntos</p>
+          <button id="comprar-crecimiento">Comprar</button>
+        </div>
+        <div class="celda">
+          <h3>Auto Clicker</h3>
+          <p id="auto-clicker-precio">5000 puntos</p>
+          <button id="comprar-auto-clicker">Comprar</button>
+        </div>
+      </div>
+    </div>
+    <div class="decoraciones">
+      <h2>Decoraciones</h2>
+      <div class="celdas">
+        <!-- Aquí irán las decoraciones -->
+      </div>
     </div>
   </div>
 
   <script>
-  let puntos = 0;
+let puntos = 0;
 let multiplicador = 1;
 let boost = 1;
-let cactusGrande = false;
+let crecimiento = 1;
+let autoClicker = false;
+let crecimientoNivel = 1;
+let cactusImagenSrc = "./cactus/1.png";
 
 const cactusImagen = document.getElementById('cactus-imagen');
 const puntosTexto = document.getElementById('puntos-texto');
+const multiplicadorPrecio = document.getElementById('multiplicador-precio');
+const boostPrecio = document.getElementById('boost-precio');
+const crecimientoPrecio = document.getElementById('crecimiento-precio');
+const autoClickerPrecio = document.getElementById('auto-clicker-precio');
 const comprarMultiplicador = document.getElementById('comprar-multiplicador');
 const comprarBoost = document.getElementById('comprar-boost');
-const comprarCactusGrande = document.getElementById('comprar-cactus-grande');
+const comprarCrecimiento = document.getElementById('comprar-crecimiento');
+const comprarAutoClicker = document.getElementById('comprar-auto-clicker');
 
 cactusImagen.addEventListener('click', () => {
   puntos += multiplicador * boost;
-  puntosTexto.textContent = `${puntos} puntos`;
+  puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
 });
 
 comprarMultiplicador.addEventListener('click', () => {
-  if (puntos >= 100) {
-    puntos -= 100;
+  if (puntos >= 100 * multiplicador) {
+    puntos -= 100 * multiplicador;
     multiplicador *= 2;
-    puntosTexto.textContent = `${puntos} puntos`;
+    multiplicadorPrecio.textContent = `${100 * multiplicador} puntos`;
+    puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
   }
 });
 
 comprarBoost.addEventListener('click', () => {
-  if (puntos >= 500) {
-    puntos -= 500;
-    boost *= 3;
-    puntosTexto.textContent = `${puntos} puntos`;
+  if (puntos >= 500 * boost) {
+    puntos -= 500 * boost;
+    boost *= 2;
+    boostPrecio.textContent = `${500 * boost} puntos`;
+    puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
   }
 });
 
-comprarCactusGrande.addEventListener('click', () => {
-  if (puntos >= 1000) {
-    puntos -= 1000;
-    cactusGrande = true;
-    cactusImagen.src = './cactus/2.png';
-    puntosTexto.textContent = `${puntos} puntos`;
+comprarCrecimiento.addEventListener('click', () => {
+  if (puntos >= 1000 * crecimiento) {
+    puntos -= 1000 * crecimiento;
+    crecimiento *= 2;
+    crecimientoPrecio.textContent = `${1000 * crecimiento} puntos`;
+    crecimientoNivel++;
+    cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
+    cactusImagen.src = cactusImagenSrc;
+    puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
   }
 });
-</script>
+
+comprarAutoClicker.addEventListener('click', () => {
+  if (puntos >= 5000) {
+    puntos -= 5000;
+    autoClicker = true;
+    autoClickerPrecio.textContent = "Activado";
+    puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+    setInterval(() => {
+      puntos += multiplicador * boost;
+      puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+    }, 1000);
+  }
+});
+  </script>
 </body>
 </html>
