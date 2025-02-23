@@ -12,6 +12,14 @@
   text-align: center;
 }
 
+.puntos {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .cactus {
   width: 200px;
   height: 200px;
@@ -29,44 +37,38 @@
   border-radius: 10px;
 }
 
-.puntos {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
 .tienda {
   margin-top: 40px;
 }
 
-.tienda .celdas {
+.potenciadores {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.tienda .celda {
-  width: 200px;
+.potenciador {
+  width: 150px;
   height: 150px;
   margin: 10px;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
-.tienda .celda h3 {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
+.potenciador i {
+  font-size: 24px;
+  margin-top: 20px;
 }
 
-.tienda .celda p {
+.potenciador p {
   font-size: 16px;
   margin-bottom: 10px;
 }
 
-.tienda .celda button {
+.potenciador button {
   background-color: #4CAF50;
   color: #fff;
   padding: 10px 20px;
@@ -74,55 +76,43 @@
   border-radius: 5px;
   cursor: pointer;
 }
-
-.decoraciones {
-  margin-top: 40px;
-}
-
-.decoraciones .celdas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-</style>
+  </style>
 </head>
 <body>
   <div class="contenedor">
-    <div class="cactus">
-      <img src="./cactus/1.png" alt="Cactus" id="cactus-imagen">
-    </div>
     <div class="puntos">
       <p id="puntos-texto"><i class="fas fa-coins"></i> 0 puntos</p>
     </div>
+    <div class="cactus">
+      <img src="./cactus/1.png" alt="Cactus" id="cactus-imagen">
+    </div>
     <div class="tienda">
       <h2>Tienda</h2>
-      <div class="celdas">
-        <div class="celda">
-          <h3>Multiplicador</h3>
+      <div class="potenciadores">
+        <div class="potenciador">
+          <i class="fas fa-plus"></i>
+          <p>Multiplicador</p>
           <p id="multiplicador-precio">100 puntos</p>
           <button id="comprar-multiplicador">Comprar</button>
         </div>
-        <div class="celda">
-          <h3>Boost</h3>
+        <div class="potenciador">
+          <i class="fas fa-rocket"></i>
+          <p>Boost</p>
           <p id="boost-precio">500 puntos</p>
           <button id="comprar-boost">Comprar</button>
         </div>
-        <div class="celda">
-          <h3>Crecimiento</h3>
+        <div class="potenciador">
+          <i class="fas fa-seedling"></i>
+          <p>Crecimiento</p>
           <p id="crecimiento-precio">1000 puntos</p>
           <button id="comprar-crecimiento">Comprar</button>
         </div>
-        <div class="celda">
-          <h3>Auto Clicker</h3>
+        <div class="potenciador">
+          <i class="fas fa-clock"></i>
+          <p>Auto Clicker</p>
           <p id="auto-clicker-precio">5000 puntos</p>
           <button id="comprar-auto-clicker">Comprar</button>
         </div>
-      </div>
-    </div>
-    <div class="decoraciones">
-      <h2>Decoraciones</h2>
-      <div class="celdas">
-        <!-- Aquí irán las decoraciones -->
       </div>
     </div>
   </div>
@@ -135,6 +125,7 @@ let crecimiento = 1;
 let autoClicker = false;
 let crecimientoNivel = 1;
 let cactusImagenSrc = "./cactus/1.png";
+let autoClickerVelocidad = 1;
 
 const cactusImagen = document.getElementById('cactus-imagen');
 const puntosTexto = document.getElementById('puntos-texto');
@@ -153,28 +144,28 @@ cactusImagen.addEventListener('click', () => {
 });
 
 comprarMultiplicador.addEventListener('click', () => {
-  if (puntos >= 100 * multiplicador) {
-    puntos -= 100 * multiplicador;
-    multiplicador *= 2;
-    multiplicadorPrecio.textContent = `${100 * multiplicador} puntos`;
+  if (puntos >= 100 * Math.pow(2, multiplicador - 1)) {
+    puntos -= 100 * Math.pow(2, multiplicador - 1);
+    multiplicador++;
+    multiplicadorPrecio.textContent = `${100 * Math.pow(2, multiplicador - 1)} puntos`;
     puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
   }
 });
 
 comprarBoost.addEventListener('click', () => {
-  if (puntos >= 500 * boost) {
-    puntos -= 500 * boost;
-    boost *= 2;
-    boostPrecio.textContent = `${500 * boost} puntos`;
+  if (puntos >= 500 * Math.pow(2, boost - 1)) {
+    puntos -= 500 * Math.pow(2, boost - 1);
+    boost++;
+    boostPrecio.textContent = `${500 * Math.pow(2, boost - 1)} puntos`;
     puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
   }
 });
 
 comprarCrecimiento.addEventListener('click', () => {
-  if (puntos >= 1000 * crecimiento) {
-    puntos -= 1000 * crecimiento;
-    crecimiento *= 2;
-    crecimientoPrecio.textContent = `${1000 * crecimiento} puntos`;
+  if (puntos >= 1000 * Math.pow(2, crecimiento - 1)) {
+    puntos -= 1000 * Math.pow(2, crecimiento - 1);
+    crecimiento++;
+    crecimientoPrecio.textContent = `${1000 * Math.pow(2, crecimiento - 1)} puntos`;
     crecimientoNivel++;
     cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
     cactusImagen.src = cactusImagenSrc;
@@ -183,15 +174,18 @@ comprarCrecimiento.addEventListener('click', () => {
 });
 
 comprarAutoClicker.addEventListener('click', () => {
-  if (puntos >= 5000) {
-    puntos -= 5000;
-    autoClicker = true;
-    autoClickerPrecio.textContent = "Activado";
+  if (puntos >= 5000 * Math.pow(2, autoClickerVelocidad - 1)) {
+    puntos -= 5000 * Math.pow(2, autoClickerVelocidad - 1);
+    autoClickerVelocidad++;
+    autoClickerPrecio.textContent = `${5000 * Math.pow(2, autoClickerVelocidad - 1)} puntos`;
     puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-    setInterval(() => {
-      puntos += multiplicador * boost;
-      puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-    }, 1000);
+    if (!autoClicker) {
+      autoClicker = true;
+      setInterval(() => {
+        puntos += multiplicador * boost * autoClickerVelocidad;
+        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      }, 1000);
+    }
   }
 });
   </script>
