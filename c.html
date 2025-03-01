@@ -46,7 +46,7 @@
       border-radius: 10px;
     }
 
-    /* Pestañas */
+    /* Pestañas con tamaño reducido */
     .tabs {
       display: flex;
       justify-content: center;
@@ -57,12 +57,12 @@
     }
 
     .tab {
-      padding: 10px 20px;
+      padding: 5px 10px;
       cursor: pointer;
       background-color: #f0f0f0;
       border-radius: 5px;
       margin: 0 5px;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .tab:hover {
@@ -84,8 +84,8 @@
     }
 
     .potenciador {
-      width: 150px;
-      padding: 20px;
+      width: 120px;
+      padding: 15px;
       background-color: #f0f0f0;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -99,12 +99,12 @@
     }
 
     .potenciador i {
-      font-size: 32px;
+      font-size: 28px;
       margin-bottom: 10px;
     }
 
     .potenciador p {
-      font-size: 16px;
+      font-size: 14px;
       margin: 5px 0;
     }
 
@@ -113,7 +113,7 @@
       background-color: #4CAF50;
       color: #fff;
       padding: 5px 10px;
-      font-size: 14px;
+      font-size: 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -196,7 +196,7 @@
   </div>
 
   <script>
-    let puntos = 0;
+    let puntos = parseInt(getCookie('puntos')) || 0;
     let multiplicador = 1;
     let boost = 1;
     let crecimiento = 1;
@@ -234,6 +234,7 @@
     cactusImagen.addEventListener('click', () => {
       puntos += multiplicador * boost;
       puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      setCookie('puntos', puntos, 365); // Guardar los puntos en la cookie
     });
 
     // Función para mostrar alerta con SweetAlert cuando no hay suficientes puntos
@@ -253,6 +254,7 @@
         multiplicador++;
         multiplicadorPrecio.textContent = `${precioMultiplicador} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        setCookie('puntos', puntos, 365);
       } else {
         mostrarAlerta(precioMultiplicador - puntos, 'Multiplicador');
       }
@@ -265,6 +267,7 @@
         boost++;
         boostPrecio.textContent = `${precioBoost} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        setCookie('puntos', puntos, 365);
       } else {
         mostrarAlerta(precioBoost - puntos, 'Boost');
       }
@@ -280,6 +283,7 @@
         cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
         cactusImagen.src = cactusImagenSrc;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        setCookie('puntos', puntos, 365);
       } else {
         mostrarAlerta(precioCrecimiento - puntos, 'Crecimiento');
       }
@@ -292,17 +296,41 @@
         autoClickerVelocidad++;
         autoClickerPrecio.textContent = `${precioAutoClicker} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        setCookie('puntos', puntos, 365);
         if (!autoClicker) {
           autoClicker = true;
           setInterval(() => {
             puntos += multiplicador * boost * autoClickerVelocidad;
             puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+            setCookie('puntos', puntos, 365);
           }, 1000);
         }
       } else {
         mostrarAlerta(precioAutoClicker - puntos, 'Auto Clicker');
       }
     });
+
+    // Funciones de cookies
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+      let nameEQ = name + "=";
+      let ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
   </script>
 </body>
 </html>
