@@ -8,9 +8,8 @@
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    /* Fondo relacionado con el cactus */
     body {
-      background: #f0e5d8; /* Fondo tipo arena */
+      background: #f0e5d8;
       font-family: Arial, sans-serif;
     }
 
@@ -79,13 +78,13 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+      gap: 15px;
       margin-top: 20px;
     }
 
     .potenciador {
-      width: 120px;
-      padding: 15px;
+      width: 90px;
+      padding: 10px;
       background-color: #f0f0f0;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -196,14 +195,15 @@
   </div>
 
   <script>
+    // Cargar los datos del juego desde las cookies
     let puntos = parseInt(getCookie('puntos')) || 0;
-    let multiplicador = 1;
-    let boost = 1;
-    let crecimiento = 1;
-    let autoClicker = false;
-    let crecimientoNivel = 1;
-    let cactusImagenSrc = "./cactus/1.png";
-    let autoClickerVelocidad = 1;
+    let multiplicador = parseInt(getCookie('multiplicador')) || 1;
+    let boost = parseInt(getCookie('boost')) || 1;
+    let crecimiento = parseInt(getCookie('crecimiento')) || 1;
+    let autoClicker = getCookie('autoClicker') === 'true' || false;
+    let crecimientoNivel = parseInt(getCookie('crecimientoNivel')) || 1;
+    let cactusImagenSrc = getCookie('cactusImagenSrc') || "./cactus/1.png";
+    let autoClickerVelocidad = parseInt(getCookie('autoClickerVelocidad')) || 1;
 
     const cactusImagen = document.getElementById('cactus-imagen');
     const puntosTexto = document.getElementById('puntos-texto');
@@ -255,6 +255,7 @@
         multiplicadorPrecio.textContent = `${precioMultiplicador} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
         setCookie('puntos', puntos, 365);
+        setCookie('multiplicador', multiplicador, 365);
       } else {
         mostrarAlerta(precioMultiplicador - puntos, 'Multiplicador');
       }
@@ -268,6 +269,7 @@
         boostPrecio.textContent = `${precioBoost} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
         setCookie('puntos', puntos, 365);
+        setCookie('boost', boost, 365);
       } else {
         mostrarAlerta(precioBoost - puntos, 'Boost');
       }
@@ -278,12 +280,14 @@
       if (puntos >= precioCrecimiento) {
         puntos -= precioCrecimiento;
         crecimiento++;
-        crecimientoPrecio.textContent = `${precioCrecimiento} puntos`;
         crecimientoNivel++;
         cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
         cactusImagen.src = cactusImagenSrc;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
         setCookie('puntos', puntos, 365);
+        setCookie('crecimiento', crecimiento, 365);
+        setCookie('crecimientoNivel', crecimientoNivel, 365);
+        setCookie('cactusImagenSrc', cactusImagenSrc, 365);
       } else {
         mostrarAlerta(precioCrecimiento - puntos, 'Crecimiento');
       }
@@ -297,6 +301,9 @@
         autoClickerPrecio.textContent = `${precioAutoClicker} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
         setCookie('puntos', puntos, 365);
+        setCookie('autoClickerVelocidad', autoClickerVelocidad, 365);
+        setCookie('autoClicker', true, 365);
+
         if (!autoClicker) {
           autoClicker = true;
           setInterval(() => {
