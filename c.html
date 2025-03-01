@@ -20,10 +20,15 @@
 
     .puntos {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 10px;
+      right: 10px;
       font-size: 24px;
       font-weight: bold;
+    }
+
+    .puntos i {
+      color: #FFD700; /* Color amarillo para el icono */
+      font-size: 20px; /* Icono un poco más pequeño */
     }
 
     .cactus {
@@ -237,10 +242,19 @@
       });
     });
 
+    // Actualizar puntos y mostrar icono
+    function actualizarPuntos() {
+      puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+    }
+
+    // Iniciar con los datos previos
+    actualizarPuntos();
+    cactusImagen.src = cactusImagenSrc;
+
     // Evento para el cactus (sumar puntos)
     cactusImagen.addEventListener('click', () => {
       puntos += multiplicador * boost;
-      puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      actualizarPuntos();
       actualizarDatos();
     });
 
@@ -251,7 +265,7 @@
         puntos -= precio;
         multiplicador++;
         multiplicadorPrecio.textContent = `${100 * Math.pow(2, multiplicador - 1)} puntos`;
-        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarPuntos();
         actualizarDatos();
       } else {
         Swal.fire({
@@ -268,7 +282,7 @@
         puntos -= precio;
         boost++;
         boostPrecio.textContent = `${500 * Math.pow(2, boost - 1)} puntos`;
-        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarPuntos();
         actualizarDatos();
       } else {
         Swal.fire({
@@ -288,7 +302,7 @@
         cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
         cactusImagen.src = cactusImagenSrc;
         crecimientoPrecio.textContent = `${1000 * Math.pow(2, crecimiento - 1)} puntos`;
-        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarPuntos();
         actualizarDatos();
       } else {
         Swal.fire({
@@ -305,12 +319,12 @@
         puntos -= precio;
         autoClickerVelocidad++;
         autoClickerPrecio.textContent = `${5000 * Math.pow(2, autoClickerVelocidad - 1)} puntos`;
-        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarPuntos();
         if (!autoClicker) {
           autoClicker = true;
           setInterval(() => {
             puntos += multiplicador * boost * autoClickerVelocidad;
-            puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+            actualizarPuntos();
             actualizarDatos();
           }, 1000);
         }
