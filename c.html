@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clicker Cactus</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     /* Fondo relacionado con el cactus */
     body {
@@ -106,10 +108,12 @@
       margin: 5px 0;
     }
 
+    /* Botones más pequeños */
     .potenciador button {
       background-color: #4CAF50;
       color: #fff;
-      padding: 10px 20px;
+      padding: 5px 10px;
+      font-size: 14px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -232,42 +236,61 @@
       puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
     });
 
+    // Función para mostrar alerta con SweetAlert cuando no hay suficientes puntos
+    function mostrarAlerta(faltanPuntos, item) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No tienes suficientes puntos',
+        text: `Te faltan ${faltanPuntos} puntos para comprar ${item}.`,
+      });
+    }
+
     // Comprar potenciadores
     comprarMultiplicador.addEventListener('click', () => {
-      if (puntos >= 100 * Math.pow(2, multiplicador - 1)) {
-        puntos -= 100 * Math.pow(2, multiplicador - 1);
+      const precioMultiplicador = 100 * Math.pow(2, multiplicador - 1);
+      if (puntos >= precioMultiplicador) {
+        puntos -= precioMultiplicador;
         multiplicador++;
-        multiplicadorPrecio.textContent = `${100 * Math.pow(2, multiplicador - 1)} puntos`;
+        multiplicadorPrecio.textContent = `${precioMultiplicador} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      } else {
+        mostrarAlerta(precioMultiplicador - puntos, 'Multiplicador');
       }
     });
 
     comprarBoost.addEventListener('click', () => {
-      if (puntos >= 500 * Math.pow(2, boost - 1)) {
-        puntos -= 500 * Math.pow(2, boost - 1);
+      const precioBoost = 500 * Math.pow(2, boost - 1);
+      if (puntos >= precioBoost) {
+        puntos -= precioBoost;
         boost++;
-        boostPrecio.textContent = `${500 * Math.pow(2, boost - 1)} puntos`;
+        boostPrecio.textContent = `${precioBoost} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      } else {
+        mostrarAlerta(precioBoost - puntos, 'Boost');
       }
     });
 
     comprarCrecimiento.addEventListener('click', () => {
-      if (puntos >= 1000 * Math.pow(2, crecimiento - 1)) {
-        puntos -= 1000 * Math.pow(2, crecimiento - 1);
+      const precioCrecimiento = 1000 * Math.pow(2, crecimiento - 1);
+      if (puntos >= precioCrecimiento) {
+        puntos -= precioCrecimiento;
         crecimiento++;
-        crecimientoPrecio.textContent = `${1000 * Math.pow(2, crecimiento - 1)} puntos`;
+        crecimientoPrecio.textContent = `${precioCrecimiento} puntos`;
         crecimientoNivel++;
         cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
         cactusImagen.src = cactusImagenSrc;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      } else {
+        mostrarAlerta(precioCrecimiento - puntos, 'Crecimiento');
       }
     });
 
     comprarAutoClicker.addEventListener('click', () => {
-      if (puntos >= 5000 * Math.pow(2, autoClickerVelocidad - 1)) {
-        puntos -= 5000 * Math.pow(2, autoClickerVelocidad - 1);
+      const precioAutoClicker = 5000 * Math.pow(2, autoClickerVelocidad - 1);
+      if (puntos >= precioAutoClicker) {
+        puntos -= precioAutoClicker;
         autoClickerVelocidad++;
-        autoClickerPrecio.textContent = `${5000 * Math.pow(2, autoClickerVelocidad - 1)} puntos`;
+        autoClickerPrecio.textContent = `${precioAutoClicker} puntos`;
         puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
         if (!autoClicker) {
           autoClicker = true;
@@ -276,6 +299,8 @@
             puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
           }, 1000);
         }
+      } else {
+        mostrarAlerta(precioAutoClicker - puntos, 'Auto Clicker');
       }
     });
   </script>
