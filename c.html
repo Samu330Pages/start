@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clicker Cactus</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
-      background: #f0e5d8;
+      background-color: #f7f7f7; /* Fondo claro */
       font-family: Arial, sans-serif;
+      text-align: center;
     }
 
     .contenedor {
       width: 80%;
       margin: 40px auto;
       text-align: center;
-      position: relative;
     }
 
     .puntos {
@@ -45,94 +43,76 @@
       border-radius: 10px;
     }
 
-    /* Pestañas con tamaño reducido */
-    .tabs {
+    .tienda {
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .tienda .tabs {
       display: flex;
       justify-content: center;
-      margin-top: 20px;
-      background-color: #ddd;
-      border-radius: 10px;
-      padding: 5px;
+      margin-bottom: 20px;
     }
 
-    .tab {
-      padding: 5px 10px;
-      cursor: pointer;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      margin: 0 5px;
-      font-size: 16px;
-    }
-
-    .tab:hover {
-      background-color: #ccc;
-    }
-
-    .tab.active {
+    .tab-button {
+      width: 100px;
+      height: 40px;
       background-color: #4CAF50;
-      color: #fff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+      border-radius: 5px;
     }
 
-    /* Contenedor de potenciadores */
-    .potenciadores-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
+    .tab-button.active {
+      background-color: #3e8e41;
+    }
+
+    .potenciadores, .crecimiento, .auto-clicker {
+      display: none;
+    }
+
+    .potenciadores.active, .crecimiento.active, .auto-clicker.active {
+      display: block;
     }
 
     .potenciador {
-      width: 90px;
-      padding: 10px;
+      width: 100px;
+      height: 120px;
+      margin: 10px;
       background-color: #f0f0f0;
       border: 1px solid #ccc;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       text-align: center;
-      transition: transform 0.2s ease;
-    }
-
-    .potenciador:hover {
-      transform: scale(1.05);
+      display: inline-block;
+      vertical-align: top;
     }
 
     .potenciador i {
-      font-size: 28px;
-      margin-bottom: 10px;
+      font-size: 24px;
+      margin-top: 20px;
     }
 
     .potenciador p {
-      font-size: 14px;
-      margin: 5px 0;
+      font-size: 12px;
+      margin-bottom: 10px;
     }
 
-    /* Botones más pequeños */
     .potenciador button {
       background-color: #4CAF50;
       color: #fff;
       padding: 5px 10px;
-      font-size: 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
+      font-size: 12px;
     }
 
     .potenciador button:disabled {
       background-color: #ccc;
-      cursor: not-allowed;
     }
-
-    /* Estilos para las secciones de potenciadores, crecimiento y autoclicker */
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
   </style>
 </head>
 <body>
@@ -144,16 +124,15 @@
       <img src="./cactus/1.png" alt="Cactus" id="cactus-imagen">
     </div>
 
-    <!-- Pestañas para cambiar entre las secciones -->
-    <div class="tabs">
-      <div class="tab active" data-tab="potenciadores">Potenciadores</div>
-      <div class="tab" data-tab="crecimiento">Crecimiento</div>
-      <div class="tab" data-tab="auto-clicker">Auto Clicker</div>
-    </div>
-
-    <!-- Contenedor para los potenciadores -->
-    <div id="potenciadores" class="section active">
-      <div class="potenciadores-container">
+    <div class="tienda">
+      <h2>Tienda</h2>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="potenciadores">Potenciadores</button>
+        <button class="tab-button" data-tab="crecimiento">Crecimiento</button>
+        <button class="tab-button" data-tab="auto-clicker">Auto Clicker</button>
+      </div>
+      
+      <div class="potenciadores active">
         <div class="potenciador">
           <i class="fas fa-plus"></i>
           <p>Multiplicador</p>
@@ -167,11 +146,8 @@
           <button id="comprar-boost">Comprar</button>
         </div>
       </div>
-    </div>
-
-    <!-- Contenedor para crecimiento -->
-    <div id="crecimiento" class="section">
-      <div class="potenciadores-container">
+      
+      <div class="crecimiento">
         <div class="potenciador">
           <i class="fas fa-seedling"></i>
           <p>Crecimiento</p>
@@ -179,11 +155,8 @@
           <button id="comprar-crecimiento">Comprar</button>
         </div>
       </div>
-    </div>
 
-    <!-- Contenedor para auto clicker -->
-    <div id="auto-clicker" class="section">
-      <div class="potenciadores-container">
+      <div class="auto-clicker">
         <div class="potenciador">
           <i class="fas fa-clock"></i>
           <p>Auto Clicker</p>
@@ -194,135 +167,14 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    // Cargar los datos del juego desde las cookies
-    let puntos = parseInt(getCookie('puntos')) || 0;
-    let multiplicador = parseInt(getCookie('multiplicador')) || 1;
-    let boost = parseInt(getCookie('boost')) || 1;
-    let crecimiento = parseInt(getCookie('crecimiento')) || 1;
-    let autoClicker = getCookie('autoClicker') === 'true' || false;
-    let crecimientoNivel = parseInt(getCookie('crecimientoNivel')) || 1;
-    let cactusImagenSrc = getCookie('cactusImagenSrc') || "./cactus/1.png";
-    let autoClickerVelocidad = parseInt(getCookie('autoClickerVelocidad')) || 1;
-
-    const cactusImagen = document.getElementById('cactus-imagen');
-    const puntosTexto = document.getElementById('puntos-texto');
-    const multiplicadorPrecio = document.getElementById('multiplicador-precio');
-    const boostPrecio = document.getElementById('boost-precio');
-    const crecimientoPrecio = document.getElementById('crecimiento-precio');
-    const autoClickerPrecio = document.getElementById('auto-clicker-precio');
-    const comprarMultiplicador = document.getElementById('comprar-multiplicador');
-    const comprarBoost = document.getElementById('comprar-boost');
-    const comprarCrecimiento = document.getElementById('comprar-crecimiento');
-    const comprarAutoClicker = document.getElementById('comprar-auto-clicker');
-
-    // Pestañas
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.section');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        sections.forEach(section => section.classList.remove('active'));
-        
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Incrementar puntos con el clic en el cactus
-    cactusImagen.addEventListener('click', () => {
-      puntos += multiplicador * boost;
-      puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-      setCookie('puntos', puntos, 365); // Guardar los puntos en la cookie
-    });
-
-    // Función para mostrar alerta con SweetAlert cuando no hay suficientes puntos
-    function mostrarAlerta(faltanPuntos, item) {
-      Swal.fire({
-        icon: 'error',
-        title: 'No tienes suficientes puntos',
-        text: `Te faltan ${faltanPuntos} puntos para comprar ${item}.`,
-      });
-    }
-
-    // Comprar potenciadores
-    comprarMultiplicador.addEventListener('click', () => {
-      const precioMultiplicador = 100 * Math.pow(2, multiplicador - 1);
-      if (puntos >= precioMultiplicador) {
-        puntos -= precioMultiplicador;
-        multiplicador++;
-        multiplicadorPrecio.textContent = `${precioMultiplicador} puntos`;
-        puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-        setCookie('puntos', puntos, 365);
-        setCookie('multiplicador', multiplicador, 365);
-      } else {
-        mostrarAlerta(precioMultiplicador - puntos, 'Multiplicador');
-      }
-    });
-
-    comprarBoost.addEventListener('click', () => {
-      const precioBoost = 500 * Math.pow(2, boost - 1);
-      if (puntos >= precioBoost) {
-        puntos -= precioBoost;
-        boost++;
-        boostPrecio.textContent = `${precioBoost} puntos`;
-        puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-        setCookie('puntos', puntos, 365);
-        setCookie('boost', boost, 365);
-      } else {
-        mostrarAlerta(precioBoost - puntos, 'Boost');
-      }
-    });
-
-    comprarCrecimiento.addEventListener('click', () => {
-      const precioCrecimiento = 1000 * Math.pow(2, crecimiento - 1);
-      if (puntos >= precioCrecimiento) {
-        puntos -= precioCrecimiento;
-        crecimiento++;
-        crecimientoNivel++;
-        cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
-        cactusImagen.src = cactusImagenSrc;
-        puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-        setCookie('puntos', puntos, 365);
-        setCookie('crecimiento', crecimiento, 365);
-        setCookie('crecimientoNivel', crecimientoNivel, 365);
-        setCookie('cactusImagenSrc', cactusImagenSrc, 365);
-      } else {
-        mostrarAlerta(precioCrecimiento - puntos, 'Crecimiento');
-      }
-    });
-
-    comprarAutoClicker.addEventListener('click', () => {
-      const precioAutoClicker = 5000 * Math.pow(2, autoClickerVelocidad - 1);
-      if (puntos >= precioAutoClicker) {
-        puntos -= precioAutoClicker;
-        autoClickerVelocidad++;
-        autoClickerPrecio.textContent = `${precioAutoClicker} puntos`;
-        puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-        setCookie('puntos', puntos, 365);
-        setCookie('autoClickerVelocidad', autoClickerVelocidad, 365);
-        setCookie('autoClicker', true, 365);
-
-        if (!autoClicker) {
-          autoClicker = true;
-          setInterval(() => {
-            puntos += multiplicador * boost * autoClickerVelocidad;
-            puntosTexto.innerHTML = `<i class="fas fa-coins"></i> ${puntos} puntos`;
-            setCookie('puntos', puntos, 365);
-          }, 1000);
-        }
-      } else {
-        mostrarAlerta(precioAutoClicker - puntos, 'Auto Clicker');
-      }
-    });
-
-    // Funciones de cookies
+    // Funciones para manejar cookies
     function setCookie(name, value, days) {
       let expires = "";
       if (days) {
         let date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); 
         expires = "; expires=" + date.toUTCString();
       }
       document.cookie = name + "=" + (value || "") + expires + "; path=/";
@@ -338,6 +190,139 @@
       }
       return null;
     }
+
+    // Inicialización de datos desde cookies
+    let puntos = parseInt(getCookie('puntos')) || 0;
+    let multiplicador = parseInt(getCookie('multiplicador')) || 1;
+    let boost = parseInt(getCookie('boost')) || 1;
+    let crecimiento = parseInt(getCookie('crecimiento')) || 1;
+    let autoClicker = getCookie('autoClicker') === 'true' || false;
+    let crecimientoNivel = parseInt(getCookie('crecimientoNivel')) || 1;
+    let cactusImagenSrc = getCookie('cactusImagenSrc') || "./cactus/1.png";
+    let autoClickerVelocidad = parseInt(getCookie('autoClickerVelocidad')) || 1;
+
+    // Selección de elementos HTML
+    const cactusImagen = document.getElementById('cactus-imagen');
+    const puntosTexto = document.getElementById('puntos-texto');
+    const multiplicadorPrecio = document.getElementById('multiplicador-precio');
+    const boostPrecio = document.getElementById('boost-precio');
+    const crecimientoPrecio = document.getElementById('crecimiento-precio');
+    const autoClickerPrecio = document.getElementById('auto-clicker-precio');
+    const comprarMultiplicador = document.getElementById('comprar-multiplicador');
+    const comprarBoost = document.getElementById('comprar-boost');
+    const comprarCrecimiento = document.getElementById('comprar-crecimiento');
+    const comprarAutoClicker = document.getElementById('comprar-auto-clicker');
+    const tabs = document.querySelectorAll('.tab-button');
+    const tabContent = document.querySelectorAll('.potenciadores, .crecimiento, .auto-clicker');
+
+    // Función para actualizar los datos en cookies
+    function actualizarDatos() {
+      setCookie('puntos', puntos, 365);
+      setCookie('multiplicador', multiplicador, 365);
+      setCookie('boost', boost, 365);
+      setCookie('crecimiento', crecimiento, 365);
+      setCookie('crecimientoNivel', crecimientoNivel, 365);
+      setCookie('autoClicker', autoClicker, 365);
+      setCookie('autoClickerVelocidad', autoClickerVelocidad, 365);
+      setCookie('cactusImagenSrc', cactusImagenSrc, 365);
+    }
+
+    // Cambiar pestañas
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(btn => btn.classList.remove('active'));
+        tab.classList.add('active');
+        tabContent.forEach(content => content.classList.remove('active'));
+        document.querySelector(`.${tab.dataset.tab}`).classList.add('active');
+      });
+    });
+
+    // Evento para el cactus (sumar puntos)
+    cactusImagen.addEventListener('click', () => {
+      puntos += multiplicador * boost;
+      puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+      actualizarDatos();
+    });
+
+    // Compras de potenciadores
+    comprarMultiplicador.addEventListener('click', () => {
+      let precio = 100 * Math.pow(2, multiplicador - 1);
+      if (puntos >= precio) {
+        puntos -= precio;
+        multiplicador++;
+        multiplicadorPrecio.textContent = `${100 * Math.pow(2, multiplicador - 1)} puntos`;
+        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarDatos();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Oops!',
+          text: `No tienes suficientes puntos para comprar el multiplicador. Faltan ${precio - puntos} puntos.`,
+        });
+      }
+    });
+
+    comprarBoost.addEventListener('click', () => {
+      let precio = 500 * Math.pow(2, boost - 1);
+      if (puntos >= precio) {
+        puntos -= precio;
+        boost++;
+        boostPrecio.textContent = `${500 * Math.pow(2, boost - 1)} puntos`;
+        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarDatos();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Oops!',
+          text: `No tienes suficientes puntos para comprar Boost. Faltan ${precio - puntos} puntos.`,
+        });
+      }
+    });
+
+    comprarCrecimiento.addEventListener('click', () => {
+      let precio = 1000 * Math.pow(2, crecimiento - 1);
+      if (puntos >= precio) {
+        puntos -= precio;
+        crecimiento++;
+        crecimientoNivel++;
+        cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
+        cactusImagen.src = cactusImagenSrc;
+        crecimientoPrecio.textContent = `${1000 * Math.pow(2, crecimiento - 1)} puntos`;
+        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        actualizarDatos();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Oops!',
+          text: `No tienes suficientes puntos para comprar Crecimiento. Faltan ${precio - puntos} puntos.`,
+        });
+      }
+    });
+
+    comprarAutoClicker.addEventListener('click', () => {
+      let precio = 5000 * Math.pow(2, autoClickerVelocidad - 1);
+      if (puntos >= precio) {
+        puntos -= precio;
+        autoClickerVelocidad++;
+        autoClickerPrecio.textContent = `${5000 * Math.pow(2, autoClickerVelocidad - 1)} puntos`;
+        puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+        if (!autoClicker) {
+          autoClicker = true;
+          setInterval(() => {
+            puntos += multiplicador * boost * autoClickerVelocidad;
+            puntosTexto.textContent = `<i class="fas fa-coins"></i> ${puntos} puntos`;
+            actualizarDatos();
+          }, 1000);
+        }
+        actualizarDatos();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Oops!',
+          text: `No tienes suficientes puntos para comprar Auto Clicker. Faltan ${precio - puntos} puntos.`,
+        });
+      }
+    });
   </script>
 </body>
 </html>
