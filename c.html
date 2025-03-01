@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     body {
-      background-color: #f7f7f7; /* Fondo claro */
+      background-color: #e0c29b; /* Fondo desértico */
       font-family: Arial, sans-serif;
       text-align: center;
     }
@@ -16,6 +16,7 @@
       width: 80%;
       margin: 40px auto;
       text-align: center;
+      position: relative;
     }
 
     .puntos {
@@ -24,16 +25,17 @@
       right: 10px;
       font-size: 24px;
       font-weight: bold;
+      color: #8e6e3f;
     }
 
     .puntos i {
-      color: #FFD700; /* Color amarillo para el icono */
-      font-size: 20px; /* Icono un poco más pequeño */
+      color: #FFD700;
+      font-size: 20px;
     }
 
     .cactus {
-      width: 200px;
-      height: 200px;
+      width: 300px;
+      height: 300px;
       margin: 20px auto;
       background-color: #f0f0f0;
       border: 1px solid #ccc;
@@ -68,6 +70,12 @@
       cursor: pointer;
       margin: 0 10px;
       border-radius: 5px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .tab-button:hover {
+      background-color: #3e8e41;
+      transform: scale(1.1);
     }
 
     .tab-button.active {
@@ -93,6 +101,11 @@
       text-align: center;
       display: inline-block;
       vertical-align: top;
+      transition: transform 0.3s;
+    }
+
+    .potenciador:hover {
+      transform: scale(1.1);
     }
 
     .potenciador i {
@@ -113,11 +126,35 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 12px;
+      transition: background-color 0.3s, transform 0.2s;
     }
 
     .potenciador button:disabled {
       background-color: #ccc;
     }
+
+    .potenciador button:hover {
+      background-color: #45a049;
+      transform: scale(1.1);
+    }
+
+    .reiniciar {
+      background-color: #ff4c4c;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .reiniciar:hover {
+      background-color: #e00000;
+      transform: scale(1.1);
+    }
+
   </style>
 </head>
 <body>
@@ -170,6 +207,8 @@
         </div>
       </div>
     </div>
+
+    <button class="reiniciar" id="reiniciar">Reiniciar Juego</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -294,40 +333,32 @@
     });
 
     comprarCrecimiento.addEventListener('click', () => {
-      let precio = 1000 * Math.pow(2, crecimiento - 1);
+      let precio = 1000 * crecimientoNivel;
       if (puntos >= precio) {
         puntos -= precio;
-        crecimiento++;
         crecimientoNivel++;
-        cactusImagenSrc = `./cactus/${crecimientoNivel}.png`;
-        cactusImagen.src = cactusImagenSrc;
-        crecimientoPrecio.textContent = `${1000 * Math.pow(2, crecimiento - 1)} puntos`;
+        cactusImagen.src = `./cactus/${crecimientoNivel}.png`; // Cambiar la imagen del cactus
+        crecimiento++;
+        crecimientoPrecio.textContent = `${1000 * crecimientoNivel} puntos`;
         actualizarPuntos();
         actualizarDatos();
       } else {
         Swal.fire({
           icon: 'error',
           title: '¡Oops!',
-          text: `No tienes suficientes puntos para comprar Crecimiento. Faltan ${precio - puntos} puntos.`,
+          text: `No tienes suficientes puntos para comprar crecimiento. Faltan ${precio - puntos} puntos.`,
         });
       }
     });
 
     comprarAutoClicker.addEventListener('click', () => {
-      let precio = 5000 * Math.pow(2, autoClickerVelocidad - 1);
+      let precio = 5000 * (autoClickerVelocidad + 1);
       if (puntos >= precio) {
         puntos -= precio;
+        autoClicker = true;
         autoClickerVelocidad++;
-        autoClickerPrecio.textContent = `${5000 * Math.pow(2, autoClickerVelocidad - 1)} puntos`;
+        autoClickerPrecio.textContent = `${5000 * (autoClickerVelocidad + 1)} puntos`;
         actualizarPuntos();
-        if (!autoClicker) {
-          autoClicker = true;
-          setInterval(() => {
-            puntos += multiplicador * boost * autoClickerVelocidad;
-            actualizarPuntos();
-            actualizarDatos();
-          }, 1000);
-        }
         actualizarDatos();
       } else {
         Swal.fire({
@@ -336,6 +367,40 @@
           text: `No tienes suficientes puntos para comprar Auto Clicker. Faltan ${precio - puntos} puntos.`,
         });
       }
+    });
+
+    // Reiniciar juego
+    document.getElementById('reiniciar').addEventListener('click', () => {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esto reiniciará todo tu progreso.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, reiniciar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Borrar cookies y reiniciar variables
+          setCookie('puntos', 0, 365);
+          setCookie('multiplicador', 1, 365);
+          setCookie('boost', 1, 365);
+          setCookie('crecimiento', 1, 365);
+          setCookie('autoClicker', 'false', 365);
+          setCookie('crecimientoNivel', 1, 365);
+          setCookie('autoClickerVelocidad', 1, 365);
+          setCookie('cactusImagenSrc', './cactus/1.png', 365);
+          puntos = 0;
+          multiplicador = 1;
+          boost = 1;
+          crecimiento = 1;
+          crecimientoNivel = 1;
+          autoClicker = false;
+          cactusImagenSrc = './cactus/1.png';
+          autoClickerVelocidad = 1;
+          actualizarPuntos();
+          cactusImagen.src = cactusImagenSrc;
+        }
+      });
     });
   </script>
 </body>
