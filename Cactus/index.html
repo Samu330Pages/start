@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cactus Clicker 🌵</title>
-    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
+    <title>Clicker de Cactus</title>
+    <meta name="description" content="Estas listo para cuidar un cactus 🌵? 🤨 Divierte jugando en este Clicker 😊.">
+    <meta property="og:title" content="Cactus clicker 🌵">
+    <meta property="og:description" content="Estas listo para cuidar un cactus 🌵? 🤨 Divierte jugando en este Clicker 😊.">
+    <meta property="og:image" content="./cactus/4.png">
+    <meta property="og:url" content="https://samu330.com">
+    <meta name="theme-color" content="#a2c4a3">
+    <link rel="icon" href="./cactus/1.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -68,14 +74,15 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
-        #click-feedback {
+        .click-feedback {
             position: absolute;
             color: #3d9970;
             font-weight: bold;
             font-size: 1.5em;
-            opacity: 0;
+            opacity: 1;
             pointer-events: none;
             animation: float-up 1s forwards;
+            z-index: 1000;
         }
         @keyframes float-up {
             0% { transform: translateY(0); opacity: 1; }
@@ -204,14 +211,25 @@
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #fullscreen-btn:hover {
             background: #3cb371;
+        }
+        #fullscreen-btn i {
+            margin: 0;
+            padding: 0;
         }
         .sweet-popup {
             max-width: 400px;
             padding: 20px;
             border-radius: 10px;
+        }
+        /* Audio oculto */
+        #bgMusic {
+            display: none;
         }
     </style>
 </head>
@@ -270,11 +288,14 @@
         <a href="https://wa.me/+5219984907794" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <button id="fullscreen-btn" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+    <audio id="bgMusic" loop>
+        <source src="./cactus/theme.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        // Evitar zoom y doble click
-        document.addEventListener('dblclick', (e) => e.preventDefault());
-        document.addEventListener('touchstart', (e) => {
+        document.addEventListener('dblclick', e => e.preventDefault());
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('touchstart', e => {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
 
@@ -301,8 +322,9 @@
             { nivel: 5, costo: 1000000, comprado: false },
             { nivel: 6, costo: 10000000, comprado: false }
         ];
+        let tabActiva = true;
+        let ultimaVezActiva = Date.now();
 
-        // Elementos del DOM
         const counter = document.getElementById('counter');
         const cactus = document.getElementById('cactus');
         const navButtons = document.querySelectorAll('.nav-button');
@@ -311,6 +333,8 @@
         const header = document.getElementById('header');
         const footer = document.getElementById('footer');
         const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 0.7;
 
         // Guardar estado en localStorage
         function guardarEstado() {
@@ -349,7 +373,7 @@
             puntos += puntosPorClic;
             actualizarContador();
             guardarEstado();
-            // Animación de bounce
+            // Animación de salto
             cactus.classList.add('bounce');
             setTimeout(() => cactus.classList.remove('bounce'), 300);
             // Animación de "+X"
@@ -359,7 +383,7 @@
         // Función para mostrar feedback de clic
         function showClickFeedback(x, y, text) {
             const feedback = document.createElement('div');
-            feedback.id = 'click-feedback';
+            feedback.className = 'click-feedback';
             feedback.textContent = text;
             feedback.style.left = (x - 30) + 'px';
             feedback.style.top = (y - 60) + 'px';
@@ -383,10 +407,11 @@
                 btn.disabled = puntos < autoClickers[key].costo;
                 costSpan.textContent = `Costo: ${autoClickers[key].costo.toLocaleString()}`;
             });
-            // Actualizar botones de crecimiento (no se puede saltar de nivel)
+            // Actualizar botones de crecimiento
             growthLevels.forEach((growth, index) => {
                 const btn = document.getElementById(`grow${index + 1}`);
                 const costSpan = document.getElementById(`costGrow${index + 1}`);
+                
                 const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
                 btn.disabled = puntos < growth.costo || growth.comprado || !nivelAnteriorComprado;
                 costSpan.textContent = `Costo: ${growth.costo.toLocaleString()}`;
@@ -415,7 +440,7 @@
             if (puntos >= autoClickers[valor].costo) {
                 puntos -= autoClickers[valor].costo;
                 autoClickers[valor].cantidad += 1;
-                autoClickers[valor].costo = Math.floor(autoClickers[valor].costo * 1.7);
+                autoClickers[valor].costo = Math.floor(autoClickers[val].costo * 1.7);
                 actualizarContador();
                 guardarEstado();
             }
@@ -424,6 +449,7 @@
         // Función para comprar crecimiento
         function comprarCrecimiento(index) {
             const growth = growthLevels[index];
+            
             const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
             if (!growth.comprado && puntos >= growth.costo && nivelAnteriorComprado) {
                 puntos -= growth.costo;
@@ -434,7 +460,7 @@
                 guardarEstado();
 
                 if (index === growthLevels.length - 1) {
-                    // Último crecimiento: cambiar colores a gris y mostrar victoria después de 5 segundos
+                    // Último crecimiento:
                     aplicarTonoGris(true);
                     setTimeout(() => {
                         Swal.fire({
@@ -448,12 +474,11 @@
                         }).then(() => {
                             reiniciarJuego();
                         });
-                    }, 5000);
+                    }, 3000);
                 }
             }
         }
 
-        // Win 🍁
         function aplicarTonoGris(aplicar) {
             if (aplicar) {
                 document.body.classList.add('grayscale');
@@ -502,7 +527,6 @@
             guardarEstado();
         }
 
-        // Botones
         document.getElementById('mult10').addEventListener('click', () => comprarMultiplicador('10'));
         document.getElementById('mult50').addEventListener('click', () => comprarMultiplicador('50'));
         document.getElementById('mult100').addEventListener('click', () => comprarMultiplicador('100'));
@@ -527,18 +551,47 @@
             });
         });
 
-        // Auto-clicker
-        setInterval(() => {
-            let suma = 0;
-            Object.keys(autoClickers).forEach(key => {
-                suma += autoClickers[key].cantidad * autoClickers[key].valor;
-            });
-            if (suma > 0) {
-                puntos += suma;
-                actualizarContador();
-                guardarEstado();
+        // Auto-clickers
+        let intervaloAutoClicker = setInterval(() => {
+            if (tabActiva) {
+                let suma = 0;
+                Object.keys(autoClickers).forEach(key => {
+                    suma += autoClickers[key].cantidad * autoClickers[key].valor;
+                });
+                if (suma > 0) {
+                    puntos += suma;
+                    actualizarContador();
+                    guardarEstado();
+                }
             }
         }, 1000);
+
+        // Afk
+        window.addEventListener('focus', () => {
+            tabActiva = true;
+            const ahora = Date.now();
+            const tiempoInactivo = (ahora - ultimaVezActiva) / 1000;
+            ultimaVezActiva = ahora;
+            if (tiempoInactivo > 3) { // Solo mostrar mensaje si estuvo inactivo más de 3 segundos
+                Swal.fire({
+                    title: '¡Bienvenido de vuelta!',
+                    text: `El juego estuvo pausado durante ${Math.round(tiempoInactivo)} segundos.`,
+                    icon: 'info',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'sweet-popup'
+                    }
+                });
+            }
+            
+            bgMusic.play().catch(e => console.log('No se pudo reproducir la música:', e));
+        });
+        window.addEventListener('blur', () => {
+            tabActiva = false;
+            ultimaVezActiva = Date.now();
+            bgMusic.pause();
+        });
 
         // Pantalla completa
         fullscreenBtn.addEventListener('click', () => {
@@ -553,11 +606,9 @@
             }
         });
 
-        // Al cargar la página, preguntar si hay partida guardada
-        window.onload = () => {
+        function inicializarJuego() {
             const saved = localStorage.getItem('cactusClickerSave');
             if (saved) {
-                // reanudar o reiniciar
                 Swal.fire({
                     title: '¡Bienvenido de nuevo!',
                     text: '¿Quieres continuar tu partida guardada o empezar una nueva?',
@@ -581,7 +632,6 @@
                     }
                 });
             } else {
-                // mensaje de bienvenida
                 Swal.fire({
                     title: '¡Bienvenido!',
                     text: 'Haz clic en el cactus para empezar a jugar.',
@@ -591,7 +641,9 @@
                     }
                 });
             }
-        };
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarJuego);
     </script>
 </body>
 </html>
