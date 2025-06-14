@@ -27,6 +27,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 120px;
         }
         #header {
             position: fixed;
@@ -46,13 +47,13 @@
             margin-left: 20px;
             color: #4b5320;
             transition: color 0.5s;
-        }
+}
         #main {
             padding-top: 70px;
             text-align: center;
             transition: background-color 0.5s, color 0.5s;
             flex: 1;
-        }
+}
         #cactus {
             width: 180px;
             cursor: pointer;
@@ -187,6 +188,11 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
         #footer a {
             color: white;
@@ -196,10 +202,43 @@
         #footer a:hover {
             color: #3d9970;
         }
+        /* Audio controls */
+        #audio-controls {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            padding: 5px;
+            background: #e6e2c3;
+            border-radius: 10px 10px 0 0;
+            z-index: 999;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        audio {
+            width: 100%;
+            max-width: 320px;
+            height: 40px;
+            background: #a2c4a3;
+            border-radius: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        audio::-webkit-media-controls-panel {
+            background: #a2c4a3;
+            border-radius: 8px;
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-mute-button,
+        audio::-webkit-media-controls-volume-slider {
+            filter: invert(1) brightness(1.5);
+        }
         /* Botón pantalla completa */
         #fullscreen-btn {
             position: fixed;
-            bottom: 70px;
+            bottom: 120px;
             right: 20px;
             background: #2e8b57;
             color: white;
@@ -226,10 +265,6 @@
             max-width: 400px;
             padding: 20px;
             border-radius: 10px;
-        }
-        /* Audio oculto */
-        #bgMusic {
-            display: none;
         }
     </style>
 </head>
@@ -282,368 +317,367 @@
             </div>
         </div>
     </div>
+    <div id="audio-controls">
+        <audio id="bgMusic" controls loop>
+            <source src="./cactus/theme.mp3" type="audio/mpeg">
+        </audio>
+    </div>
     <div id="footer">
         <a href="https://www.facebook.com/sm330.io" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://www.instagram.com/sm330.io?igsh=MTFvZmtudWd4dmM1dg==" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://wa.me/+5219984907794" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <button id="fullscreen-btn" title="Pantalla completa"><i class="fas fa-expand"></i></button>
-    <audio id="bgMusic" loop>
-        <source src="./cactus/theme.mp3" type="audio/mpeg">
-    </audio>
 
     <script>
-        document.addEventListener('dblclick', e => e.preventDefault());
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('touchstart', e => {
-            if (e.touches.length > 1) e.preventDefault();
-        }, { passive: false });
-
         // Variables del juego
-        let puntos = 0;
-        let puntosPorClic = 1;
-        let cactusLevel = 1;
-        let autoClickers = {
-            '1': { cantidad: 0, costo: 500, valor: 1 },
-            '10': { cantidad: 0, costo: 5000, valor: 10 },
-            '100': { cantidad: 0, costo: 50000, valor: 100 },
-            '1000': { cantidad: 0, costo: 500000, valor: 1000 }
-        };
-        let clickMultipliers = {
-            '10': { costo: 100, valor: 10 },
-            '50': { costo: 1000, valor: 50 },
-            '100': { costo: 10000, valor: 100 },
-            '1000': { costo: 100000, valor: 1000 }
-        };
-        let growthLevels = [
-            { nivel: 2, costo: 1000, comprado: false },
-            { nivel: 3, costo: 10000, comprado: false },
-            { nivel: 4, costo: 100000, comprado: false },
-            { nivel: 5, costo: 1000000, comprado: false },
-            { nivel: 6, costo: 10000000, comprado: false }
-        ];
-        let tabActiva = true;
-        let ultimaVezActiva = Date.now();
+let puntos = 0;
+let puntosPorClic = 1;
+let cactusLevel = 1;
+let autoClickers = {
+    '1': { cantidad: 0, costo: 500, valor: 1 },
+    '10': { cantidad: 0, costo: 5000, valor: 10 },
+    '100': { cantidad: 0, costo: 50000, valor: 100 },
+    '1000': { cantidad: 0, costo: 500000, valor: 1000 }
+};
+let clickMultipliers = {
+    '10': { costo: 100, valor: 10 },
+    '50': { costo: 1000, valor: 50 },
+    '100': { costo: 10000, valor: 100 },
+    '1000': { costo: 100000, valor: 1000 }
+};
+let growthLevels = [
+    { nivel: 2, costo: 1000, comprado: false },
+    { nivel: 3, costo: 10000, comprado: false },
+    { nivel: 4, costo: 100000, comprado: false },
+    { nivel: 5, costo: 1000000, comprado: false },
+    { nivel: 6, costo: 10000000, comprado: false }
+];
+let tabActiva = true;
+let ultimaVezActiva = Date.now();
+let musicaSonando = false;
 
-        const counter = document.getElementById('counter');
-        const cactus = document.getElementById('cactus');
-        const navButtons = document.querySelectorAll('.nav-button');
-        const shopSections = document.querySelectorAll('.shop-section');
-        const main = document.getElementById('main');
-        const header = document.getElementById('header');
-        const footer = document.getElementById('footer');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        const bgMusic = document.getElementById('bgMusic');
-        bgMusic.volume = 0.7;
+const counter = document.getElementById('counter');
+const cactus = document.getElementById('cactus');
+const navButtons = document.querySelectorAll('.nav-button');
+const shopSections = document.querySelectorAll('.shop-section');
+const main = document.getElementById('main');
+const header = document.getElementById('header');
+const footer = document.getElementById('footer');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+const bgMusic = document.getElementById('bgMusic');
+bgMusic.volume = 0.7;
 
-        // Guardar estado en localStorage
-        function guardarEstado() {
-            const estado = {
-                puntos,
-                puntosPorClic,
-                cactusLevel,
-                autoClickers,
-                clickMultipliers,
-                growthLevels
-            };
-            localStorage.setItem('cactusClickerSave', JSON.stringify(estado));
+// Guardar estado en localStorage
+function guardarEstado() {
+    const estado = {
+        puntos,
+        puntosPorClic,
+        cactusLevel,
+        autoClickers,
+        clickMultipliers,
+        growthLevels
+    };
+    localStorage.setItem('cactusClickerSave', JSON.stringify(estado));
+}
+
+// Cargar estado de localStorage
+function cargarEstado() {
+    const save = localStorage.getItem('cactusClickerSave');
+    if (!save) return false;
+    try {
+        const estado = JSON.parse(save);
+        puntos = estado.puntos || 0;
+        puntosPorClic = estado.puntosPorClic || 1;
+        cactusLevel = estado.cactusLevel || 1;
+        autoClickers = estado.autoClickers || autoClickers;
+        clickMultipliers = estado.clickMultipliers || clickMultipliers;
+        growthLevels = estado.growthLevels || growthLevels;
+        cactus.src = `./cactus/${cactusLevel}.png`;
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Función para sumar puntos al hacer clic
+cactus.addEventListener('click', (e) => {
+    puntos += puntosPorClic;
+    actualizarContador();
+    guardarEstado();
+    // Animación de salto
+    cactus.classList.add('bounce');
+    setTimeout(() => cactus.classList.remove('bounce'), 300);
+    // Animación de "+X"
+    showClickFeedback(e.clientX, e.clientY, `+${puntosPorClic}`);
+});
+
+// Función para mostrar feedback de clic
+function showClickFeedback(x, y, text) {
+    const feedback = document.createElement('div');
+    feedback.className = 'click-feedback';
+    feedback.textContent = text;
+    feedback.style.left = (x - 30) + 'px';
+    feedback.style.top = (y - 60) + 'px';
+    document.body.appendChild(feedback);
+    setTimeout(() => feedback.remove(), 1000);
+}
+
+// Función para actualizar el contador y botones de crecimiento
+function actualizarContador() {
+    counter.textContent = `Puntos: ${puntos.toLocaleString()}`;
+    // Actualizar estado de los botones
+    Object.keys(clickMultipliers).forEach(key => {
+        const btn = document.getElementById(`mult${key}`);
+        const costSpan = document.getElementById(`cost${key}`);
+        btn.disabled = puntos < clickMultipliers[key].costo;
+        costSpan.textContent = `Costo: ${clickMultipliers[key].costo.toLocaleString()}`;
+    });
+    Object.keys(autoClickers).forEach(key => {
+        const btn = document.getElementById(`auto${key}`);
+        const costSpan = document.getElementById(`costAuto${key}`);
+        btn.disabled = puntos < autoClickers[key].costo;
+        costSpan.textContent = `Costo: ${autoClickers[key].costo.toLocaleString()}`;
+    });
+    // Actualizar botones de crecimiento
+    growthLevels.forEach((growth, index) => {
+        const btn = document.getElementById(`grow${index + 1}`);
+        const costSpan = document.getElementById(`costGrow${index + 1}`);
+        const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
+        btn.disabled = puntos < growth.costo || growth.comprado || !nivelAnteriorComprado;
+        costSpan.textContent = `Costo: ${growth.costo.toLocaleString()}`;
+        if (growth.comprado) {
+            btn.textContent = `Crecimiento Nivel ${growth.nivel} (¡Comprado!)`;
+            btn.disabled = true;
+        } else {
+            btn.textContent = `Crecimiento Nivel ${growth.nivel}`;
         }
+    });
+}
 
-        // Cargar estado de localStorage
-        function cargarEstado() {
-            const save = localStorage.getItem('cactusClickerSave');
-            if (!save) return false;
-            try {
-                const estado = JSON.parse(save);
-                puntos = estado.puntos || 0;
-                puntosPorClic = estado.puntosPorClic || 1;
-                cactusLevel = estado.cactusLevel || 1;
-                autoClickers = estado.autoClickers || autoClickers;
-                clickMultipliers = estado.clickMultipliers || clickMultipliers;
-                growthLevels = estado.growthLevels || growthLevels;
-                cactus.src = `./cactus/${cactusLevel}.png`;
-                return true;
-            } catch {
-                return false;
-            }
-        }
+// Función para comprar potenciador de clic
+function comprarMultiplicador(valor) {
+    if (puntos >= clickMultipliers[valor].costo) {
+        puntos -= clickMultipliers[valor].costo;
+        puntosPorClic += clickMultipliers[valor].valor;
+        clickMultipliers[valor].costo = Math.floor(clickMultipliers[valor].costo * 1.5);
+        actualizarContador();
+        guardarEstado();
+    }
+}
 
-        // Función para sumar puntos al hacer clic
-        cactus.addEventListener('click', (e) => {
-            puntos += puntosPorClic;
-            actualizarContador();
-            guardarEstado();
-            // Animación de salto
-            cactus.classList.add('bounce');
-            setTimeout(() => cactus.classList.remove('bounce'), 300);
-            // Animación de "+X"
-            showClickFeedback(e.clientX, e.clientY, `+${puntosPorClic}`);
-        });
+// Función para comprar auto-clicker
+function comprarAutoClicker(valor) {
+    if (puntos >= autoClickers[valor].costo) {
+        puntos -= autoClickers[valor].costo;
+        autoClickers[valor].cantidad += 1;
+        autoClickers[valor].costo = Math.floor(autoClickers[valor].costo * 1.7);
+        actualizarContador();
+        guardarEstado();
+    }
+}
 
-        // Función para mostrar feedback de clic
-        function showClickFeedback(x, y, text) {
-            const feedback = document.createElement('div');
-            feedback.className = 'click-feedback';
-            feedback.textContent = text;
-            feedback.style.left = (x - 30) + 'px';
-            feedback.style.top = (y - 60) + 'px';
-            document.body.appendChild(feedback);
-            setTimeout(() => feedback.remove(), 1000);
-        }
+// Función para comprar crecimiento
+function comprarCrecimiento(index) {
+    const growth = growthLevels[index];
+    const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
+    if (!growth.comprado && puntos >= growth.costo && nivelAnteriorComprado) {
+        puntos -= growth.costo;
+        growth.comprado = true;
+        cactusLevel = growth.nivel;
+        cactus.src = `./cactus/${growth.nivel}.png`;
+        actualizarContador();
+        guardarEstado();
 
-        // Función para actualizar el contador y botones de crecimiento
-        function actualizarContador() {
-            counter.textContent = `Puntos: ${puntos.toLocaleString()}`;
-            // Actualizar estado de los botones
-            Object.keys(clickMultipliers).forEach(key => {
-                const btn = document.getElementById(`mult${key}`);
-                const costSpan = document.getElementById(`cost${key}`);
-                btn.disabled = puntos < clickMultipliers[key].costo;
-                costSpan.textContent = `Costo: ${clickMultipliers[key].costo.toLocaleString()}`;
-            });
-            Object.keys(autoClickers).forEach(key => {
-                const btn = document.getElementById(`auto${key}`);
-                const costSpan = document.getElementById(`costAuto${key}`);
-                btn.disabled = puntos < autoClickers[key].costo;
-                costSpan.textContent = `Costo: ${autoClickers[key].costo.toLocaleString()}`;
-            });
-            // Actualizar botones de crecimiento
-            growthLevels.forEach((growth, index) => {
-                const btn = document.getElementById(`grow${index + 1}`);
-                const costSpan = document.getElementById(`costGrow${index + 1}`);
-                
-                const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
-                btn.disabled = puntos < growth.costo || growth.comprado || !nivelAnteriorComprado;
-                costSpan.textContent = `Costo: ${growth.costo.toLocaleString()}`;
-                if (growth.comprado) {
-                    btn.textContent = `Crecimiento Nivel ${growth.nivel} (¡Comprado!)`;
-                    btn.disabled = true;
-                } else {
-                    btn.textContent = `Crecimiento Nivel ${growth.nivel}`;
-                }
-            });
-        }
-
-        // Función para comprar potenciador de clic
-        function comprarMultiplicador(valor) {
-            if (puntos >= clickMultipliers[valor].costo) {
-                puntos -= clickMultipliers[valor].costo;
-                puntosPorClic += clickMultipliers[valor].valor;
-                clickMultipliers[valor].costo = Math.floor(clickMultipliers[valor].costo * 1.5);
-                actualizarContador();
-                guardarEstado();
-            }
-        }
-
-        // Función para comprar auto-clicker
-        function comprarAutoClicker(valor) {
-            if (puntos >= autoClickers[valor].costo) {
-                puntos -= autoClickers[valor].costo;
-                autoClickers[valor].cantidad += 1;
-                autoClickers[valor].costo = Math.floor(autoClickers[val].costo * 1.7);
-                actualizarContador();
-                guardarEstado();
-            }
-        }
-
-        // Función para comprar crecimiento
-        function comprarCrecimiento(index) {
-            const growth = growthLevels[index];
-            
-            const nivelAnteriorComprado = index === 0 ? true : growthLevels[index - 1].comprado;
-            if (!growth.comprado && puntos >= growth.costo && nivelAnteriorComprado) {
-                puntos -= growth.costo;
-                growth.comprado = true;
-                cactusLevel = growth.nivel;
-                cactus.src = `./cactus/${growth.nivel}.png`;
-                actualizarContador();
-                guardarEstado();
-
-                if (index === growthLevels.length - 1) {
-                    // Último crecimiento:
-                    aplicarTonoGris(true);
-                    setTimeout(() => {
-                        Swal.fire({
-                            title: '¡Felicidades!',
-                            text: 'Has hecho crecer tu cactus hasta el final.',
-                            icon: 'success',
-                            confirmButtonText: 'Reiniciar Juego',
-                            customClass: {
-                                popup: 'sweet-popup'
-                            }
-                        }).then(() => {
-                            reiniciarJuego();
-                        });
-                    }, 3000);
-                }
-            }
-        }
-
-        function aplicarTonoGris(aplicar) {
-            if (aplicar) {
-                document.body.classList.add('grayscale');
-                header.classList.add('grayscale');
-                main.classList.add('grayscale');
-                footer.classList.add('grayscale');
-                cactus.style.filter = 'grayscale(100%) brightness(0.7)';
-                shopSections.forEach(sec => sec.classList.add('grayscale'));
-            } else {
-                document.body.classList.remove('grayscale');
-                header.classList.remove('grayscale');
-                main.classList.remove('grayscale');
-                footer.classList.remove('grayscale');
-                cactus.style.filter = 'none';
-                shopSections.forEach(sec => sec.classList.remove('grayscale'));
-            }
-        }
-
-        // Reiniciar juego
-        function reiniciarJuego() {
-            puntos = 0;
-            puntosPorClic = 1;
-            cactusLevel = 1;
-            cactus.src = './cactus/1.png';
-            autoClickers = {
-                '1': { cantidad: 0, costo: 500, valor: 1 },
-                '10': { cantidad: 0, costo: 5000, valor: 10 },
-                '100': { cantidad: 0, costo: 50000, valor: 100 },
-                '1000': { cantidad: 0, costo: 500000, valor: 1000 }
-            };
-            clickMultipliers = {
-                '10': { costo: 100, valor: 10 },
-                '50': { costo: 1000, valor: 50 },
-                '100': { costo: 10000, valor: 100 },
-                '1000': { costo: 100000, valor: 1000 }
-            };
-            growthLevels = [
-                { nivel: 2, costo: 1000, comprado: false },
-                { nivel: 3, costo: 10000, comprado: false },
-                { nivel: 4, costo: 100000, comprado: false },
-                { nivel: 5, costo: 1000000, comprado: false },
-                { nivel: 6, costo: 10000000, comprado: false }
-            ];
-            aplicarTonoGris(false);
-            actualizarContador();
-            guardarEstado();
-        }
-
-        document.getElementById('mult10').addEventListener('click', () => comprarMultiplicador('10'));
-        document.getElementById('mult50').addEventListener('click', () => comprarMultiplicador('50'));
-        document.getElementById('mult100').addEventListener('click', () => comprarMultiplicador('100'));
-        document.getElementById('mult1000').addEventListener('click', () => comprarMultiplicador('1000'));
-        document.getElementById('auto1').addEventListener('click', () => comprarAutoClicker('1'));
-        document.getElementById('auto10').addEventListener('click', () => comprarAutoClicker('10'));
-        document.getElementById('auto100').addEventListener('click', () => comprarAutoClicker('100'));
-        document.getElementById('auto1000').addEventListener('click', () => comprarAutoClicker('1000'));
-        document.getElementById('grow1').addEventListener('click', () => comprarCrecimiento(0));
-        document.getElementById('grow2').addEventListener('click', () => comprarCrecimiento(1));
-        document.getElementById('grow3').addEventListener('click', () => comprarCrecimiento(2));
-        document.getElementById('grow4').addEventListener('click', () => comprarCrecimiento(3));
-        document.getElementById('grow5').addEventListener('click', () => comprarCrecimiento(4));
-
-        // Tienda
-        navButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                navButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                shopSections.forEach(section => section.classList.remove('active'));
-                document.getElementById(btn.dataset.section).classList.add('active');
-            });
-        });
-
-        // Auto-clickers
-        let intervaloAutoClicker = setInterval(() => {
-            if (tabActiva) {
-                let suma = 0;
-                Object.keys(autoClickers).forEach(key => {
-                    suma += autoClickers[key].cantidad * autoClickers[key].valor;
+        if (index === growthLevels.length - 1) {
+            aplicarTonoGris(true);
+            setTimeout(() => {
+                Swal.fire({
+                    title: '¡Felicidades!',
+                    text: 'Has hecho crecer tu cactus hasta el final.',
+                    icon: 'success',
+                    confirmButtonText: 'Reiniciar Juego',
+                    customClass: {
+                        popup: 'sweet-popup'
+                    }
+                }).then(() => {
+                    reiniciarJuego();
                 });
-                if (suma > 0) {
-                    puntos += suma;
+            }, 3000);
+        }
+    }
+}
+
+function aplicarTonoGris(aplicar) {
+    if (aplicar) {
+        document.body.classList.add('grayscale');
+        header.classList.add('grayscale');
+        main.classList.add('grayscale');
+        footer.classList.add('grayscale');
+        cactus.style.filter = 'grayscale(100%) brightness(0.7)';
+        shopSections.forEach(sec => sec.classList.add('grayscale'));
+    } else {
+        document.body.classList.remove('grayscale');
+        header.classList.remove('grayscale');
+        main.classList.remove('grayscale');
+        footer.classList.remove('grayscale');
+        cactus.style.filter = 'none';
+        shopSections.forEach(sec => sec.classList.remove('grayscale'));
+    }
+}
+
+// Reiniciar juego
+function reiniciarJuego() {
+    puntos = 0;
+    puntosPorClic = 1;
+    cactusLevel = 1;
+    cactus.src = './cactus/1.png';
+    autoClickers = {
+        '1': { cantidad: 0, costo: 500, valor: 1 },
+        '10': { cantidad: 0, costo: 5000, valor: 10 },
+        '100': { cantidad: 0, costo: 50000, valor: 100 },
+        '1000': { cantidad: 0, costo: 500000, valor: 1000 }
+    };
+    clickMultipliers = {
+        '10': { costo: 100, valor: 10 },
+        '50': { costo: 1000, valor: 50 },
+        '100': { costo: 10000, valor: 100 },
+        '1000': { costo: 100000, valor: 1000 }
+    };
+    growthLevels = [
+        { nivel: 2, costo: 1000, comprado: false },
+        { nivel: 3, costo: 10000, comprado: false },
+        { nivel: 4, costo: 100000, comprado: false },
+        { nivel: 5, costo: 1000000, comprado: false },
+        { nivel: 6, costo: 10000000, comprado: false }
+    ];
+    aplicarTonoGris(false);
+    actualizarContador();
+    guardarEstado();
+}
+
+// Asignar eventos a los botones
+document.getElementById('mult10').addEventListener('click', () => comprarMultiplicador('10'));
+document.getElementById('mult50').addEventListener('click', () => comprarMultiplicador('50'));
+document.getElementById('mult100').addEventListener('click', () => comprarMultiplicador('100'));
+document.getElementById('mult1000').addEventListener('click', () => comprarMultiplicador('1000'));
+document.getElementById('auto1').addEventListener('click', () => comprarAutoClicker('1'));
+document.getElementById('auto10').addEventListener('click', () => comprarAutoClicker('10'));
+document.getElementById('auto100').addEventListener('click', () => comprarAutoClicker('100'));
+document.getElementById('auto1000').addEventListener('click', () => comprarAutoClicker('1000'));
+document.getElementById('grow1').addEventListener('click', () => comprarCrecimiento(0));
+document.getElementById('grow2').addEventListener('click', () => comprarCrecimiento(1));
+document.getElementById('grow3').addEventListener('click', () => comprarCrecimiento(2));
+document.getElementById('grow4').addEventListener('click', () => comprarCrecimiento(3));
+document.getElementById('grow5').addEventListener('click', () => comprarCrecimiento(4));
+
+// Tienda
+navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        shopSections.forEach(section => section.classList.remove('active'));
+        document.getElementById(btn.dataset.section).classList.add('active');
+    });
+});
+
+// Auto-clickers
+let intervaloAutoClicker = setInterval(() => {
+    if (tabActiva) {
+        let suma = 0;
+        Object.keys(autoClickers).forEach(key => {
+            suma += autoClickers[key].cantidad * autoClickers[key].valor;
+        });
+        if (suma > 0) {
+            puntos += suma;
+            actualizarContador();
+            guardarEstado();
+        }
+    }
+}, 1000);
+
+// Afk
+window.addEventListener('focus', () => {
+    tabActiva = true;
+    const ahora = Date.now();
+    const tiempoInactivo = (ahora - ultimaVezActiva) / 1000;
+    ultimaVezActiva = ahora;
+    if (tiempoInactivo > 3) {
+        Swal.fire({
+            title: '¡Bienvenido de vuelta!',
+            text: `El juego estuvo pausado durante ${Math.round(tiempoInactivo)} segundos.`,
+            icon: 'info',
+            timer: 2000,
+            showConfirmButton: false,
+            customClass: {
+                popup: 'sweet-popup'
+            }
+        });
+    }
+    // Solo reanuda si estaba sonando
+    if (musicaSonando) {
+        bgMusic.play().catch(e => console.log('No se pudo reproducir la música:', e));
+    }
+});
+window.addEventListener('blur', () => {
+    tabActiva = false;
+    ultimaVezActiva = Date.now();
+    // Pausa la música y guarda el estado
+    musicaSonando = !bgMusic.paused;
+    bgMusic.pause();
+});
+
+// Pantalla completa
+fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            Swal.fire('Error', 'No se pudo entrar en pantalla completa.', 'error');
+        });
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+});
+
+function inicializarJuego() {
+    const saved = localStorage.getItem('cactusClickerSave');
+    if (saved) {
+        Swal.fire({
+            title: '¡Bienvenido de nuevo!',
+            text: '¿Quieres continuar tu partida guardada o empezar una nueva?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Nuevo Juego',
+            customClass: {
+                popup: 'sweet-popup'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (cargarEstado()) {
                     actualizarContador();
-                    guardarEstado();
+                } else {
+                    Swal.fire('Error', 'No se pudo cargar la partida guardada.', 'error');
+                    reiniciarJuego();
                 }
-            }
-        }, 1000);
-
-        // Afk
-        window.addEventListener('focus', () => {
-            tabActiva = true;
-            const ahora = Date.now();
-            const tiempoInactivo = (ahora - ultimaVezActiva) / 1000;
-            ultimaVezActiva = ahora;
-            if (tiempoInactivo > 3) { // Solo mostrar mensaje si estuvo inactivo más de 3 segundos
-                Swal.fire({
-                    title: '¡Bienvenido de vuelta!',
-                    text: `El juego estuvo pausado durante ${Math.round(tiempoInactivo)} segundos.`,
-                    icon: 'info',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    customClass: {
-                        popup: 'sweet-popup'
-                    }
-                });
-            }
-            
-            bgMusic.play().catch(e => console.log('No se pudo reproducir la música:', e));
-        });
-        window.addEventListener('blur', () => {
-            tabActiva = false;
-            ultimaVezActiva = Date.now();
-            bgMusic.pause();
-        });
-
-        // Pantalla completa
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    Swal.fire('Error', 'No se pudo entrar en pantalla completa.', 'error');
-                });
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
+                reiniciarJuego();
             }
         });
-
-        function inicializarJuego() {
-            const saved = localStorage.getItem('cactusClickerSave');
-            if (saved) {
-                Swal.fire({
-                    title: '¡Bienvenido de nuevo!',
-                    text: '¿Quieres continuar tu partida guardada o empezar una nueva?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Continuar',
-                    cancelButtonText: 'Nuevo Juego',
-                    customClass: {
-                        popup: 'sweet-popup'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (cargarEstado()) {
-                            actualizarContador();
-                        } else {
-                            Swal.fire('Error', 'No se pudo cargar la partida guardada.', 'error');
-                            reiniciarJuego();
-                        }
-                    } else {
-                        reiniciarJuego();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: '¡Bienvenido!',
-                    text: 'Haz clic en el cactus para empezar a jugar.',
-                    icon: 'info',
-                    customClass: {
-                        popup: 'sweet-popup'
-                    }
-                });
+    } else {
+        Swal.fire({
+            title: '¡Bienvenido!',
+            text: 'Haz clic en el cactus para empezar a jugar. 🌵',
+            icon: 'info',
+            customClass: {
+                popup: 'sweet-popup'
             }
-        }
+        });
+    }
+}
 
-        document.addEventListener('DOMContentLoaded', inicializarJuego);
+document.addEventListener('DOMContentLoaded', inicializarJuego);
     </script>
 </body>
 </html>
