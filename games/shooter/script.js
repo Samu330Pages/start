@@ -307,7 +307,7 @@ function resetProgress() {
 
 // Ir a la página principal (puedes cambiar la URL)
 function goHome() {
-  window.location.href = '.../index.html';
+  window.location.href = '/';
 }
 
 // Botones
