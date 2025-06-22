@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Shooter 🎱</title>
+  <meta name="description" content="Shooter: dispara, evita que lleguen al centro las figuras y supera tu mejor puntuación.">
+  <meta name="keywords" content="bubble shooter, juego, burbujas, puntuación, diversión, HTML5, juego móvil">
+  <meta name="author" content="Samu330">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="Shooter 🎱">
+  <meta property="og:description" content="Shooter: dispara, evita que lleguen al centro las figuras y supera tu mejor puntuación.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://samu330.com">
+  <meta property="og:image" content="https://static.fnac-static.com/multimedia/Images/FD/Comete/145966/CCP_IMG_1200x800/1923326.jpg">
+  <meta property="og:site_name" content="Shooter 🎱">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shooter 🎱">
+  <meta name="twitter:description" content="Shooter: dispara, evita que lleguen al centro las figuras y supera tu mejor puntuación.">
+  <meta name="twitter:image" content="">
+  <link rel="icon" href="https://png.pngtree.com/png-vector/20240821/ourmid/pngtree-transparent-ball-of-yarn-png-image_13359125.png" type="image/x-icon">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="score">
+    <p>Puntos actuales: <span id="scoreEl">0</span></p>
+    <p>Tu mejor nivel: <span id="highestEl">0</span></p>
+  </div>
+  <div id="fpsCounter">FPS: 0</div>
+  <div id="gameOverEl">
+    <div>
+      <h1>¡Fin del juego!</h1>
+      <p>Tu puntuación: <span id="finalScoreEl">0</span></p>
+      <button id="restartBtn" class="restart">Jugar de nuevo</button>
+      <button id="resetBtn" class="reset">Reiniciar progreso</button>
+      <button id="homeBtn" class="home">Ir a la página principal</button>
+    </div>
+  </div>
+  <canvas></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
