@@ -1,4 +1,3 @@
-// Desactivar clic derecho y selección
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
 
@@ -39,7 +38,6 @@ let spanEnemiesInterval;
 let spawnTime = 1000;
 highestEl.innerHTML = highest;
 
-// Colores vivos para enemigos
 const vividColors = [
   '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff',
   '#ff8800', '#8800ff', '#00ff88', '#ff0088', '#88ff00', '#0088ff'
@@ -176,7 +174,6 @@ function animate(timestamp) {
     }
   }
 
-  // Actualizar y destruir enemigos, crear explosiones y aumentar puntuación
   for (let i = enemies.length - 1; i >= 0; i--) {
     enemies[i].update();
     const dist = Math.hypot(player.x - enemies[i].x, player.y - enemies[i].y);
@@ -203,7 +200,6 @@ function animate(timestamp) {
             )
           );
         }
-        // Reducir tamaño del enemigo o eliminarlo
         if (enemies[i].radius - 10 > 10) {
           updateScore(100);
           enemies[i].radius -= 8;
@@ -219,7 +215,6 @@ function animate(timestamp) {
   }
 }
 
-// Disparar al enemigo
 function shootEnemy(x, y) {
   const canvasX = canvas.width / 2;
   const canvasY = canvas.height / 2;
@@ -273,7 +268,6 @@ function showGameOver() {
   gameOverEl.style.display = 'flex';
 }
 
-// Generar enemigos aleatorios
 function spanEnemies() {
   spanEnemiesInterval = setTimeout(() => {
     let x, y;
@@ -313,7 +307,7 @@ function resetProgress() {
 
 // Ir a la página principal (puedes cambiar la URL)
 function goHome() {
-  window.location.href = '../index.html';
+  window.location.href = '.../index.html';
 }
 
 // Botones
