@@ -22,7 +22,7 @@ const gameOverEl = document.getElementById('gameOverEl');
 const finalScoreEl = document.getElementById('finalScoreEl');
 const restartBtn = document.getElementById('restartBtn');
 //const resetBtn = document.getElementById('resetBtn');
-//const homeBtn = document.getElementById('homeBtn');
+const homeBtn = document.getElementById('homeBtn');
 
 // Variables y constantes
 const friction = 0.98;
@@ -306,14 +306,14 @@ function startGame() {
 }
 */
 // Ir a la página principal (puedes cambiar la URL)
-/*function goHome() {
+function goHome() {
   window.location.href = '/';
 }
-*/
+
 // Botones
 restartBtn.addEventListener('click', startGame);
 //resetBtn.addEventListener('click', resetProgress);
-//homeBtn.addEventListener('click', goHome);
+homeBtn.addEventListener('click', goHome);
 
 // Iniciar el juego directamente
 startGame();
