@@ -1,128 +1,130 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  touch-action: manipulation;
-}
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      touch-action: manipulation;
+    }
 
-body {
-  color: #333;
-  overflow: hidden;
-  background: #111;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-}
+    body {
+      color: #333;
+      overflow: hidden;
+      background: #111;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
 
-#score {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  color: white;
-  font-size: 13px;
-  padding: 5px;
-  z-index: 99;
-  background: rgba(0,0,0,0.5);
-  border-radius: 4px;
-}
+    #score {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 13px;
+      padding: 5px;
+      z-index: 99;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+    }
 
-#score p {
-  display: inline-block;
-  margin-right: 10px;
-}
+    #score p {
+      display: inline-block;
+      margin-right: 10px;
+    }
 
-#fpsCounter {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  color: lime;
-  font-family: monospace;
-  font-size: 1.2em;
-  z-index: 100;
-  background: rgba(0,0,0,0.5);
-  padding: 3px 8px;
-  border-radius: 4px;
-}
+    #fpsCounter {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      color: lime;
+      font-family: monospace;
+      font-size: 1.2em;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
 
-button:focus {
-  outline: none;
-}
+    button:focus {
+      outline: none;
+    }
 
-#gameOverEl {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  padding: 1em;
-  text-align: center;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  background: rgba(0,0,0,0.2);
-  backdrop-filter: blur(4px);
-  display: none;
-}
+    #gameOverEl {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      padding: 1em;
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(4px);
+      display: none;
+    }
 
-#gameOverEl > div {
-  width: 100%;
-  max-width: 350px;
-  padding: 1.5em;
-  background: rgba(34,34,34,0.8);
-  border-radius: 10px;
-  color: white;
-  z-index: 1000;
-}
+    #gameOverEl > div {
+      width: 100%;
+      max-width: 350px;
+      padding: 1.5em;
+      background: rgba(34, 34, 34, 0.8);
+      border-radius: 10px;
+      color: white;
+      z-index: 1000;
+    }
 
-#gameOverEl h1 {
-  font-size: 3em;
-  font-weight: 600;
-  color: white;
-}
+    #gameOverEl h1 {
+      font-size: 3em;
+      font-weight: 600;
+      color: white;
+    }
 
-#gameOverEl p {
-  font-size: 14px;
-}
+    #gameOverEl p {
+      font-size: 14px;
+      margin-top: 0.5em;
+    }
 
-#gameOverEl button {
-  width: 100%;
-  margin-top: 0.5em;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 2em;
-  padding: 0.8em 1.5em;
-  background: dodgerblue;
-  transition: all 0.3s ease;
-}
+    #gameOverEl button {
+      width: 100%;
+      margin-top: 0.5em;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 2em;
+      padding: 0.8em 1.5em;
+      background: dodgerblue;
+      transition: all 0.3s ease;
+      font-size: 1em;
+    }
 
-#gameOverEl button.restart {
-  background: #4CAF50;
-}
+    #gameOverEl button.restart {
+      background: #4caf50;
+    }
 
-#gameOverEl button.reset {
-  background: #f44336;
-}
+    #gameOverEl button.reset {
+      background: #f44336;
+    }
 
-#gameOverEl button.home {
-  background: #9C27B0;
-}
+    #gameOverEl button.home {
+      background: #9c27b0;
+    }
 
-#gameOverEl button:hover {
-  opacity: 0.8;
-}
+    #gameOverEl button:hover {
+      opacity: 0.8;
+    }
 
-canvas {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: block;
-}
+    canvas {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: block;
+    }
