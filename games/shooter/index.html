@@ -27,13 +27,15 @@
   </div>
   <div id="fpsCounter">FPS: 0</div>
   <div id="gameOverEl">
-    <div>
-      <h1>¡Fin del juego!</h1>
-      <p>Tu puntuación: <span id="finalScoreEl">0</span></p>
-      <button id="restartBtn" class="restart">Jugar de nuevo</button>
-      <!--<button id="resetBtn" class="reset">Reiniciar progreso</button>-->
-      <button id="homeBtn" class="home">Ir a la página principal</button>
-    </div>
+  <div>
+    <h1 id="modalTitle">¡Fin del juego!</h1>
+    <p id="modalMessage">Tu puntuación: <span id="finalScoreEl">0</span></p>
+    <button id="startBtn">Comenzar Juego</button>
+    <button id="restartBtn" class="restart" style="display: none;">Jugar de nuevo</button>
+    <button id="resumeBtn" style="display: none;">Reanudar Juego</button>
+    <!--<button id="resetBtn" class="reset">Reiniciar progreso</button>-->
+    <button id="homeBtn" class="home">Ir a la página principal</button>
+  </div>
   </div>
   <canvas></canvas>
   <script src="script.js"></script>
