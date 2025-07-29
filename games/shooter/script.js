@@ -1,28 +1,24 @@
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+document.addEventListener("selectstart", (e) => e.preventDefault());
 
-// Canvas
-const canvas = document.querySelector('canvas');
+// Canvas y contexto
+const canvas = document.querySelector("canvas");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-window.addEventListener('resize', () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  stopGame();
-});
+const c = canvas.getContext("2d");
 
-// Contexto
-const c = canvas.getContext('2d');
-
-// Elementos del DOM
-const scoreEl = document.getElementById('scoreEl');
-const highestEl = document.getElementById('highestEl');
-const fpsCounter = document.getElementById('fpsCounter');
-const gameOverEl = document.getElementById('gameOverEl');
-const finalScoreEl = document.getElementById('finalScoreEl');
-const restartBtn = document.getElementById('restartBtn');
-//const resetBtn = document.getElementById('resetBtn');
-const homeBtn = document.getElementById('homeBtn');
+// Elementos DOM modal y UI
+const scoreEl = document.getElementById("scoreEl");
+const highestEl = document.getElementById("highestEl");
+const fpsCounter = document.getElementById("fpsCounter");
+const gameOverEl = document.getElementById("gameOverEl");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
+const finalScoreEl = document.getElementById("finalScoreEl");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const resumeBtn = document.getElementById("resumeBtn");
+const homeBtn = document.getElementById("homeBtn");
 
 // Variables y constantes
 const friction = 0.98;
@@ -32,25 +28,43 @@ let projectiles = [];
 let enemies = [];
 let particles = [];
 let score = 0;
-let highest = localStorage.getItem('highest') ? parseInt(localStorage.getItem('highest')) : 0;
+let highest = localStorage.getItem("highest")
+  ? parseInt(localStorage.getItem("highest"))
+  : 0;
 let animationId;
 let spanEnemiesInterval;
 let spawnTime = 1000;
+
 highestEl.innerHTML = highest;
 
 const vividColors = [
-  '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff',
-  '#ff8800', '#8800ff', '#00ff88', '#ff0088', '#88ff00', '#0088ff'
+  "#ff0000",
+  "#00ff00",
+  "#0000ff",
+  "#ffff00",
+  "#ff00ff",
+  "#00ffff",
+  "#ff8800",
+  "#8800ff",
+  "#00ff88",
+  "#ff0088",
+  "#88ff00",
+  "#0088ff",
 ];
-const shapes = ['circle', 'square', 'triangle'];
+const shapes = ["circle", "square", "triangle"];
 
-// Contador de FPS
 let lastTime = performance.now();
 let fps = 0;
 
-// Clase Bola
+// Estado del juego: 'start', 'playing', 'paused', 'gameover'
+let gameState = "start";
+
+// Player
+let player;
+
+// Clases
 class Ball {
-  constructor(x, y, radius, color, shape = 'circle') {
+  constructor(x, y, radius, color, shape = "circle") {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -59,13 +73,18 @@ class Ball {
   }
   draw() {
     c.fillStyle = this.color;
-    if (this.shape === 'circle') {
+    if (this.shape === "circle") {
       c.beginPath();
       c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
       c.fill();
-    } else if (this.shape === 'square') {
-      c.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
-    } else if (this.shape === 'triangle') {
+    } else if (this.shape === "square") {
+      c.fillRect(
+        this.x - this.radius,
+        this.y - this.radius,
+        this.radius * 2,
+        this.radius * 2
+      );
+    } else if (this.shape === "triangle") {
       c.beginPath();
       c.moveTo(this.x, this.y - this.radius);
       c.lineTo(this.x - this.radius, this.y + this.radius);
@@ -76,9 +95,8 @@ class Ball {
   }
 }
 
-// Clase Disparador (bola que se mueve)
 class Shooter extends Ball {
-  constructor(x, y, radius, color, velocity, shape = 'circle') {
+  constructor(x, y, radius, color, velocity, shape = "circle") {
     super(x, y, radius, color, shape);
     this.velocity = velocity;
   }
@@ -89,9 +107,8 @@ class Shooter extends Ball {
   }
 }
 
-// Clase Partícula (explosión)
 class Particle extends Shooter {
-  constructor(x, y, radius, color, velocity, shape = 'circle') {
+  constructor(x, y, radius, color, velocity, shape = "circle") {
     super(x, y, radius, color, velocity, shape);
     this.alpha = 1;
   }
@@ -115,24 +132,21 @@ class Particle extends Shooter {
 function updateScore(amount = 100) {
   score += amount;
   scoreEl.innerHTML = score;
-  // Si supera el récord, actualiza
   if (score > highest) {
     highest = score;
-    localStorage.setItem('highest', highest);
+    localStorage.setItem("highest", highest);
     highestEl.innerHTML = highest;
   }
-  // Ajusta la dificultad
   spawnTime *= 0.9995;
 }
 
-// Calcular velocidad
+// Calcular velocidad en dirección centro
 function calculateVelocity(x, y, x1 = canvas.width / 2, y1 = canvas.height / 2) {
   const angle = Math.atan2(y1 - y, x1 - x);
-  const velocity = {
+  return {
     x: Math.cos(angle),
-    y: Math.sin(angle)
+    y: Math.sin(angle),
   };
-  return velocity;
 }
 
 // Actualizar FPS
@@ -140,19 +154,21 @@ function updateFPS(timestamp) {
   const now = performance.now();
   fps = Math.round(1000 / (now - lastTime));
   lastTime = now;
-  fpsCounter.textContent = 'FPS: ' + fps;
+  fpsCounter.textContent = "FPS: " + fps;
   return fps;
 }
 
 // Animación principal
 function animate(timestamp) {
+  if (gameState !== "playing") return; // Pausa animación si no está jugando
   animationId = requestAnimationFrame(animate);
   updateFPS(timestamp);
-  c.fillStyle = 'rgba(0,0,0,0.1)';
+  c.fillStyle = "rgba(0,0,0,0.1)";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
   if (player) player.draw();
 
-  // Actualizar y eliminar partículas
+  // Partículas
   for (let i = particles.length - 1; i >= 0; i--) {
     if (particles[i].alpha <= 0) {
       particles.splice(i, 1);
@@ -161,11 +177,12 @@ function animate(timestamp) {
     }
   }
 
-  // Actualizar y eliminar proyectiles
+  // Proyectiles
   for (let i = projectiles.length - 1; i >= 0; i--) {
     projectiles[i].update();
+
     if (
-      projectiles[i].x + projectiles[i].radius < 1 ||
+      projectiles[i].x + projectiles[i].radius < 0 ||
       projectiles[i].x - projectiles[i].radius > canvas.width ||
       projectiles[i].y + projectiles[i].radius < 0 ||
       projectiles[i].y - projectiles[i].radius > canvas.height
@@ -174,17 +191,28 @@ function animate(timestamp) {
     }
   }
 
+  // Enemigos y colisiones
   for (let i = enemies.length - 1; i >= 0; i--) {
     enemies[i].update();
-    const dist = Math.hypot(player.x - enemies[i].x, player.y - enemies[i].y);
-    if (dist - enemies[i].radius - player.radius < 1) {
+
+    // Colision jugador - enemigo
+    const distPlayerEnemy = Math.hypot(
+      player.x - enemies[i].x,
+      player.y - enemies[i].y
+    );
+    if (distPlayerEnemy - enemies[i].radius - player.radius < 1) {
       showGameOver();
       break;
     }
+
+    // Colisiones proyectil - enemigo
     for (let j = projectiles.length - 1; j >= 0; j--) {
-      const dist = Math.hypot(projectiles[j].x - enemies[i].x, projectiles[j].y - enemies[i].y);
-      if (dist - enemies[i].radius - projectiles[j].radius < 0) {
-        // Crear explosión de partículas
+      const distProjEnemy = Math.hypot(
+        projectiles[j].x - enemies[i].x,
+        projectiles[j].y - enemies[i].y
+      );
+      if (distProjEnemy - enemies[i].radius - projectiles[j].radius < 0) {
+        // Crear partículas explosión
         for (let k = 0; k < enemies[i].radius; k++) {
           particles.push(
             new Particle(
@@ -194,7 +222,7 @@ function animate(timestamp) {
               enemies[i].color,
               {
                 x: (Math.random() - 0.5) * (Math.random() * 9.8 - 0.5),
-                y: (Math.random() - 0.5) * (Math.random() * 9.8 - 0.5)
+                y: (Math.random() - 0.5) * (Math.random() * 9.8 - 0.5),
               },
               enemies[i].shape
             )
@@ -215,36 +243,40 @@ function animate(timestamp) {
   }
 }
 
+// Función para disparar en dirección clic/touch al canvas
 function shootEnemy(x, y) {
-  const canvasX = canvas.width / 2;
-  const canvasY = canvas.height / 2;
-  let v = calculateVelocity(canvasX, canvasY, x, y);
-  v.x *= 5.5;
-  v.y *= 5.5;
-  projectiles.push(new Shooter(canvasX, canvasY, 5, 'white', v));
+  if (gameState !== "playing") return;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  let velocity = calculateVelocity(centerX, centerY, x, y);
+  velocity.x *= 5.5;
+  velocity.y *= 5.5;
+  projectiles.push(new Shooter(centerX, centerY, 5, "white", velocity));
 }
 
-// Evento de ratón
-canvas.addEventListener('click', (e) => {
+// Eventos de disparo mouse y touch
+function handleShootEvent(e) {
+  if (gameState !== "playing") return;
   const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  let x, y;
+  if (e.type === "click") {
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  } else if (e.type === "touchstart") {
+    e.preventDefault();
+    const touch = e.touches[0];
+    x = touch.clientX - rect.left;
+    y = touch.clientY - rect.top;
+  }
   shootEnemy(x, y);
-});
+}
 
-// Evento táctil
-canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  shootEnemy(x, y);
-});
+canvas.addEventListener("click", handleShootEvent);
+canvas.addEventListener("touchstart", handleShootEvent);
 
-// Inicializar juego
+// Inicialización del juego
 function init() {
-  player = new Ball(x, y, 10, 'white');
+  player = new Ball(x, y, 10, "white");
   projectiles = [];
   enemies = [];
   particles = [];
@@ -254,22 +286,56 @@ function init() {
   highestEl.innerHTML = highest;
 }
 
-// Detener juego
+// Detener el juego (animación + enemigos)
 function stopGame() {
-  clearInterval(spanEnemiesInterval);
+  clearTimeout(spanEnemiesInterval);
   cancelAnimationFrame(animationId);
-  canvas.removeEventListener('click', shootEnemy);
 }
 
-// Mostrar fin de juego
+// Mostrar modal y configurar según estado
+function showModal(type) {
+  gameOverEl.style.display = "flex";
+
+  if (type === "start") {
+    gameState = "start";
+    modalTitle.textContent = "Bienvenido a Shooter 🎱";
+    modalMessage.innerHTML = "¿Listo para jugar?";
+    startBtn.style.display = "inline-block";
+    restartBtn.style.display = "none";
+    resumeBtn.style.display = "none";
+  } else if (type === "gameover") {
+    gameState = "gameover";
+    modalTitle.textContent = "¡Fin del juego!";
+    modalMessage.innerHTML = `Tu puntuación: <span id="finalScoreEl">${score}</span>`;
+    startBtn.style.display = "none";
+    restartBtn.style.display = "inline-block";
+    resumeBtn.style.display = "none";
+  } else if (type === "paused") {
+    gameState = "paused";
+    modalTitle.textContent = "Juego pausado";
+    modalMessage.innerHTML = `Tu puntuación actual: <span>${score}</span><br>Vuelve cuando quieras.`;
+    startBtn.style.display = "none";
+    restartBtn.style.display = "none";
+    resumeBtn.style.display = "inline-block";
+  }
+}
+
+// Ocultar modal
+function hideModal() {
+  gameOverEl.style.display = "none";
+}
+
+// Mostrar fin del juego
 function showGameOver() {
   stopGame();
-  finalScoreEl.innerHTML = score;
-  gameOverEl.style.display = 'flex';
+  showModal("gameover");
 }
 
+// Generar enemigos continuamente con timeout recursivo
 function spanEnemies() {
   spanEnemiesInterval = setTimeout(() => {
+    if (gameState !== "playing") return;
+
     let x, y;
     const radius = Math.random() * 16 + 14;
     if (Math.random() < 0.5) {
@@ -286,34 +352,56 @@ function spanEnemies() {
   }, spawnTime);
 }
 
-// Iniciar juego
+// Iniciar juego (nuevo o reanudar)
 function startGame() {
+  gameState = "playing";
   x = canvas.width / 2;
   y = canvas.height / 2;
   init();
   animate();
-  clearInterval(spanEnemiesInterval);
+  clearTimeout(spanEnemiesInterval);
   spanEnemies();
-  gameOverEl.style.display = 'none';
+  hideModal();
 }
 
-// Reiniciar progreso (borrar récord)
-/*function resetProgress() {
-  localStorage.removeItem('highest');
-  highest = 0;
-  highestEl.innerHTML = highest;
+// Manejo de botones modal
+startBtn.addEventListener("click", () => {
   startGame();
-}
-*/
-// Ir a la página principal (puedes cambiar la URL)
-function goHome() {
-  window.location.href = '/';
-}
+});
 
-// Botones
-restartBtn.addEventListener('click', startGame);
-//resetBtn.addEventListener('click', resetProgress);
-homeBtn.addEventListener('click', goHome);
+restartBtn.addEventListener("click", () => {
+  startGame();
+});
 
-// Iniciar el juego directamente
-startGame();
+resumeBtn.addEventListener("click", () => {
+  hideModal();
+  gameState = "playing";
+  animate();
+  clearTimeout(spanEnemiesInterval);
+  spanEnemies();
+});
+
+homeBtn.addEventListener("click", () => {
+  window.location.href = "/";
+});
+
+// Pausar juego al cambiar pestaña o minimizar ventana
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    if (gameState === "playing") {
+      stopGame();
+      showModal("paused");
+    }
+  }
+});
+
+// Ajustar canvas al redimensionar ventana y pausar
+window.addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  stopGame();
+  showModal("paused");
+});
+
+// Mostrar modal inicial para empezar el juego al cargar
+showModal("start");
