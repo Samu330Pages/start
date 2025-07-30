@@ -46,7 +46,7 @@ function showResetPasswordInput() {
         return false;
       }
 
-      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=${email}`)
+      return fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmailV1?email=${email}`)
         .then(function(response) {
           return response.json();
         })
@@ -109,8 +109,8 @@ function signup() {
   var password = document.getElementById("signup-password").value;
   var confirmPassword = document.getElementById("signup-confirm-password").value;
   var username = document.getElementById("username").value;
-  var checkEmailUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmail?email=" + email;
-  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUser?email=" + email + "&user=" + username;
+  var checkEmailUrl = "https://us-central1-number-ac729.cloudfunctions.net/checkEmailV1?email=" + email;
+  var createUserUrl = "https://us-central1-number-ac729.cloudfunctions.net/createUserV1?email=" + email + "&user=" + username;
 
   if (password !== confirmPassword) {
     Swal.fire("Las contraseñas no coinciden");
@@ -143,7 +143,7 @@ function signup() {
         }).then(function() {
           firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(function() {
-              window.location.href = "https://samu330.com/nyan/rewards";
+              window.location.href = "https://samu330.com";
             })
             .catch(function(error) {
               Swal.fire(`Error durante la creación del usuario ${error}`);
@@ -158,7 +158,7 @@ function signup() {
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    window.location.href = "https://samu330.com/nyan/rewards";
+    window.location.href = "https://samu330.com";
   } else {
   }
 });
