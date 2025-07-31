@@ -368,6 +368,9 @@
                     modalButtonsContainer.appendChild(createButton("Volver a jugar", null, () => {
                         startGame();
                     }));
+                    modalButtonsContainer.appendChild(createButton("Ver Rating", "secondary", () => {
+                        showRankingModal();
+                    }));
 
                     if (!isUserRegistered) {
                         modalButtonsContainer.appendChild(createButton("Iniciar Sesión / Registrarse", "secondary", () => {
