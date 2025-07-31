@@ -333,7 +333,7 @@
                     break;
 
                 case "welcome":
-                    modalTitle.innerText = `¡Bienvenido ${isUserRegistered ? userName : "Invitado"}!`;
+                    modalTitle.innerText = `¡Bienvenid@ ${isUserRegistered ? userName : "Invitado"}!`;
                     modalMessage.innerHTML = (isUserRegistered ? `Puntaje guardado: ${userScore}` : "Puedes jugar sin registrarte o iniciar sesión para guardar tu progreso y aparecer en el ranking.") + "<br><br>";
                     modalButtonsContainer.style.display = "flex";
 
