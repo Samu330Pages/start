@@ -504,17 +504,17 @@
     async function updateUserScoreIfNeeded(newScore) {
   if (!isUserRegistered || !userUID) return null;
   try {
-    // Aquí codificas el UID para que los caracteres especiales no rompan la URL
     const encodedUID = encodeURIComponent(userUID);
+    console.log(`Actualizando score con UID codificado: ${encodedUID}, score: ${newScore}`);
     const response = await fetch(`https://us-central1-number-ac729.cloudfunctions.net/updateScoreV1?uid=${encodedUID}&score=${newScore}`);
     if (!response.ok) throw new Error("Error al actualizar score");
     const data = await response.json();
-    return data; // Aquí tienes {message:"true"/"false", score: number} según API
+    return data; // {message: "true"/"false", score: number}
   } catch (e) {
     console.error("Error actualizando score:", e);
     return null;
   }
-}
+    }
 
     // Función llamada al acabar la partida
     async function onGameOver() {
