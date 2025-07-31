@@ -504,12 +504,13 @@
     async function updateUserScoreIfNeeded(newScore) {
   if (!isUserRegistered || !userUID) return null;
   try {
+    console.log(`UID original sin codificar: ${userUID}`);
     const encodedUID = encodeURIComponent(userUID);
-    console.log(`Actualizando score con UID codificado: ${encodedUID}, score: ${newScore}`);
+    console.log(`UID codificado para URL: ${encodedUID}, score: ${newScore}`);
     const response = await fetch(`https://us-central1-number-ac729.cloudfunctions.net/updateScoreV1?uid=${encodedUID}&score=${newScore}`);
     if (!response.ok) throw new Error("Error al actualizar score");
     const data = await response.json();
-    return data; // {message: "true"/"false", score: number}
+    return data;
   } catch (e) {
     console.error("Error actualizando score:", e);
     return null;
