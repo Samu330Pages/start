@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Shooter 🎱 - Juego corregido inicio partida</title>
+  <title>Shooter 🎱 - Corregido inicio partida seguro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <style>
+    /* Mismos estilos que has usado */
     * {
       box-sizing: border-box;
       margin: 0; padding: 0;
@@ -135,6 +136,7 @@
     };
     firebase.initializeApp(firebaseConfig);
 
+    // DOM refs...
     const modalContainer = document.getElementById("modalContainer");
     const modalTitle = document.getElementById("modalTitle");
     const modalMessage = document.getElementById("modalMessage");
@@ -145,7 +147,7 @@
     const canvas = document.querySelector("canvas");
     const c = canvas.getContext("2d");
 
-    // Ajustar tamaño canvas completo
+    // Canvas setup
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -172,7 +174,7 @@
     let animationId;
     let spanEnemiesInterval;
     let spawnTime = 1000;
-    let gameState = "verifying"; // verifying, welcome, playing, paused, gameover
+    let gameState = "verifying";
 
     let isUserRegistered = false;
     let userUID = null;
@@ -236,9 +238,9 @@
       }
     }
 
-    // startGame declarada antes de usarla para el botón
-
+    // -------- Función START_GAME definida antes que se use -----------
     function startGame() {
+      console.log('Comenzar partida pulsado');
       gameState = "playing";
       x = canvas.width / 2;
       y = canvas.height / 2;
@@ -249,11 +251,15 @@
       hideModal();
     }
 
+    // El resto de funciones auxiliares mantienen la estructura...
+
     function updateScore(amount = 100) {
       score += amount;
       scoreEl.innerText = score;
-      if (!isUserRegistered) {
-        if (score > highest) {
+      if (isUserRegistered) {
+        highestEl.innerText = userScore > score ? userScore : score;
+      } else {
+        if(score > highest){
           highest = score;
           localStorage.setItem("highest", highest);
           highestEl.innerText = highest;
@@ -272,68 +278,65 @@
       fps = Math.round(1000 / (now - lastTime));
       lastTime = now;
       fpsCounter.textContent = "FPS: " + fps;
-      return fps;
     }
 
     function animate(timestamp) {
-      if (gameState !== "playing") return;
+      if(gameState !== "playing") return;
       animationId = requestAnimationFrame(animate);
       updateFPS(timestamp);
 
       c.fillStyle = "rgba(0,0,0,0.1)";
       c.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (player) player.draw();
+      if(player) player.draw();
 
-      for (let i = particles.length - 1; i >= 0; i--) {
-        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      for(let i = particles.length - 1; i >= 0; i--) {
+        if(particles[i].alpha <= 0) particles.splice(i,1);
         else particles[i].update();
       }
 
-      for (let i = projectiles.length - 1; i >= 0; i--) {
+      for(let i = projectiles.length - 1; i >= 0; i--) {
         projectiles[i].update();
-        if (
-          projectiles[i].x + projectiles[i].radius < 0 ||
-          projectiles[i].x - projectiles[i].radius > canvas.width ||
-          projectiles[i].y + projectiles[i].radius < 0 ||
-          projectiles[i].y - projectiles[i].radius > canvas.height
-        ) projectiles.splice(i, 1);
+        if(projectiles[i].x + projectiles[i].radius < 0 ||
+           projectiles[i].x - projectiles[i].radius > canvas.width ||
+           projectiles[i].y + projectiles[i].radius < 0 ||
+           projectiles[i].y - projectiles[i].radius > canvas.height){
+          projectiles.splice(i,1);
+        }
       }
 
-      for (let i = enemies.length - 1; i >= 0; i--) {
+      for(let i = enemies.length - 1; i >= 0; i--) {
         enemies[i].update();
 
         const dist = Math.hypot(player.x - enemies[i].x, player.y - enemies[i].y);
 
-        if (dist - enemies[i].radius - player.radius <= 0) {
+        if(dist - enemies[i].radius - player.radius <= 0) {
           stopGame();
-          showGameOverModal();
-          break;
+          onGameOver();
+          return;
         }
 
-        for (let j = projectiles.length - 1; j >= 0; j--) {
+        for(let j = projectiles.length - 1; j >= 0; j--) {
           const distP = Math.hypot(projectiles[j].x - enemies[i].x, projectiles[j].y - enemies[i].y);
-          if (distP - enemies[i].radius - projectiles[j].radius < 0) {
-            for (let k = 0; k < enemies[i].radius; k++) {
-              particles.push(
-                new Particle(
-                  projectiles[j].x,
-                  projectiles[j].y,
-                  Math.random() * 3,
-                  enemies[i].color,
-                  { x: (Math.random() - 0.5) * (Math.random() * 9.8 - 0.5), y: (Math.random() - 0.5) * (Math.random() * 9.8 - 0.5) },
-                  enemies[i].shape
-                )
-              );
+          if(distP - enemies[i].radius - projectiles[j].radius < 0) {
+            for(let k=0; k < enemies[i].radius; k++) {
+              particles.push(new Particle(
+                projectiles[j].x,
+                projectiles[j].y,
+                Math.random()*3,
+                enemies[i].color,
+                { x: (Math.random()-0.5)*(Math.random()*9.8-0.5), y: (Math.random()-0.5)*(Math.random()*9.8-0.5)},
+                enemies[i].shape
+              ));
             }
-            if (enemies[i].radius - 10 > 10) {
+            if(enemies[i].radius - 10 > 10){
               updateScore(100);
               enemies[i].radius -= 8;
-              projectiles.splice(j, 1);
+              projectiles.splice(j,1);
             } else {
               updateScore(250);
-              enemies.splice(i, 1);
-              projectiles.splice(j, 1);
+              enemies.splice(i,1);
+              projectiles.splice(j,1);
             }
             break;
           }
@@ -341,90 +344,95 @@
       }
     }
 
-    function shootEnemy(x, y) {
-      if (gameState !== "playing") return;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+    function shootEnemy(x,y){
+      if(gameState !== "playing") return;
+      const centerX = canvas.width/2;
+      const centerY = canvas.height/2;
       let velocity = calculateVelocity(centerX, centerY, x, y);
-      velocity.x *= 5.5;
-      velocity.y *= 5.5;
+      velocity.x*=5.5;
+      velocity.y*=5.5;
       projectiles.push(new Shooter(centerX, centerY, 5, "white", velocity));
     }
 
-    function handleShootEvent(e) {
-      if (gameState !== "playing") return;
+    function handleShootEvent(e){
+      if(gameState !== "playing") return;
       const rect = canvas.getBoundingClientRect();
-      let x, y;
-      if (e.type === "click") {
+      let x,y;
+      if(e.type === "click"){
         x = e.clientX - rect.left;
         y = e.clientY - rect.top;
-      } else if (e.type === "touchstart") {
+      } else if(e.type === "touchstart"){
         e.preventDefault();
         const touch = e.touches[0];
         x = touch.clientX - rect.left;
         y = touch.clientY - rect.top;
       }
-      shootEnemy(x, y);
+      shootEnemy(x,y);
     }
 
     canvas.addEventListener("click", handleShootEvent);
     canvas.addEventListener("touchstart", handleShootEvent);
 
-    function init() {
-      player = new Ball(x, y, 10, "white");
+    function init(){
+      player = new Ball(x,y,10,"white");
       projectiles = [];
       enemies = [];
       particles = [];
       score = 0;
       spawnTime = 1000;
+      if(isUserRegistered){
+        highestEl.innerText = userScore;
+      } else {
+        highestEl.innerText = highest;
+      }
       scoreEl.innerText = score;
-      highestEl.innerText = highest;
     }
 
-    function stopGame() {
+    function stopGame(){
       clearTimeout(spanEnemiesInterval);
       cancelAnimationFrame(animationId);
     }
 
-    function spanEnemies() {
-      spanEnemiesInterval = setTimeout(() => {
-        if (gameState !== "playing") return;
+    function spanEnemies(){
+      spanEnemiesInterval = setTimeout(()=>{
+        if(gameState !== "playing") return;
         let ex, ey;
         const radius = Math.random() * 16 + 14;
-        if (Math.random() < 0.5) {
+        if(Math.random() < 0.5){
           ex = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
           ey = Math.random() * canvas.height;
-        } else {
+        } else{
           ex = Math.random() * canvas.width;
           ey = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
         }
-        const color = vividColors[Math.floor(Math.random() * vividColors.length)];
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = vividColors[Math.floor(Math.random()*vividColors.length)];
+        const shape = shapes[Math.floor(Math.random()*shapes.length)];
         enemies.push(new Shooter(ex, ey, radius, color, calculateVelocity(ex, ey), shape));
         spanEnemies();
       }, spawnTime);
     }
 
-    // Modal helpers
+    // MODALES
 
-    function clearModalButtons() {
+    function clearModalButtons(){
       modalButtonsContainer.innerHTML = "";
       modalButtonsContainer.style.display = "none";
     }
 
-    function createButton(text, className, onClick) {
+    function createButton(text, className, onClick){
       const btn = document.createElement("button");
       btn.textContent = text;
-      if (className) btn.classList.add(className);
+      if(className) btn.classList.add(className);
       btn.onclick = onClick;
       return btn;
     }
 
-    function showModal(type) {
+    // Modal show por tipo con mensaje extra opcional
+    function showModal(type, messageExtra=""){
       modalContainer.style.display = "flex";
       clearModalButtons();
 
-      switch (type) {
+      switch(type){
         case "verifying":
           modalTitle.innerText = "Verificando usuario...";
           modalMessage.innerText = "Por favor espera.";
@@ -435,7 +443,7 @@
           modalMessage.innerHTML = "Selecciona cómo quieres jugar:";
           modalButtonsContainer.style.display = "flex";
 
-          modalButtonsContainer.appendChild(createButton("Jugar como Invitado", null, () => {
+          modalButtonsContainer.appendChild(createButton("Jugar como Invitado", null, ()=>{
             isUserRegistered = false;
             userUID = null;
             userName = "Invitado";
@@ -445,7 +453,7 @@
             showModal("welcome");
           }));
 
-          modalButtonsContainer.appendChild(createButton("Iniciar Sesión / Registrarse", null, () => {
+          modalButtonsContainer.appendChild(createButton("Iniciar Sesión / Registrarse", null, ()=>{
             window.location.href = "https://samu330.com/login/index";
           }));
 
@@ -453,84 +461,99 @@
 
         case "welcome":
           modalTitle.innerText = `¡Bienvenido ${isUserRegistered ? userName : "Invitado"}!`;
-          modalMessage.innerHTML = isUserRegistered
-            ? `Puntaje guardado: ${userScore}`
-            : "Puedes jugar sin registrarte o iniciar sesión para guardar tu progreso y aparecer en el ranking.<br><br>";
-
+          modalMessage.innerHTML = (isUserRegistered ? `Puntaje guardado: ${userScore}` : "Puedes jugar sin registrarte o iniciar sesión para guardar tu progreso y aparecer en el ranking.") + "<br><br>";
           modalButtonsContainer.style.display = "flex";
-
-          modalButtonsContainer.appendChild(createButton("Comenzar Partida", null, () => {
+          modalButtonsContainer.appendChild(createButton("Comenzar Partida", null, ()=>{
             startGame();
           }));
-
-          modalButtonsContainer.appendChild(createButton("Ver Rating", null, () => {
+          modalButtonsContainer.appendChild(createButton("Ver Rating", "secondary", ()=>{
             Swal.fire('Próximamente', 'Funcionalidad de ranking en desarrollo.', 'info');
           }));
-
           break;
 
         case "paused":
           modalTitle.innerText = "Juego pausado";
           modalMessage.innerHTML = `Tu puntuación actual: ${score}<br>Vuelve cuando quieras.`;
           modalButtonsContainer.style.display = "flex";
-
-          modalButtonsContainer.appendChild(createButton("Reanudar Juego", null, () => {
+          modalButtonsContainer.appendChild(createButton("Reanudar Juego", null, ()=>{
             hideModal();
             gameState = "playing";
             animate();
             clearTimeout(spanEnemiesInterval);
             spanEnemies();
           }));
-
           break;
 
         case "gameover":
           modalTitle.innerText = "¡Fin del juego!";
-          modalMessage.innerHTML = `Tu puntuación: <b>${score}</b>`;
+          modalMessage.innerHTML = `Tu puntuación: <b>${score}</b>${messageExtra}`; // texto extra para indicar superación
           modalButtonsContainer.style.display = "flex";
-
-          modalButtonsContainer.appendChild(createButton("Volver a jugar", null, () => {
+          modalButtonsContainer.appendChild(createButton("Volver a jugar", null, ()=>{
             startGame();
           }));
-
-          // Mostrar botón de iniciar sesion / registro SOLO si es invitado
-          if (!isUserRegistered) {
-            modalButtonsContainer.appendChild(createButton("Iniciar Sesión / Registrarse", "secondary", () => {
+          if(!isUserRegistered){
+            modalButtonsContainer.appendChild(createButton("Iniciar Sesión / Registrarse", "secondary", ()=>{
               window.location.href = "https://samu330.com/login/index";
             }));
           }
-
           break;
       }
     }
 
-    function hideModal() {
+    function hideModal(){
       modalContainer.style.display = "none";
     }
 
-    function showGameOverModal() {
-      gameState = "gameover";
-      showModal("gameover");
+    // API para actualizar score usuario registrado
+    async function updateUserScoreIfNeeded(newScore){
+      if(!isUserRegistered || !userUID) return null;
+      try {
+        const encodedUID = encodeURIComponent(userUID);
+        const response = await fetch(`https://us-central1-number-ac729.cloudfunctions.net/updateScoreV1?uid=${encodedUID}&score=${newScore}`);
+        if(!response.ok) throw new Error("Error api updateScore");
+        const data = await response.json();
+        return data; // {message: "true"/"false", score: number}
+      } catch(e){
+        console.error("Error updateUserScoreIfNeeded:",e);
+        return null;
+      }
     }
 
+    async function onGameOver(){
+      if(isUserRegistered){
+        const data = await updateUserScoreIfNeeded(score);
+        if(data && data.message === 'true'){
+          userScore = score;
+          highestEl.innerText = userScore;
+          showModal("gameover","<br><strong>¡Felicitaciones! Superaste tu puntuación anterior.</strong>");
+        } else {
+          // No superó puntuación o error
+          showModal("gameover");
+        }
+      } else {
+        showModal("gameover");
+      }
+    }
+
+    // Firebase auth flow unchanged
     async function checkEmailRegistered(email) {
       try {
         const response = await fetch(`https://us-central1-number-ac729.cloudfunctions.net/checkEmailV1?email=${encodeURIComponent(email)}`);
         if(!response.ok) throw new Error("Error API");
         return await response.json();
-      } catch (err) {
-        console.error(err);
+      } catch(e) {
+        console.error(e);
         return null;
       }
     }
 
-    firebase.auth().onAuthStateChanged(async user => {
+    firebase.auth().onAuthStateChanged(async user=>{
       showModal("verifying");
 
-      if (user) {
+      if(user){
         userUID = user.uid;
         const data = await checkEmailRegistered(user.email);
-        if (data && data.IsEmailRegistered) {
+        if(data && data.IsEmailRegistered){
           isUserRegistered = true;
           userName = data.User || user.email || "Usuario";
           userScore = data.Score || 0;
@@ -542,11 +565,11 @@
           userName = "Invitado";
           userScore = 0;
           Swal.fire({
-            icon: "warning",
-            title: "Usuario no registrado",
-            text: "Tu cuenta no está registrada para progreso global. Puedes jugar sin registro o registrarte.",
-            confirmButtonText: "Aceptar"
-          }).then(() => {
+            icon:"warning",
+            title:"Usuario no registrado",
+            text:"Tu cuenta no está registrada para progreso global. Puedes jugar sin registro o registrarte.",
+            confirmButtonText:"Aceptar"
+          }).then(()=>{
             showModal("verifyResult");
           });
         }
@@ -559,9 +582,8 @@
       }
     });
 
-    // Pausar juego al cambiar pestaña o redimensionar ventana
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden && gameState === "playing") {
+      if(document.hidden && gameState === "playing"){
         stopGame();
         showModal("paused");
         gameState = "paused";
@@ -571,7 +593,7 @@
     window.addEventListener("resize", () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      if (gameState === "playing") {
+      if(gameState === "playing"){
         stopGame();
         showModal("paused");
         gameState = "paused";
