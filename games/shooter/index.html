@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Shooter 🎱</title>
-  <meta name="description" content="Shooter: dispara, evita que lleguen al centro las figuras y supera tu mejor puntuación.">
+  <meta name="description" content="Shooter: dispara, evita que lleguen al centro las figuras y gana el primer lugar!">
   <meta name="keywords" content="bubble shooter, juego, burbujas, puntuación, diversión, HTML5, juego móvil">
   <meta name="author" content="Samu330">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -15,29 +15,32 @@
   <meta property="og:site_name" content="Shooter 🎱">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Shooter 🎱">
-  <meta name="twitter:description" content="Shooter: dispara, evita que lleguen al centro las figuras y supera tu mejor puntuación.">
+  <meta name="twitter:description" content="SShooter: dispara, evita que lleguen al centro las figuras y gana el primer lugar!">
   <meta name="twitter:image" content="">
   <link rel="icon" href="https://png.pngtree.com/png-vector/20240821/ourmid/pngtree-transparent-ball-of-yarn-png-image_13359125.png" type="image/x-icon">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
   <div id="score">
-    <p>Puntos actuales: <span id="scoreEl">0</span></p>
-    <p>Tu mejor nivel: <span id="highestEl">0</span></p>
-  </div>
-  <div id="fpsCounter">FPS: 0</div>
-  <div id="gameOverEl">
+  <p>Puntos actuales: <span id="scoreEl">0</span></p>
+  <p>Tu mejor nivel: <span id="highestEl">0</span></p>
+</div>
+
+<div id="fpsCounter">FPS: 0</div>
+
+<div id="modalContainer" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
   <div>
-    <h1 id="modalTitle">¡Fin del juego!</h1>
-    <p id="modalMessage">Tu puntuación: <span id="finalScoreEl">0</span></p>
-    <button id="startBtn">Comenzar Juego</button>
-    <button id="restartBtn" class="restart" style="display: none;">Jugar de nuevo</button>
-    <button id="resumeBtn" style="display: none;">Reanudar Juego</button>
-    <!--<button id="resetBtn" class="reset">Reiniciar progreso</button>-->
-    <button id="homeBtn" class="home">Ir a la página principal</button>
+    <h1 id="modalTitle">Cargando...</h1>
+    <p id="modalMessage">Por favor espera.</p>
+    <div id="modalButtons"></div>
   </div>
-  </div>
-  <canvas></canvas>
+</div>
+
+<canvas></canvas>
   <script src="script.js"></script>
 </body>
 </html>
