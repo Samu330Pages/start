@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Facebook Downloader 📥</title>
+<meta name="description" content="Descarga videos de Facebook fácilmente. Soporte para múltiples calidades y rápida descarga." />
+<meta name="keywords" content="descargar videos facebook, facebook video downloader, fb video download, descargar video fb, fb downloader, video facebook, descargar" />
+<meta name="author" content="samu330.com" />
+<link rel="icon" href="icon.png" type="image/png" />
+
+<meta property="og:title" content="Facebook Downloader 📥" />
+<meta property="og:description" content="Descarga videos de Facebook fácilmente. Soporte para múltiples calidades y descarga rápida." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://samu330.com/fb/dl" />
+<meta property="og:image" content="https://raw.githubusercontent.com/Samu330Pages/start/refs/heads/main/fb/image.jpg" />
+<meta property="og:site_name" content="samu330.com" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Facebook Downloader 📥" />
+<meta name="twitter:description" content="Descarga videos de Facebook fácilmente. Soporte para múltiples calidades y rápida descarga." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Samu330Pages/start/refs/heads/main/fb/image.jpg" />
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+<header>
+  <i class="fab fa-facebook-square" style="color:#1877f2;"></i> Facebook Downloader
+</header>
+
+<div class="container" role="main" aria-label="Formulario para descargar videos de Facebook">
+  <div class="input-group">
+    <input type="text" id="videoUrl" aria-label="Pega el link del video de Facebook" placeholder="Pega aquí el link del video..." autocomplete="off" />
+    <button class="btn-paste" id="pasteBtn" title="Pegar link del portapapeles" aria-label="Pegar enlace del portapapeles">
+      <i class="fas fa-clipboard"></i>
+    </button>
+  </div>
+  <button id="downloadBtn" class="btn-download">
+    <i class="fas fa-download"></i> Descargar Video
+    <span class="loader" id="btnLoader" aria-hidden="true"></span>
+  </button>
+
+  <div class="preview" id="previewContainer" aria-live="polite" aria-atomic="true" style="display:none;">
+    <h3>Vista previa del video</h3>
+    <img id="thumbnail" src="" alt="Miniatura del video de facebook" />
+  </div>
+
+  <div class="video-links" id="videoLinksContainer" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<footer class="footer" aria-label="Pie de página">
+  &copy; 2025 samu330.com - Hecho con ❤️ para ti
+  <div class="social-links" aria-label="Redes sociales">
+    <a href="https://www.instagram.com/sm330.io" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.facebook.com/sm330.io" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://wa.me/5219984907794" target="_blank" rel="noopener" title="WhatsApp" aria-label="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+</footer>
+
+<script src="index.js"></script>
+
+</body>
+</html>
