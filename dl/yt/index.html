@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>YouTube Search & Download</title>
+<meta name="author" content="Samu330" />
+<meta name="keywords" content="YouTube, descarga, mp3, videos, audio, calidad, búsqueda" />
+<link rel="icon" href="icono.png" type="image/png" />
+<link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+
+<div id="modalOverlay"></div>
+
+<div class="container" role="main">
+  <h1><i class="fa-solid fa-circle-play"></i> YouTube Search & Download</h1>
+
+  <form id="searchForm" autocomplete="off" spellcheck="false" novalidate>
+    <div class="input-wrapper">
+      <input type="text" id="searchInput" maxlength="80" placeholder="YouTube link o realizar búsqueda..." aria-label="Input para link o búsqueda" />
+      <i id="clearInput" title="Limpiar contenido" class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Limpiar campo"></i>
+      <i id="pasteIcon" title="Pegar portapapeles" class="fa-solid fa-clipboard" role="button" tabindex="0" aria-label="Pegar texto"></i>
+    </div>
+    <button type="submit" id="searchBtn" aria-live="polite" aria-atomic="true" aria-relevant="text">
+      <i class="fa-solid fa-magnifying-glass"></i> Buscar
+    </button>
+  </form>
+
+  <div id="results"></div>
+</div>
+
+<div id="downloadOptions" role="dialog" aria-modal="true" aria-labelledby="videoTitle" tabindex="-1">
+  <img id="videoThumbnail" alt="Miniatura del video" />
+  <h3 id="videoTitle"></h3>
+
+  <div class="tabs" role="tablist" aria-label="Selector de tipo de descarga">
+    <div id="tabAudio" class="tab active" data-type="mp3" role="tab" tabindex="0" aria-selected="true" aria-controls="audioContent">Audio (mp3)</div>
+    <div id="tabVideo" class="tab" data-type="mp4" role="tab" tabindex="-1" aria-selected="false" aria-controls="videoContent">Video</div>
+  </div>
+
+  <div id="audioContent" role="tabpanel" aria-hidden="false" style="padding:0 5px 5px;">
+    <label>Formato disponible:</label>
+    <div style="margin: 5px 0 10px; color:#00ff99; font-weight:700;">MP3</div>
+  </div>
+
+  <div id="videoContent" role="tabpanel" aria-hidden="true" style="display:none; padding:0 5px 5px;">
+    <label for="videoQuality">Calidad de video:</label>
+    <select id="videoQuality" aria-label="Seleccione calidad del video">
+      <option value="144">144p</option>
+      <option value="240">240p</option>
+      <option value="360" selected>360p</option>
+      <option value="480">480p</option>
+      <option value="720">720p</option>
+      <option value="1080">1080p</option>
+    </select>
+  </div>
+
+  <div class="actions">
+    <button id="cancelDownload" class="cancel-btn" type="button">Cancelar</button>
+    <button id="startDownload" type="button">Descargar <i class="fa-solid fa-arrow-down-to-line"></i></button>
+  </div>
+</div>
+
+<main>
+  <footer>
+    &copy; 2025 samu330.com - Hecho con ❤️ para ti
+    <p>
+      <a href="https://facebook.com/sm330.io" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
+      <a href="https://instagram.com/sm330.io" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/5219984907794" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+    </p>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
