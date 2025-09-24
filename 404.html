@@ -1,82 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <title>Page Error</title>
-    <link rel="shortcut icon" href="https://vipvacaciones.com/wp-content/uploads/2022/06/Nubes-2.png" />
-    <meta name="description" content="NOT FOUND">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .page_404{
-            padding: 40px 0;
-            background: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        .page_404 img{
-            width: 100%;
-        }
-
-        .four_zero_four_bg{
-            background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
-            height: 400px;
-            background-position: center;
-        }
-
-        .four_zero_four_bg h1{
-            font-size: 80px;
-        }
-
-        .four_zero_four_bg h3{
-            font-size: 80px;
-        }
-
-        .link_404{
-            color: #fff!important;
-            padding: 10px 20px;
-            background: #39ac31;
-            margin: 20px 0;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .contant_box_404{
-            margin-top: -50px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <title>Página no encontrada</title>
+  <meta name="description" content="404 - Página no encontrada">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="https://vipvacaciones.com/wp-content/uploads/2022/06/Nubes-2.png">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      background: radial-gradient(1200px 800px at 50% -200px, #1f2937 0%, var(--bg) 60%);
+      color: var(--text);
+    }
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .code {
+      font-size: 88px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin: 0 0 12px 0;
+    }
+    .title {
+      font-size: 22px;
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+    .desc {
+      margin: 0 0 24px 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background .15s ease-in-out, transform .05s ease-in-out;
+      box-shadow: 0 6px 16px rgba(34,197,94,0.35);
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: translateY(1px); }
+  </style>
 </head>
 <body>
-    <script>
-        document.onkeydown = function(e) {
-            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 117)) {
-                alert('hehe (｡•̀ᴗ-)✧');
-                return false;
-            } else {
-                return true;
-            }
-        };
-    </script>
-    <script type='text/javascript'>
-        document.oncontextmenu = function(){return false}
-    </script>
-    <section class="page_404">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="col-sm-10 col-sm-offset-1 text-center">
-                        <div class="four_zero_four_bg">
-                            <h1>404</h1>
-                        </div>
-                        <div class="contant_box_404">
-                            <h3>Look like you're lost</h3>
-                            <p>The page you are looking for is not available!</p>
-                            <a href="index" class="link_404">Go to Home</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <main class="wrap" role="main" aria-labelledby="titulo-404">
+    <section class="card">
+      <div class="code" aria-hidden="true">404</div>
+      <h1 id="titulo-404" class="title">Página no encontrada</h1>
+      <p class="desc">La URL que buscas no existe o fue movida.</p>
+      <a class="btn" href="index.html">Ir al inicio</a>
     </section>
+  </main>
 </body>
 </html>
