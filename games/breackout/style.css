@@ -1,8 +1,7 @@
 * { 
     margin: 0; 
     padding: 0; 
-    box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
 }
 
 body { 
@@ -10,7 +9,6 @@ body {
     font-family: 'Arial', sans-serif;
     overflow: hidden;
     touch-action: none;
-    width: 100vw;
     height: 100vh;
 }
 
@@ -21,13 +19,6 @@ canvas {
     box-shadow: 0 0 50px #00f7ff;
     width: 100vw;
     height: 100vh;
-    
-    will-change: transform;
-    transform: translateZ(0);
-    image-rendering: crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: pixelated;
-    -webkit-font-smoothing: none;
 }
 
 .ui { 
