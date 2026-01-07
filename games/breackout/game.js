@@ -48,18 +48,22 @@ function handleTouch(e) {
 function resize() {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
+    
     canvas.width = Math.floor(rect.width * dpr);
     canvas.height = Math.floor(rect.height * dpr);
+    
     ctx.resetTransform();
     ctx.scale(dpr, dpr);
     
     gameWidth = rect.width - MARGIN * 2;
     gameHeight = rect.height - MARGIN * 2 - 60;
+    
     paddle.y = rect.height - 80;
     paddle.x = (gameWidth / 2) + MARGIN - paddle.width / 2;
     paddle.targetX = paddle.x;
     updatePaddleWidth();
     
+    // Reposicionar elementos
     if (balls[0]) {
         balls[0].x = paddle.x + paddle.width / 2;
         balls[0].y = paddle.y - balls[0].radius - 5;
@@ -324,6 +328,10 @@ function moveBalls() {
     if (checkWinCondition()) winGame();
 }
 
+function updatePaddleWidth() {
+    paddle.width = paddle.powerUps.wide ? paddle.baseWidth * 1.5 : paddle.baseWidth;
+}
+
 function resetBall() {
     ballLaunched = false;
     balls.length = 1;
@@ -518,6 +526,7 @@ function gameLoop(currentTime) {
 // INICIALIZACIÓN
 loadHighScore();
 initSound();
+resize();
 initBricks();
 resetBall();
 readyEl.style.display = 'block';
