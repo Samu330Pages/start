@@ -314,7 +314,7 @@ function moveBalls() {
             balls.splice(i, 1);
             if (balls.length === 0) {
                 lives--;
-                livesEl.textContent = '❤️'.repeat(lives) + '💔'.repeat(3 - lives);
+                livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
                 if (lives <= 0) gameOver();
                 else resetBall();
             }
