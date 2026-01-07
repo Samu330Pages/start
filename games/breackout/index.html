@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout</title>
+    <link rel="shortcut icon" href="https://pbs.twimg.com/media/FLA-tgKXsAIJzhn.jpg" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ui">
+        <div class="score" id="score">Puntos: 0</div>
+        <div id="highScore">Récord: 0</div>
+        <div class="lives" id="lives">❤️❤️❤️</div>
+    </div>
+    
+    <div class="ready" id="readyScreen">
+        <h2>⚽ ¡Listo!</h2>
+        <p>Toca <strong>CUALQUIER PARTE</strong> de la pantalla</p>
+        <button class="launch-btn" onclick="launchBall()">🚀 LANZAR</button>
+    </div>
+    
+    <div class="game-over" id="gameOver">
+        <h2>💥 ¡Game Over!</h2>
+        <p id="finalScore">Puntos: 0</p>
+        <button class="restart-btn" onclick="restartGame()">🔄 Jugar de Nuevo</button>
+    </div>
+    
+    <div class="win" id="win" style="display: none;">
+        <h2>🏆 ¡Nivel Completado!</h2>
+        <p id="winScore">Puntos: 0</p>
+        <button class="restart-btn" onclick="restartGame()">🔄 Continuar</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="game.js"></script>
+</body>
+</html>
