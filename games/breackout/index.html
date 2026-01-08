@@ -3,16 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breakout</title>
-    <link rel="shortcut icon" href="https://pbs.twimg.com/media/FLA-tgKXsAIJzhn.jpg" />
-    <link rel="stylesheet" href="style.css">
+    <title>Breakout Samu330 - PELOTA FUNCIONA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            width: 100vw; 
+            height: 100vh;
+        }
+        
+    canvas { 
+    display: block; 
+    width: 100vw; 
+    height: 100vh;
+    background: #111;
+    border: 4px solid #00f7ff;
+    box-shadow: 0 0 50px #00f7ff;
+    
+    /* 🔥 NUEVO: Renderizado nítido HD */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    
+    /* 🔥 Anti-aliasing OFF para bordes perfectos */
+    -webkit-font-smoothing: none;
+}
+        .ui { 
+            position: fixed; top: 5px; left: 25px; right: 25px;
+            display: flex; justify-content: space-between;
+            color: white; font-size: 18px; font-weight: bold;
+            text-shadow: 0 0 20px #00f7ff; z-index: 5;
+        }
+        .game-over, .win, .ready { 
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); color: white;
+            padding: 40px; border-radius: 25px;
+            text-align: center; font-size: 28px;
+            display: none; z-index: 10; backdrop-filter: blur(10px);
+            border: 2px solid #00f7ff;
+        }
+        .launch-btn, .restart-btn {
+            background: linear-gradient(45deg, #00f7ff, #00d4ff);
+            color: #000; border: none; padding: 20px 40px;
+            border-radius: 50px; font-size: 20px; cursor: pointer;
+            margin-top: 20px; font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,247,255,0.4);
+        }
+        .launch-btn:active, .restart-btn:active { transform: scale(0.95); }
+        .restart-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+        }
+    </style>
 </head>
 <body>
     <div class="ui">
-        <div class="score" id="score">Puntos: 0</div>
-        <div id="highScore">Récord: 0</div>
-        <div class="lives" id="lives">❤️❤️❤️</div>
-    </div>
+    <div class="score" id="score">Puntos: 0</div>
+    <div id="highScore">Récord: 0</div>
+    <div class="lives" id="lives">❤️❤️❤️</div>
+</div>
     
     <div class="ready" id="readyScreen">
         <h2>⚽ ¡Listo!</h2>
@@ -23,17 +79,707 @@
     <div class="game-over" id="gameOver">
         <h2>💥 ¡Game Over!</h2>
         <p id="finalScore">Puntos: 0</p>
-        <button class="restart-btn" onclick="restartGame()">🔄 Jugar de Nuevo</button>
+        <button class="restart-btn" onclick="restartGame()">Jugar de Nuevo</button>
     </div>
     
-    <div class="win" id="win" style="display: none;">
-        <h2>🏆 ¡Nivel Completado!</h2>
+    <div class="win" id="win">
+        <h2>🏆 ¡Ganaste!</h2>
         <p id="winScore">Puntos: 0</p>
-        <button class="restart-btn" onclick="restartGame()">🔄 Continuar</button>
+        <button class="restart-btn" onclick="restartGame()">Jugar de Nuevo</button>
     </div>
 
     <canvas id="gameCanvas"></canvas>
 
-    <script src="game.js"></script>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const readyEl = document.getElementById('readyScreen');
+        const gameOverEl = document.getElementById('gameOver');
+        const winEl = document.getElementById('win');
+
+        let gameRunning = true;
+        let ballLaunched = false;
+        let score = 0;
+        let lives = 3;
+    let highScore = 0;
+let currentHighScore = 0;
+        let dragging = false;
+        let totalInitialBricks = 0;
+
+        const MARGIN = 25;
+        let gameWidth = 0;
+        let gameHeight = 0;
+const brickSounds = [];
+    let platformSound = null;
+    let gameOverSound = null;
+let soundReady = false;
+
+        // Paddle
+        const paddle = {
+            baseWidth: 120, width: 120, height: 20, x: 0, y: 0, targetX: 0, speed: 0.3,
+            powerUps: { wide: false, balls: 1, wideTimer: 0 }
+        };
+
+        // 🔥 PELOTAS - SIEMPRE EXISTE 1
+        const balls = [{
+            x: 0, y: 0, radius: 10, vx: 0, vy: 0, speed: 4.8, trail: []
+        }];
+
+        // Power-ups que caen
+        const powerUps = [];
+
+        const BRICK_ROWS = 8;
+        const BRICK_COLS = 14;
+        const brickWidth = 45;
+        const brickHeight = 20;
+        const brickPadding = 6;
+        const bricks = [];
+    
+    // 🔥 HIGH SCORE - GUARDADO LOCAL
+function loadHighScore() {
+    const saved = localStorage.getItem('breakoutHighScore');
+    highScore = saved ? parseInt(saved) : 0;
+    currentHighScore = highScore;
+    updateHighScoreUI();
+}
+    
+// 🔥 SONIDOS SIMPLIFICADOS - FUNCIONAN SIEMPRE
+function initSound() {
+    // Bricks aleatorios
+    const brickFiles = ['brick.mp3', 'brick1.mp3', 'brick2.mp3'];
+    brickFiles.forEach(file => {
+        const sound = new Audio(file);
+        sound.volume = 0.5;
+        sound.load(); // Forzar carga
+        brickSounds.push(sound);
+    });
+    
+    // Paddle
+    platformSound = new Audio('plataform.mp3');
+    platformSound.volume = 0.4;
+    platformSound.load();
+    
+    // 🔥 GAME OVER SOUND
+gameOverSound = new Audio('game-over.mp3');
+gameOverSound.volume = 0.7; // Más fuerte para dramatismo
+gameOverSound.load();
+    
+    // 🔥 FORZAR READY después de 500ms (funciona perfecto)
+    setTimeout(() => {
+        soundReady = true;
+        console.log('🔊 ¡SONIDOS ACTIVADOS!');
+    }, 500);
+}
+
+function saveHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        currentHighScore = highScore;
+        localStorage.setItem('breakoutHighScore', highScore);
+        console.log(`🏆 ¡NUEVO RECORD! ${highScore}`);
+        showNewRecord();
+    }
+}
+
+function updateHighScoreUI() {
+    const highScoreEl = document.getElementById('highScore');
+    if (highScoreEl) {
+        highScoreEl.textContent = `Récord: ${highScore.toLocaleString()}`;
+    }
+}
+
+function showNewRecord() {
+    // Efecto visual rápido de nuevo récord
+    const scoreEl = document.getElementById('score');
+    scoreEl.style.color = '#ffd700';
+    scoreEl.style.textShadow = '0 0 20px #ffd700';
+    setTimeout(() => {
+        scoreEl.style.color = 'white';
+        scoreEl.style.textShadow = '0 0 20px #00f7ff';
+    }, 2000);
+}
+
+        function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    
+    // 🔥 HD: Canvas a resolución nativa
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    
+    // 🔥 FIX: Resetear scale ANTES de calcular dimensiones lógicas
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+    
+    // 🔥 Dimensiones LÓGICAS (coordenadas del juego)
+    gameWidth = rect.width - MARGIN * 2;
+    gameHeight = rect.height - MARGIN * 2 - 60;
+    paddle.y = rect.height - 80;
+    
+    paddle.x = (gameWidth / 2) + MARGIN - paddle.width / 2;
+    paddle.targetX = paddle.x;
+    updatePaddleWidth();
+    
+    if (balls[0]) {
+        balls[0].x = paddle.x + paddle.width / 2;
+        balls[0].y = paddle.y - balls[0].radius - 5;
+    }
+}
+        
+        window.addEventListener('resize', resize);
+        resize();
+
+        function updatePaddleWidth() {
+            paddle.width = paddle.powerUps.wide ? paddle.baseWidth * 1.5 : paddle.baseWidth;
+        }
+
+        // 🔥 INPUT - LANZAMIENTO FIJO
+        canvas.addEventListener('click', function(e) {
+            if (!ballLaunched && gameRunning) {
+                launchBall();
+            }
+        });
+
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            dragging = true;
+            paddle.targetX = Math.max(MARGIN + 10, Math.min(gameWidth + MARGIN - paddle.width - 10, x - paddle.width/2));
+            if (!ballLaunched && gameRunning) {
+                launchBall();
+            }
+        });
+
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            if (!dragging) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            paddle.targetX = Math.max(MARGIN + 10, Math.min(gameWidth + MARGIN - paddle.width - 10, x - paddle.width/2));
+        });
+
+        canvas.addEventListener('touchend', function() { dragging = false; });
+        canvas.addEventListener('mousedown', function() { dragging = true; });
+        canvas.addEventListener('mouseup', function() { dragging = false; });
+        
+        canvas.addEventListener('mousemove', function(e) {
+            if (dragging) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                paddle.targetX = Math.max(MARGIN + 10, Math.min(gameWidth + MARGIN - paddle.width - 10, x - paddle.width/2));
+            }
+        });
+
+        const keys = {};
+        window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+        // 🔥 3. FIX launchBall() - NO usa powerUps.balls
+function launchBall() {
+    loadHighScore();
+    console.log("🚀 LANZANDO PELOTA");
+    ballLaunched = true;
+    readyEl.style.display = 'none';
+    
+    // 🔥 SIEMPRE 1 PELOTA al inicio (power-ups se agregan después)
+    balls.length = 1;
+    balls[0] = {
+        x: paddle.x + paddle.width/2,
+        y: paddle.y - 15,
+        radius: 10,
+        vx: (Math.random() - 0.5) * 4,
+        vy: -4.8,
+        speed: 4.8,
+        trail: [],
+        id: 0
+    };
+}
+
+        function restartGame() {
+            loadHighScore();
+            console.log("🔄 RESTART");
+            gameRunning = true;
+            ballLaunched = false;
+            score = 0;
+            lives = 3;
+            paddle.powerUps = { wide: false, balls: 1, wideTimer: 0 };
+            balls.length = 1;
+            balls[0] = { x: 0, y: 0, radius: 10, vx: 0, vy: 0, speed: 4.8, trail: [] };
+            powerUps.length = 0;
+            
+            gameOverEl.style.display = 'none';
+            winEl.style.display = 'none';
+            readyEl.style.display = 'block';
+            
+            scoreEl.textContent = 'Puntos: 0';
+            livesEl.textContent = '❤️❤️❤️';
+            
+            resize();
+            initBricks();
+        }
+
+        function initBricks() {
+            bricks.length = 0;
+            totalInitialBricks = 0;
+            
+            const availableWidth = gameWidth - 40;
+            const brickTotalWidth = brickWidth + brickPadding;
+            const maxCols = Math.floor(availableWidth / brickTotalWidth);
+            const cols = Math.min(BRICK_COLS, maxCols);
+            const totalBricksWidth = cols * brickWidth + (cols - 1) * brickPadding;
+            const startX = MARGIN + (gameWidth - totalBricksWidth) / 2;
+            
+            for (let r = 0; r < BRICK_ROWS; r++) {
+                bricks[r] = [];
+                for (let c = 0; c < cols; c++) {
+                    const rand = Math.random();
+                    let hits, colorBase, points, powerUpChance;
+                    
+                    if (rand < 0.08) {
+                        hits = 4; colorBase = 0; points = 60; powerUpChance = 0.4;
+                    } else if (rand < 0.25) {
+                        hits = 3; colorBase = 25; points = 40; powerUpChance = 0.25;
+                    } else if (rand < 0.5) {
+                        hits = 2; colorBase = 45; points = 25; powerUpChance = 0.15;
+                    } else {
+                        hits = 1; colorBase = 120; points = 10; powerUpChance = 0.08;
+                    }
+                    
+                    const hasPowerUp = Math.random() < powerUpChance;
+                    const powerUpType = hasPowerUp ? Math.floor(Math.random() * 2) : -1;
+                    
+                    bricks[r][c] = {
+                        x: startX + c * (brickWidth + brickPadding),
+                        y: MARGIN + 40 + r * (brickHeight + 8),
+                        width: brickWidth,
+                        height: brickHeight,
+                        hits: hits,
+                        maxHits: hits,
+                        colorBase: colorBase,
+                        points: points,
+                        powerUp: powerUpType,
+                        hasPowerUp: hasPowerUp,
+                        status: 1
+                    };
+                    totalInitialBricks += hits;
+                }
+                for (let c = cols; c < BRICK_COLS; c++) {
+                    bricks[r][c] = { status: 0 };
+                }
+            }
+        }
+
+        function dropPowerUp(x, y, type) {
+            powerUps.push({
+                x: x, y: y, vy: 2, type: type, radius: 12, life: 300
+            });
+        }
+
+function collisionDetection() {
+    for (let r = 0; r < BRICK_ROWS; r++) {
+        for (let c = 0; c < BRICK_COLS; c++) {
+            const b = bricks[r][c];
+            if (b.status === 1 && b.hits > 0) {
+                for (let ball of balls) {
+                    if (ball.x + ball.radius > b.x && 
+                        ball.x - ball.radius < b.x + b.width &&
+                        ball.y + ball.radius > b.y && 
+                        ball.y - ball.radius < b.y + b.height) {
+                        
+                        b.hits = Math.max(0, b.hits - 1);
+                        console.log(`🔨 Brick ${r},${c}: ${b.hits}/${b.maxHits} hits`);
+                        
+                        score += b.points;
+scoreEl.textContent = `Puntos: ${score.toLocaleString()}`;
+updateHighScoreUI(); // Verificar récord en tiempo real
+if (score >= highScore) {
+    saveHighScore();
+}
+// 🔥 SONIDO ALEATORIO BRICK
+if (soundReady && brickSounds.length > 0) {
+    const randomSound = brickSounds[Math.floor(Math.random() * brickSounds.length)];
+    randomSound.currentTime = 0; // Reiniciar
+    randomSound.play().catch(e => {
+        // Silencioso si está bloqueado
+    });
+}
+                        
+                        // Color daño
+                        const damageRatio = b.hits / b.maxHits;
+                        b.colorBase += (1 - damageRatio) * 30;
+                        
+                        if (b.hits <= 0) {
+                            b.status = 0;
+                            if (b.hasPowerUp && b.powerUp >= 0) {
+                                dropPowerUp(b.x + b.width/2, b.y + b.height, b.powerUp);
+                            }
+                        }
+                        
+                        // Rebote real
+                        ball.vy *= -1;
+                        if (Math.abs(ball.x - (b.x + b.width/2)) < b.width/2) {
+                            ball.vx *= -1;
+                        }
+                        return; // Una colisión por frame
+                    }
+                }
+            }
+        }
+    }
+}
+
+function updatePowerUps() {
+    for (let i = powerUps.length - 1; i >= 0; i--) {
+        const pu = powerUps[i];
+        pu.y += pu.vy;
+        pu.life--;
+        pu.vy += 0.1;
+        
+        // Colisión paddle
+        if (pu.y + pu.radius > paddle.y && pu.y < paddle.y + paddle.height &&
+            pu.x > paddle.x && pu.x < paddle.x + paddle.width) {
+            
+            if (pu.type === 0) { // Wide
+                paddle.powerUps.wide = true;
+                paddle.powerUps.wideTimer = 480;
+                updatePaddleWidth();
+            } 
+            // 🔥 FIX MULTI-BOLA: AGREGAR PELOTA INMEDIATAMENTE
+            else if (pu.type === 1) {
+                paddle.powerUps.balls++;
+                // 🔥 CREAR PELOTA EXTRA AL INSTANTE
+                const newBall = {
+                    x: paddle.x + paddle.width / 2 + (Math.random() - 0.5) * 40,
+                    y: paddle.y - 15,
+                    radius: 10,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: -3,
+                    speed: 4.8,
+                    trail: [],
+                    id: balls.length
+                };
+                balls.push(newBall);
+                console.log(`⚽ +1 PELOTA! Total: ${balls.length}`);
+            }
+            powerUps.splice(i, 1);
+            continue;
+        }
+        
+        if (pu.y > canvas.height || pu.life <= 0) {
+            powerUps.splice(i, 1);
+        }
+    }
+    
+    if (paddle.powerUps.wide && paddle.powerUps.wideTimer > 0) {
+        paddle.powerUps.wideTimer--;
+        if (paddle.powerUps.wideTimer <= 0) {
+            paddle.powerUps.wide = false;
+            updatePaddleWidth();
+        }
+    }
+}
+
+        function checkWinCondition() {
+            let activeHits = 0;
+            for (let r = 0; r < BRICK_ROWS; r++) {
+                for (let c = 0; c < BRICK_COLS; c++) {
+                    if (bricks[r] && bricks[r][c] && bricks[r][c].status === 1) {
+                        activeHits += bricks[r][c].hits;
+                    }
+                }
+            }
+            return activeHits === 0;
+        }
+
+        function movePaddle() {
+            paddle.x += (paddle.targetX - paddle.x) * paddle.speed;
+            if (keys['arrowleft'] || keys['a']) paddle.targetX -= 15;
+            if (keys['arrowright'] || keys['d']) paddle.targetX += 15;
+            paddle.x = Math.max(MARGIN + 10, Math.min(gameWidth + MARGIN - paddle.width - 10, paddle.x));
+        }
+
+        function moveBalls() {
+            for (let i = balls.length - 1; i >= 0; i--) {
+                const ball = balls[i];
+                
+                const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+                if (speed > 0) {
+                    const ratio = ball.speed / speed;
+                    ball.vx *= ratio;
+                    ball.vy *= ratio;
+                }
+
+                ball.trail.push({x: ball.x, y: ball.y});
+                if (ball.trail.length > 8) ball.trail.shift();
+
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                const leftWall = MARGIN;
+const rightWall = gameWidth + MARGIN;
+const topWall = MARGIN;
+
+if (ball.x - ball.radius < leftWall) { 
+    ball.x = leftWall + ball.radius; 
+    ball.vx *= -1; 
+}
+if (ball.x + ball.radius > rightWall) { 
+    ball.x = rightWall - ball.radius; 
+    ball.vx *= -1; 
+}
+if (ball.y - ball.radius < topWall) { 
+    ball.y = topWall + ball.radius; 
+    ball.vy *= -1; 
+}
+
+                if (ball.y + ball.radius > paddle.y && ball.y < paddle.y + paddle.height &&
+    ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+    
+    // 🔥 SONIDO PADDLE
+    if (soundReady && platformSound) {
+        platformSound.currentTime = 0;
+        platformSound.play().catch(() => {});
+    }
+    
+    ball.y = paddle.y - ball.radius;
+    ball.vy *= -1;
+    const hitPos = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+    ball.vx += hitPos * 2.5;
+}
+
+                if (ball.y > gameHeight + MARGIN + 20) {
+                    balls.splice(i, 1);
+                    if (balls.length === 0) {
+                        lives--;
+                        livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
+                        if (lives <= 0) gameOver();
+                        else resetBall();
+                    }
+                }
+            }
+
+            if (checkWinCondition()) {
+    winGame();
+    return; // Salir del loop de pelotas para evitar problemas
+}
+        }
+
+        function resetBall() {
+            ballLaunched = false;
+            balls.length = 1;
+            balls[0] = {
+                x: paddle.x + paddle.width / 2,
+                y: paddle.y - 15,
+                radius: 10, vx: 0, vy: 0, speed: 4.8, trail: []
+            };
+        }
+
+        function gameOver() {
+    gameRunning = false;
+    
+    // 🔥 SONIDO GAME OVER
+    if (soundReady && gameOverSound) {
+        gameOverSound.currentTime = 0;
+        gameOverSound.play().catch(() => {});
+    }
+    
+    saveHighScore(); // Guardar récord
+    document.getElementById('finalScore').textContent = `Puntos: ${score.toLocaleString()}`;
+    if (score === highScore) {
+        document.getElementById('finalScore').innerHTML += '<br><span style="color: gold; font-size: 24px;">🏆 ¡NUEVO RÉCORD!</span>';
+    }
+    gameOverEl.style.display = 'block';
+}
+
+        function winGame() {
+    // 🔥 NUEVO: En vez de mostrar pantalla de victoria, regenerar bricks
+    console.log("🏆 ¡Nivel Completado! Generando nuevos bricks...");
+    
+    // Regenerar bricks manteniendo puntaje y vidas
+    initBricks();
+    
+    // Resetear pelotas a posición inicial (manteniendo las que existan por power-ups)
+    if (balls.length === 0) {
+        resetBall();
+    } else {
+        // Reposicionar pelotas existentes
+        for (let ball of balls) {
+            ball.x = paddle.x + paddle.width / 2;
+            ball.y = paddle.y - 15;
+            ball.vy = -ball.speed * 0.8; // Darle dirección hacia arriba
+            ball.vx = (Math.random() - 0.5) * 2; // Pequeño ángulo aleatorio
+        }
+    }
+    
+    // Asegurar que el juego siga corriendo
+    gameRunning = true;
+    ballLaunched = true;
+            updateHighScoreUI();
+    
+    // Ocultar pantallas de victoria si estaban visibles
+    winEl.style.display = 'none';
+}
+
+        function update() {
+    movePaddle();
+    
+    // 🔥 NUEVO: Mostrar nivel completado brevemente
+    if (checkWinCondition()) {
+        // Se manejará en winGame()
+    }
+    
+    updatePowerUps();
+    if (gameRunning) {
+        moveBalls();
+        collisionDetection();
+    }
+}
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingQuality = 'high';
+
+            ctx.strokeStyle = '#00f7ff';
+            ctx.shadowColor = '#00f7ff';
+            ctx.shadowBlur = 20;
+            ctx.lineWidth = 6;
+            ctx.strokeRect(MARGIN, MARGIN, gameWidth, gameHeight);
+            ctx.shadowBlur = 0;
+
+            // Bricks
+            for (let r = 0; r < BRICK_ROWS; r++) {
+                for (let c = 0; c < BRICK_COLS; c++) {
+                    const b = bricks[r][c];
+                    if (b.status === 1) {
+                        const damageRatio = b.hits / b.maxHits;
+                        const hue = (b.colorBase + (1 - damageRatio) * 40) % 360;
+                        ctx.shadowColor = `hsl(${hue}, 80%, 50%)`;
+                        ctx.shadowBlur = damageRatio < 0.5 ? 15 : 8;
+                        ctx.fillStyle = `hsl(${hue}, 80%, ${50 + (1-damageRatio)*20}%)`;
+                        
+                        ctx.lineWidth = b.maxHits > 2 ? 3 : 1.5;
+                        ctx.strokeStyle = `rgba(255,255,255,${0.9 - damageRatio * 0.4})`;
+                        
+                        ctx.fillRect(b.x, b.y, b.width, b.height);
+                        ctx.strokeRect(b.x, b.y, b.width, b.height);
+                        
+                        if (b.maxHits > 1) {
+                            ctx.fillStyle = 'white';
+                            ctx.font = `bold ${Math.max(12, b.width/3.2)}px Arial`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.shadowColor = 'black';
+                            ctx.shadowBlur = 6;
+                            ctx.fillText(b.hits, b.x + b.width/2, b.y + b.height/2);
+                            ctx.shadowBlur = 0;
+                        }
+                        
+                        if (b.hasPowerUp) {
+                            ctx.fillStyle = b.powerUp === 0 ? '#00ff88' : '#ffaa00';
+                            ctx.shadowColor = ctx.fillStyle;
+                            ctx.shadowBlur = 8;
+                            ctx.beginPath();
+                            ctx.arc(b.x + b.width - 8, b.y + 8, 5, 0, Math.PI*2);
+                            ctx.fill();
+                            ctx.shadowBlur = 0;
+                        }
+                        ctx.shadowBlur = 0;
+                    }
+                }
+            }
+
+            // Power-ups
+            for (let pu of powerUps) {
+                ctx.save();
+                ctx.shadowColor = pu.type === 0 ? '#00ff88' : '#ffaa00';
+                ctx.shadowBlur = 15;
+                
+                if (pu.type === 0) {
+                    ctx.fillStyle = '#00ff88';
+                    ctx.fillRect(pu.x - 15, pu.y - 8, 30, 16);
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('W', pu.x, pu.y);
+                } else {
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.beginPath();
+                    ctx.arc(pu.x, pu.y, pu.radius, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 12px Arial';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('×', pu.x, pu.y);
+                }
+                ctx.restore();
+            }
+
+            // Paddle
+            ctx.fillStyle = paddle.powerUps.wide ? '#00ff88' : '#00f7ff';
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 25;
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            ctx.shadowBlur = 0;
+
+            // Balls
+            for (let ball of balls) {
+                ctx.save();
+                for (let i = 0; i < ball.trail.length; i++) {
+                    const alpha = (i + 1) / ball.trail.length * 0.5;
+                    ctx.fillStyle = `rgba(255,100,100,${alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(ball.trail[i].x, ball.trail[i].y, ball.radius * 0.6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.translate(ball.x, ball.y);
+                if (!ballLaunched) {
+                    ctx.shadowColor = '#ffff00';
+                    ctx.shadowBlur = 30;
+                    ctx.fillStyle = '#ffff66';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, ball.radius + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.shadowColor = '#ff6b6b';
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = '#ff6b6b';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update() {
+            movePaddle();
+            updatePowerUps();
+            if (gameRunning) {
+                moveBalls();
+                collisionDetection();
+            }
+        }
+
+        // 🔥 INICIO
+    loadHighScore();
+    initSound();
+        initBricks();
+        resetBall();
+        readyEl.style.display = 'block';
+        gameLoop();
+    </script>
 </body>
 </html>
