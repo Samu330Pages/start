@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Fake</title>
+    <link rel="icon" type="image/webp" href="icon_02.webp">
+    <meta name="description"
+        content="Crea capturas de pantalla realistas de chats de WhatsApp. Generador de conversaciones falsas con modo oscuro, edición de mensajes, etiquetas y más ajustes.">
+    <meta name="keywords"
+        content="whatsapp fake, generador de chat, crear conversación falsa, fake whatsapp chat generator, samu330">
+    <meta name="author" content="Samu330">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tu-dominio.com/">
+    <meta property="og:title" content="Generador de Chats Falsos de WhatsApp - Samu330">
+    <meta property="og:description"
+        content="Crea y descarga capturas de pantalla de chats de WhatsApp personalizables.">
+    <meta property="og:image" content="preview.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Generador de Chats Falsos de WhatsApp">
+    <meta property="twitter:description" content="Herramienta gratuita para crear capturas de chats realistas.">
+    <meta property="twitter:image" content="preview.png">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.1.2/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700,300">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-js@3.6.0/lib/emoji.min.js"></script>
+</head>
+
+<body class="light-theme">
+
+    <div class="main-wrapper">
+        <div class="config-panel" id="config-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="config-title">Ajustes</h2>
+                <div id="theme-toggle" style="cursor:pointer;" onclick="toggleTheme()">
+                    <i id="theme-icon" class="fa-solid fa-moon" style="font-size: 24px;"></i>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <label>Contacto</label>
+                <input type="text" id="set-name" placeholder="Nombre" oninput="updateProfile()">
+
+                <label>Estado del contacto</label>
+                <select id="set-status" onchange="updateStatusLayout()">
+                    <option value="En línea">En línea</option>
+                    <option value="Escribiendo...">Escribiendo...</option>
+                    <option value="Grabando audio...">Grabando audio...</option>
+                    <option value="última vez hoy a las">Última vez...</option>
+                    <option value="">Ninguno (Vacío)</option>
+                </select>
+
+                <div id="last-seen-container" style="display: none; margin-top: 10px;">
+                    <label>Fecha y Hora</label>
+                    <input type="datetime-local" id="set-last-seen" oninput="updateProfile()">
+                </div>
+
+                <label>Foto de Perfil</label>
+                <div class="file-upload-wrapper">
+                    <label for="file-input" class="custom-file-upload">
+                        <i class="fa-solid fa-camera"></i> Seleccionar Imagen
+                    </label>
+                    <input type="file" id="file-input" accept="image/*">
+                </div>
+            </div>
+
+            <div id="cropper-modal"
+                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="max-width:90%; max-height:70vh; margin-bottom:20px;">
+                    <img id="image-to-crop" style="max-width:100%;">
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-main" onclick="cancelCrop()" style="background:#ea0038;">Cancelar</button>
+                    <button class="btn-main" onclick="applyCrop()">Recortar y Guardar</button>
+                </div>
+            </div>
+            <div class="config-section">
+                <label>Mensaje</label>
+                <textarea id="set-msg" maxlength="5000" placeholder="Escribe un mensaje..."
+                    oninput="updatePreview()"></textarea>
+
+                <div id="msg-preview-container" style="margin-top: 10px; margin-bottom: 20px;">
+                    <span style="font-size: 11px; font-weight: bold; color: #8696a0; text-transform: uppercase;">Vista
+                        previa:</span>
+
+                    <div id="preview-wrapper" style="display: flex; flex-direction: column; margin-top: 5px;">
+                        <div id="msg-preview-bubble" class="message sent-first"
+                            style="align-self: flex-end; margin: 0; min-width: 80px; width: fit-content;">
+                            <span id="preview-text-content" class="text-content"></span>
+                            <div class="metadata">
+                                <span class="time">12:00</span>
+                                <span id="preview-tick-icon" class="tick"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <label>Burbuja</label>
+                <select id="set-side">
+                    <option value="RIGHT">Derecha (Mío)</option>
+                    <option value="LEFT">Izquierda (Contacto)</option>
+                </select>
+
+                <label>Responder a:</label>
+                <select id="reply-to-msg">
+                    <option value="none">-- Ninguno --</option>
+                </select>
+
+                <label>Estado del mensaje (Si es mío)</label>
+                <select id="set-tick">
+                    <option value="sent">Enviado (Un tick)</option>
+                    <option value="received">Recibido (Dos ticks grises)</option>
+                    <option value="read">Leído (Dos ticks azules)</option>
+                </select>
+
+                <label>Fecha del Sistema (Opcional)</label>
+                <select id="set-system-date">
+                    <option value="">Ninguna (Solo mensaje)</option>
+                    <option value="Hoy">Hoy</option>
+                    <option value="Ayer">Ayer</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                    <option value="CUSTOM">Seleccionar fecha...</option>
+                </select>
+                <input type="date" id="custom-date-input" style="display:none; margin-top:5px;">
+
+                <label>Hora del Mensaje</label>
+                <input type="time" id="set-msg-time">
+
+                <button class="btn-main" onclick="processNewMessage()" style="margin-top:10px;">Añadir Mensaje</button>
+
+                <div class="config-group" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+                    <button class="btn-download" onclick="descargarCaptura()">
+                        <i class="fa-solid fa-camera"></i> Guardar Captura de Pantalla
+                    </button>
+                </div>
+            </div>
+            <button onclick="toggleConfig()" class="btn-close">Cerrar Ajustes</button>
+
+            <div class="config-footer"
+                style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center;">
+                <p style="font-size: 13px; color: #666; margin-bottom: 10px;">¿Tienes alguna duda o sugerencia?</p>
+                <a href="https://wa.me/529984907794?text=Hola!%20Tengo%20una%20pregunta/queja/sugerencia%20sobre%20el%20Generador"
+                    target="_blank" class="btn-contact">
+                    <i class="fa-brands fa-whatsapp"></i> Contáctame
+                </a>
+
+                <div class="copyright" style="margin-top: 25px; font-size: 11px; color: #999; letter-spacing: 1px;">
+                    &copy; 2024 - 2026 <b>Samu330</b>. Todos los derechos reservados.
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-area">
+            <div class="screen-container">
+                <div class="user-bar">
+                    <div class="back">
+                        <img id="icon-back" src="images/ic_arrow_back.webp">
+                    </div>
+                    <div class="avatar">
+                        <img id="avatar-img" src="images/avatar_contact.webp">
+                    </div>
+                    <div class="name">
+                        <span id="name">Contacto</span>
+                        <span class="status">En línea</span>
+                    </div>
+                    <div class="actions"><img id="icon-video" src="images/ic_videocam.webp"></div>
+                    <div class="actions"><img id="icon-call" src="images/ic_call.webp"></div>
+                    <div class="actions more-dots" onclick="toggleConfig()" style="cursor:pointer;">
+                        <div id="welcome-guide" class="welcome-guide">
+                            <div class="guide-arrow">
+                                <span>¡Clic aquí para abrir configuraciones!</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                        <i class="zmdi zmdi-more-vert"></i>
+                    </div>
+                </div>
+
+                <div class="conversation">
+                    <div class="conversation-container" id="chat"></div>
+
+                    <div class="conversation-compose">
+                        <div class="input-box">
+                            <div class="icon-btn emoji"><img src="images/ic_sticker_smiley.png"></div>
+                            <input class="input-msg" placeholder="Mensaje" readonly>
+                            <div class="icon-btn attachment"><img src="images/delta_ic_attach.png"></div>
+                            <div class="icon-btn photo"><img src="images/ic_photo_camera.png"></div>
+                        </div>
+                        <button class="send-btn">
+                            <img src="images/allo_mic.png">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-overlay" class="modal-overlay" onclick="closeAllModals()"></div>
+
+    <div id="delete-modal" class="custom-modal">
+        <div class="modal-content">
+            <h4>¿Eliminar mensaje?</h4>
+            <p>Esta acción no se puede deshacer.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                <button class="btn-delete-confirm" id="confirm-delete-btn">Eliminar para mí</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="custom-modal">
+        <div class="modal-content">
+            <h4>Editar Mensaje</h4>
+            <div class="edit-field">
+                <label>Contenido del mensaje</label>
+                <textarea id="edit-text" rows="3"></textarea>
+            </div>
+            <div class="edit-field">
+                <label>Hora</label>
+                <input type="time" id="edit-time">
+            </div>
+            <div id="edit-ticks-container" class="edit-field">
+                <label>Estado (Ticks)</label>
+                <select id="edit-tick">
+                    <option value="sent">Enviado</option>
+                    <option value="delivered">Entregado</option>
+                    <option value="read">Leído</option>
+                </select>
+            </div>
+            <div class="edit-field">
+                <label>Fecha del Sistema (Separador)</label>
+                <select id="edit-system-date">
+                    <option value="">Sin cambio / Ninguna</option>
+                    <option value="Hoy">Hoy</option>
+                    <option value="Ayer">Ayer</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                    <option value="CUSTOM">Fecha personalizada...</option>
+                </select>
+                <input type="date" id="edit-custom-date" style="display:none; margin-top:5px;">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                <button class="btn-save" onclick="saveMessageEdit()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="date-modal" class="custom-modal">
+        <div class="modal-content">
+            <h4>Gestionar Fecha</h4>
+            <div class="edit-field">
+                <label>Texto de la fecha</label>
+                <select id="edit-date-select">
+                    <option value="Hoy">Hoy</option>
+                    <option value="Ayer">Ayer</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                    <option value="CUSTOM">Fecha personalizada...</option>
+                </select>
+                <input type="date" id="edit-date-custom" style="display:none; margin-top:5px;">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                <button class="btn-delete-confirm" style="background:#ea4335;"
+                    onclick="deleteSystemDate()">Eliminar</button>
+                <button class="btn-save" onclick="saveSystemDate()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
