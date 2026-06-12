@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subway Surfers World Tour - Selecciona tu Ciudad</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/img/FirstAvatar.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@400;600;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle, #2575fc 0%, #1a2a6c 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(90px, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 40px 20px;
+            border-radius: 24px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+            border: 4px solid #ffcc00;
+        }
+
+        h1 {
+            font-family: 'Bungee', sans-serif;
+            font-size: 3rem;
+            color: #ffcc00;
+            text-shadow: 4px 4px 0px #ff3300, 7px 7px 0px #000;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ffcc;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid-countries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .card-country {
+            background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%);
+            border: 3px solid #fff;
+            border-radius: 18px;
+            padding: 25px 15px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-country:nth-child(2n) {
+            background: linear-gradient(135deg, #00ccff 0%, #0066ff 100%);
+        }
+        .card-country:nth-child(3n) {
+            background: linear-gradient(135deg, #b800ff 0%, #6e00ff 100%);
+        }
+
+        .card-country:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 12px 24px #ffcc00;
+            filter: brightness(1.1);
+        }
+
+        .card-country:active {
+            transform: scale(0.98);
+        }
+
+        .icon-city {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
+        }
+
+        .name-city {
+            font-family: 'Bungee', sans-serif;
+            font-size: 1.4rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000;
+            letter-spacing: 1px;
+        }
+
+        .name-tour {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffcc00;
+            margin-top: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        #game-container {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .btn-back {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ff3300;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            font-family: 'Bungee', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            z-index: 10000;
+            transition: transform 0.1s;
+        }
+
+        .btn-back:hover {
+            background: #ff5500;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="selection-screen">
+        <h1>Subway Surfers</h1>
+        <div class="subtitle">World Tour: Elige tu Destino</div>
+
+        <div class="grid-countries">
+            <div class="card-country" onclick="launchGame('mexico')">
+                <div class="icon-city">🌮</div>
+                <div class="name-city">México</div>
+                <div class="name-tour">World Tour</div>
+            </div>
+
+            <div class="card-country" onclick="launchGame('barcelona')">
+                <div class="icon-city">⚽</div>
+                <div class="name-city">Barcelona</div>
+                <div class="name-tour">World Tour</div>
+            </div>
+
+            <div class="card-country" onclick="launchGame('zurich')">
+                <div class="icon-city">🍫</div>
+                <div class="name-city">Zúrich</div>
+                <div class="name-tour">Default</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <button class="btn-back" onclick="exitGame()">← Volver al Menú</button>
+        <iframe id="game-frame" src=""></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'F12' || 
+                (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'i' || event.key === 'j')) || 
+                (event.ctrlKey && (event.key === 'U' || event.key === 'u')) ||
+                (event.ctrlKey && (event.key === 'S' || event.key === 's'))) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        const gameMaps = {
+            'mexico': 'mexico.html',
+            'barcelona': 'barcelona.html',
+            'zurich': 'zurich.html'
+        };
+
+        function launchGame(mapId) {
+            const targetUrl = gameMaps[mapId];
+            if (targetUrl) {
+                const frame = document.getElementById('game-frame');
+                const container = document.getElementById('game-container');
+                
+                frame.src = targetUrl;
+                container.style.display = 'block';
+                
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            }
+        }
+
+        function exitGame() {
+            const frame = document.getElementById('game-frame');
+            const container = document.getElementById('game-container');
+            
+            frame.src = '';
+            container.style.display = 'none';
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+    </script>
+</body>
+</html>
