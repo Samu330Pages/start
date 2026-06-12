@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Subway Surfers</title>
+    <title>Subway Surfers: Mexico</title>
     <link rel="icon" href="img/FirstAvatar.png">
 
     <base href="https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/">
@@ -14,6 +14,7 @@
     <script src="4399.z.js"></script>
 
     <script>
+        // CONFIGURACIÓN ACTUALIZADA PARA MÉXICO
         window.config = {
             loader: "unity",
             debug: false,
@@ -21,15 +22,15 @@
             minRatio: 9 / 16,
             title: "Subway Surfers: Mexico",
             unityVersion: "2019.4.18f1",
-            unityWebglBuildUrl: "Mexico3.json",
+            unityWebglBuildUrl: "Mexico3.json", // Cambiado a Mexico
             fileSize: 36,
             cachedDecompressedFileSizes: {
-                "ZurichNewPrivacy.asm.code.unityweb": 9078047,
-                "ZurichNewPrivacy.asm.framework.unityweb": 86375,
-                "ZurichNewPrivacy.asm.memory.unityweb": 956748,
-                "ZurichNewPrivacy.data.unityweb": 19164736,
-                "ZurichNewPrivacy.wasm.code.unityweb": 7282721,
-                "ZurichNewPrivacy.wasm.framework.unityweb": 90700
+                "Mexico.asm.code.unityweb": 9078047,
+                "Mexico.asm.framework.unityweb": 86375,
+                "Mexico.asm.memory.unityweb": 956748,
+                "Mexico.data.unityweb": 19164736,
+                "Mexico.wasm.code.unityweb": 7282721,
+                "Mexico.wasm.framework.unityweb": 90700
             }
         };
 
@@ -124,9 +125,10 @@
 
                 setupXHRInterceptor();
 
+                // ARCHIVOS CAMBIADOS PARA MÉXICO
                 const filesToMerge = [
-                    "Mexico3.data.unityweb",
-                    "Mexico3.wasm.code.unityweb"
+                    "Mexico.data.unityweb",
+                    "Mexico.wasm.code.unityweb"
                 ];
 
                 for (const filename of filesToMerge) {
