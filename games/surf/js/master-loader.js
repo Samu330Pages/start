@@ -13,7 +13,7 @@ if (!window.config.unityWebglLoaderUrl) {
                 "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/UnityLoader.2019.2.js";
             break;
         default:
-            window.config.unityWebglLoaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/UnityLoader.js";
+            window.config.unityWebglLoaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/UnityLoader.2019.2.js";
     }
 }
 
