@@ -1,0 +1,16 @@
+{
+  "companyName": "Kiloo",
+  "productName": "Subway Surfers",
+  "productVersion": "1.0",
+  "dataUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.data.unityweb",
+  "wasmCodeUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.wasm.code.unityweb",
+  "wasmFrameworkUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.wasm.framework.unityweb",
+  "asmCodeUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.asm.code.unityweb",
+  "asmFrameworkUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.asm.framework.unityweb",
+  "asmMemoryUrl": "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.asm.memory.unityweb",
+  "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+  "webglContextAttributes": {"preserveDrawingBuffer": false},
+  "splashScreenStyle": "Dark",
+  "backgroundColor": "#222428",
+  "cacheControl": {"default": "must-revalidate"}
+}
