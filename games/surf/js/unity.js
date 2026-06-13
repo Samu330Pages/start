@@ -15,7 +15,7 @@ var loaderScript = document.createElement("script");
 loaderScript.src = window.config.unityWebglLoaderUrl;
 
 loaderScript.onload = function() {
-    console.log("Motor de Unity detectado con éxito. Iniciando juego...");
+    console.log("Motor de Unity del CDN cargado con éxito. Iniciando instancia...");
     
     if (typeof UnityLoader !== "undefined") {
         var unityInstance = UnityLoader.instantiate("unity-container", window.config.unityWebglBuildUrl, {
@@ -34,13 +34,8 @@ loaderScript.onload = function() {
         });
         
         window.unityGame = unityInstance;
-
-        if (window.PokiSDK) {
-            window.PokiSDK.gameLoadingFinished();
-            window.PokiSDK.gameplayStart();
-        }
     } else {
-        console.error("Error crítico: El motor se descargó pero la variable 'UnityLoader' no está lista.");
+        console.error("Error crítico: El script del CDN cargó pero UnityLoader no está definido.");
     }
 };
 
