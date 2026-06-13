@@ -17,16 +17,6 @@ if (!window.config.unityWebglLoaderUrl) {
     }
 }
 
-window.PokiSDK = {
-    init: function() { return Promise.resolve(true); },
-    gameLoadingStart: function() {},
-    gameLoadingProgress: function() {},
-    gameLoadingFinished: function() {},
-    gameplayStart: function() {},
-    gameplayStop: function() {},
-    commercialBreak: function() { return Promise.resolve(true); },
-    rewardedBreak: function() { return Promise.resolve(true); }
-};
 var gameScript = document.createElement("script");
 gameScript.src = "js/unity.js"; 
 document.body.appendChild(gameScript);
