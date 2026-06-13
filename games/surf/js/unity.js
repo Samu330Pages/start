@@ -11,25 +11,14 @@ container.style.backgroundColor = "#222428";
 container.style.zIndex = "999999";
 document.body.appendChild(container);
 
-var cdnBaseUrl = "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/";
-
-var originalOpen = XMLHttpRequest.prototype.open;
-XMLHttpRequest.prototype.open = function(method, url, ...args) {
-    if (url.indexOf("Mexico3.") !== -1 || url.indexOf(".unityweb") !== -1 || url.indexOf(".json") !== -1) {
-        var filename = url.substring(url.lastIndexOf('/') + 1);
-        url = cdnBaseUrl + filename;
-    }
-    return originalOpen.call(this, method, url, ...args);
-};
-
 var loaderScript = document.createElement("script");
 loaderScript.src = window.config.unityWebglLoaderUrl;
 
 loaderScript.onload = function() {
-    console.log("Motor de Unity detectado con éxito. Iniciando simulación de entorno...");
+    console.log("Motor de Unity detectado con éxito. Iniciando juego...");
     
     if (typeof UnityLoader !== "undefined") {
-        var unityInstance = UnityLoader.instantiate("unity-container", "Mexico3.json", {
+        var unityInstance = UnityLoader.instantiate("unity-container", window.config.unityWebglBuildUrl, {
             onProgress: function(instance, progress) {
                 if (window.PokiSDK && typeof window.PokiSDK.gameLoadingProgress === "function") {
                     window.PokiSDK.gameLoadingProgress({ percentage: progress });
