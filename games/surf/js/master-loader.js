@@ -3,7 +3,7 @@ var scripts = document.getElementsByTagName("script"),
     scriptUrl = scripts[scripts.length - 1].src,
     root = scriptUrl.split("master-loader.js")[0],
     loaders = {
-        unity: "unity.js",
+        unity: "js/unity.js",
         "unity-beta": "unity-beta.js",
         "unity-2020": "unity-2020.js"
     };
@@ -16,7 +16,7 @@ if (!window.config.unityWebglLoaderUrl) {
         minor = versionSplit[1];
     switch (year) {
         case "2019":
-            window.config.unityWebglLoaderUrl = 1 === minor ? "UnityLoader.2019.1.js" : "UnityLoader.2019.2.js";
+            window.config.unityWebglLoaderUrl = 1 === minor ? "UnityLoader.2019.1.js" : "js/UnityLoader.2019.2.js";
             break;
         default:
             window.config.unityWebglLoaderUrl = "UnityLoader.js"
