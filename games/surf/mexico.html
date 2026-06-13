@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Subway Surfers: México</title>
-    <link rel="icon" href="js/FirstAvatar.png"> <meta charset="utf-8">
+    <link rel="icon" href="js/FirstAvatar.png"> 
+    <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style>
         html, body {
@@ -13,14 +14,13 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
-            background-color: #000;
+            background-color: #222428;
         }
     </style>
 
     <script src="js/poki-sdk.js"></script>
 
     <script>
-        // Configuración unificada para móviles y PC
         window.config = {
             loader: "unity",
             debug: false,
@@ -29,9 +29,11 @@
             title: "Subway Surfers: Mexico",
             unityVersion: "2019.1.18f1",
             
-            unityWebglBuildUrl: "Mexico3.json",
+            // Forzamos la URL directa del JSON de GitHub (Evita bloqueos de ruta local)
+            unityWebglBuildUrl: "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/Mexico3.json",
             
-            unityWebglLoaderUrl: "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/UnityLoader.2019.1.js",
+            // ¡EL TRUCO!: Le damos la URL absoluta del CDN directo que requiere esta versión
+            unityWebglLoaderUrl: "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/UnityLoader.2019.1.js",
             
             fileSize: 26,
             cachedDecompressedFileSizes: {
@@ -44,7 +46,6 @@
             }
         };
 
-        // Declaramos los disparadores listos para evitar bucles de carga
         window.mergedBlobUrls = {};
         window.assetsReady = true;
         window.assetsPrepared = true;
