@@ -3,7 +3,7 @@ var scripts = document.getElementsByTagName("script"),
     scriptUrl = scripts[scripts.length - 1].src,
     root = scriptUrl.split("master-loader.js")[0],
     loaders = {
-        unity: "js/unity.js",
+        unity: "unity.js",
         "unity-beta": "unity-beta.js",
         "unity-2020": "unity-2020.js"
     };
