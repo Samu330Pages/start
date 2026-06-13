@@ -11,14 +11,25 @@ container.style.backgroundColor = "#222428";
 container.style.zIndex = "999999";
 document.body.appendChild(container);
 
+var cdnBaseUrl = "https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/mexico/";
+
+var originalOpen = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function(method, url, ...args) {
+    if (url.indexOf("Mexico3.") !== -1 || url.indexOf(".unityweb") !== -1 || url.indexOf(".json") !== -1) {
+        var filename = url.substring(url.lastIndexOf('/') + 1);
+        url = cdnBaseUrl + filename;
+    }
+    return originalOpen.call(this, method, url, ...args);
+};
+
 var loaderScript = document.createElement("script");
 loaderScript.src = window.config.unityWebglLoaderUrl;
 
 loaderScript.onload = function() {
-    console.log("Motor de Unity detectado y verificado con éxito.");
+    console.log("Motor de Unity detectado con éxito. Iniciando simulación de entorno...");
     
     if (typeof UnityLoader !== "undefined") {
-        var unityInstance = UnityLoader.instantiate("unity-container", window.config.unityWebglBuildUrl, {
+        var unityInstance = UnityLoader.instantiate("unity-container", "Mexico3.json", {
             onProgress: function(instance, progress) {
                 if (window.PokiSDK && typeof window.PokiSDK.gameLoadingProgress === "function") {
                     window.PokiSDK.gameLoadingProgress({ percentage: progress });
@@ -40,7 +51,7 @@ loaderScript.onload = function() {
             window.PokiSDK.gameplayStart();
         }
     } else {
-        console.error("Error crítico: El motor se descargó pero la variable 'UnityLoader' sigue sin estar lista.");
+        console.error("Error crítico: El motor se descargó pero la variable 'UnityLoader' no está lista.");
     }
 };
 
