@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subway Surfers World Tour - Selecciona tu Ciudad</title>
+    <title>Subway Surfers World Tour</title>
     <link rel="icon" href="https://cdn.jsdelivr.net/gh/bubbls/subwaysurfersmerge/img/FirstAvatar.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@400;600;800&display=swap');
@@ -59,7 +59,7 @@
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             text-align: center;
             background: rgba(0, 0, 0, 0.4);
             padding: 40px 20px;
@@ -68,29 +68,62 @@
             border: 4px solid #ffcc00;
         }
 
-        h1 {
-            font-family: 'Bungee', sans-serif;
-            font-size: 3rem;
-            color: #ffcc00;
-            text-shadow: 4px 4px 0px #ff3300, 7px 7px 0px #000;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        .logo-juego {
+            max-width: 100%;
+            width: 450px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(4px 4px 0px #ff3300) drop-shadow(6px 6px 0px #000);
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #00ffcc;
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
             margin-bottom: 40px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+
+        .btn-social {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-social:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 204, 0, 0.4);
+        }
+
+        .btn-ws {
+            background: #25D366;
+        }
+
+        .btn-fb {
+            background: #1877F2;
+        }
+
+        .btn-ig {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .btn-tk {
+            background: #000000;
+            border-color: #00f2fe;
         }
 
         .grid-countries {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 25px;
             width: 100%;
             padding: 10px;
@@ -100,7 +133,7 @@
             background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%);
             border: 3px solid #fff;
             border-radius: 18px;
-            padding: 25px 15px;
+            padding: 0 0 15px 0;
             cursor: pointer;
             position: relative;
             transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
@@ -108,10 +141,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            overflow: hidden;
         }
 
-        /* Colores alternados automáticos gracias al orden CSS */
         .card-country:nth-child(3n+1) {
             background: linear-gradient(135deg, #ff9900 0%, #ff5500 100%);
         }
@@ -134,27 +167,30 @@
             transform: scale(0.98);
         }
 
-        .icon-city {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.3));
+        .thumb-city {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 3px solid #fff;
+            margin-bottom: 12px;
         }
 
         .name-city {
             font-family: 'Bungee', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #fff;
             text-shadow: 2px 2px 0px #000;
             letter-spacing: 1px;
+            margin-top: 5px;
         }
 
         .name-tour {
             font-size: 0.85rem;
             font-weight: 600;
             color: #ffcc00;
-            margin-top: 5px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 10px;
+            margin-top: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px 12px;
             border-radius: 10px;
             text-transform: uppercase;
         }
@@ -203,103 +239,108 @@
 <body>
 
     <div class="container" id="selection-screen">
-        <h1>Subway Surfers</h1>
-        <div class="subtitle">World Tour: Elige tu Destino</div>
+        <img src="images/logo.png" alt="Subway Surfers Logo" class="logo-juego">
+        <div class="social-container">
+            <a href="https://wa.me/5219984907794" target="_blank" class="btn-social btn-ws">💬 WhatsApp</a>
+            <a href="https://facebook.com/sm330.io" target="_blank" class="btn-social btn-fb">📘 Facebook</a>
+            <a href="https://instagram.com/sm330.io" target="_blank" class="btn-social btn-ig">📸 Instagram</a>
+            <a href="https://tiktok.com/@samu330ofc3" target="_blank" class="btn-social btn-tk">🎵 TikTok</a>
+        </div>
 
         <div class="grid-countries">
             <div class="card-country" onclick="launchGame('zurich')">
-                <div class="icon-city">🍫</div>
-                <div class="name-city">Zúrich</div>
+                <img src="images/zurich.png" alt="Zúrich" class="thumb-city">
+                <div class="name-city">🍫 Zúrich</div>
                 <div class="name-tour">Default</div>
             </div>
 
             <div class="card-country" onclick="launchGame('mexico')">
-                <div class="icon-city">🌮</div>
-                <div class="name-city">México</div>
+                <img src="images/mexico.png" alt="México" class="thumb-city">
+                <div class="name-city">🌮 México</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('barcelona')">
-                <div class="icon-city">⚽</div>
-                <div class="name-city">Barcelona</div>
+                <img src="images/barcelona.png" alt="Barcelona" class="thumb-city">
+                <div class="name-city">⚽ Barcelona</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('beijing')">
-                <div class="icon-city">🏮</div>
-                <div class="name-city">Beijing</div>
+                <img src="images/beijing.png" alt="Beijing" class="thumb-city">
+                <div class="name-city">🏮 Beijing</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('berlin')">
-                <div class="icon-city">🥨</div>
-                <div class="name-city">Berlín</div>
+                <img src="images/berlin.png" alt="Berlín" class="thumb-city">
+                <div class="name-city">🥨 Berlín</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('buenos-aires')">
-                <div class="icon-city">🪗</div>
-                <div class="name-city">Buenos Aires</div>
+                <img src="images/buenos-aires.png" alt="Buenos Aires" class="thumb-city">
+                <div class="name-city">🪗 Buenos Aires</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('havana')">
-                <div class="icon-city">🏝️</div>
-                <div class="name-city">Havana</div>
+                <img src="images/havana.png" alt="Havana" class="thumb-city">
+                <div class="name-city">🏝️ Havana</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('houston')">
-                <div class="icon-city">🚀</div>
-                <div class="name-city">Houston</div>
+                <img src="images/houston.png" alt="Houston" class="thumb-city">
+                <div class="name-city">🚀 Houston</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('iceland')">
-                <div class="icon-city">🏔️</div>
-                <div class="name-city">Islandia</div>
+                <img src="images/iceland.png" alt="Islandia" class="thumb-city">
+                <div class="name-city">🌋 Islandia</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('london')">
-                <div class="icon-city">💂</div>
-                <div class="name-city">Londres</div>
+                <img src="images/london.png" alt="Londres" class="thumb-city">
+                <div class="name-city">💂 Londres</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('miami')">
-                <div class="icon-city">🏖️</div>
-                <div class="name-city">Miami</div>
+                <img src="images/miami.png" alt="Miami" class="thumb-city">
+                <div class="name-city">🏖️ Miami</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('monaco')">
-                <div class="icon-city">🏎️</div>
-                <div class="name-city">Mónaco </div>
+                <img src="images/monaco.png" alt="Mónaco" class="thumb-city">
+                <div class="name-city">🏎️ Mónaco</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('new-orleans')">
-                <div class="icon-city">👻</div>
-                <div class="name-city">Nueva Orleans</div>
+                <img src="images/new-orleans.png" alt="Nueva Orleans" class="thumb-city">
+                <div class="name-city">👻 Nueva Orleans</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('san-francisco')">
-                <div class="icon-city">🌉</div>
-                <div class="name-city">San Francisco</div>
+                <img src="images/san-francisco.png" alt="San Francisco" class="thumb-city">
+                <div class="name-city">🌉 San Francisco</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('st-petersburg')">
-                <div class="icon-city">🕌</div>
-                <div class="name-city">San Petersburgo</div>
+                <img src="images/st-petersburg.png" alt="San Petersburgo" class="thumb-city">
+                <div class="name-city">🕌 San Petersburgo</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
             <div class="card-country" onclick="launchGame('winter-holiday')">
-                <div class="icon-city">☃️</div>
-                <div class="name-city">vacaciones de invierno</div>
+                <img src="images/winter-holiday.png" alt="Vacaciones de Invierno" class="thumb-city">
+                <div class="name-city">☃️ Vacaciones de Invierno</div>
                 <div class="name-tour">World Tour</div>
             </div>
 
