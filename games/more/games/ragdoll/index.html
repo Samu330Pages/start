@@ -1,117 +1,110 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<Module>
 
-<head>
-  <script
-    src="https://cdn.jsdelivr.net/gh/laparda14/Ragdoll-archers@62504c9570ea720c6367e7debe1e110c68f77c2d/vs/gameloader-helper.js"></script>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Ragdoll Archers</title>
 
-  <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/styyyle.css">
+<!DOCTYPE html><html lang="en-us"><head>
+<script src="https://cdn.jsdelivr.net/gh/laparda14/Ragdoll-archers@62504c9570ea720c6367e7debe1e110c68f77c2d/vs/gameloader-helper.js"></script>
+<meta charset="utf-8">
+<script src=""></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ragdoll Archers</title>
 
-  <style type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/styyyle.css">
+
+<style type="text/css">
     #rotation-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #1a1a1a;
-      z-index: 999999;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 30px;
-      box-sizing: border-box;
+        display: none; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1a1a1a; 
+        z-index: 999999; 
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 30px;
+        box-sizing: border-box;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+        opacity: 1;
+        visibility: visible;
     }
-
+    #rotation-overlay.ocultar-aviso {
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
     .phone-animation {
-      font-size: 65px;
-      margin-bottom: 20px;
-      animation: rotateDevice 2s ease-in-out infinite;
+        font-size: 65px;
+        margin-bottom: 20px;
+        animation: rotateDevice 2s ease-in-out infinite;
     }
-
     .message-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
     }
-
     .message-desc {
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: #cccccc;
-      line-height: 1.5;
-      max-width: 290px;
+        font-size: 0.95rem;
+        font-weight: 400;
+        color: #cccccc;
+        line-height: 1.5;
+        max-width: 290px;
     }
-
     @keyframes rotateDevice {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      45% {
-        transform: rotate(-90deg);
-      }
-
-      100% {
-        transform: rotate(-90deg);
-      }
+        0% { transform: rotate(0deg); }
+        45% { transform: rotate(-90deg); }
+        100% { transform: rotate(-90deg); }
     }
-
     @media (max-width: 900px) and (orientation: portrait) {
-      #rotation-overlay {
-        display: flex;
-      }
+        #rotation-overlay {
+            display: flex;
+        }
     }
-  </style>
+</style>
+
 </head>
-
 <body>
-
-  <div id="rotation-overlay">
+  
+<div id="rotation-overlay">
     <div class="phone-animation">🔄📱</div>
     <div class="message-title">Mejor experiencia</div>
     <div class="message-desc">
-      Para disfrutar correctamente de este juego, por favor gira tu dispositivo en modo horizontal.
+        Para disfrutar correctamente de este juego, por favor gira tu dispositivo en modo horizontal.
     </div>
-  </div>
+</div>
 
-  <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas"></canvas>
-  </div>
-
-  <div id="loading-cover">
-    <div id="unity-loading-bar">
-      <div class="progress-spinner-container">
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
+</div>
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+</div>
+<div id="loading-cover">
+<div id="unity-loading-bar">
+<div class="progress-spinner-container">
+<div id="unity-progress-bar-empty">
+<div id="unity-progress-bar-full"></div>
+</div>
+</div>
+</div>
+</div>
+<script>
     const buildUrl = "Build";
-    const loaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.js.unityweb";
-    const config = {
-      dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.data.unityweb",
-      frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.framework.js.unityweb",
-      codeUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "Ericetto",
-      productName: "Ragdoll Archers",
-      productVersion: "0.1",
-    };
+    const loaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/ruffle@7117cc5006472d782b65d96abd375597d6273242/v11121212.js";
+const config = {
+  dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
+  frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
+  codeUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "Ericetto",
+  productName: "Ragdoll Archers",
+  productVersion: "0.1",
+};
+
 
     const container = document.querySelector("#unity-container");
     const canvas = document.querySelector("#unity-canvas");
@@ -122,7 +115,7 @@
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       container.className = "unity-mobile";
     }
-
+    
     loadingCover.style.display = "";
 
     const unityLoader = document.createElement("script");
@@ -139,7 +132,19 @@
       });
     };
     document.body.appendChild(unityLoader);
-  </script>
-</body>
 
-</html>
+    document.addEventListener("pointerdown", () => {
+      container.focus();
+      window.focus();
+      canvas.focus();
+    });
+
+    setTimeout(function() {
+        var aviso = document.getElementById("rotation-overlay");
+        if (aviso) {
+            aviso.classList.add("ocultar-aviso");
+        }
+    }, 5000);
+
+  </script>
+</body></html>
