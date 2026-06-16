@@ -56,14 +56,47 @@
         line-height: 1.5;
         max-width: 290px;
     }
+    
+    #fullscreen-btn {
+        position: fixed;
+        bottom: 15px;
+        left: 15px;
+        z-index: 9999; 
+        background-color: rgba(26, 26, 26, 0.85);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        transition: background-color 0.2s, transform 0.1s;
+    }
+    #fullscreen-btn:hover {
+        background-color: rgb(26, 26, 26);
+        transform: scale(1.05);
+    }
+    #fullscreen-btn:active {
+        transform: scale(0.95);
+    }
+
     @keyframes rotateDevice {
         0% { transform: rotate(0deg); }
         45% { transform: rotate(-90deg); }
         100% { transform: rotate(-90deg); }
     }
+
     @media (max-width: 900px) and (orientation: portrait) {
         #rotation-overlay {
             display: flex;
+        }
+        #fullscreen-btn {
+            display: none !important;
         }
     }
 </style>
@@ -78,6 +111,10 @@
         Para disfrutar correctamente de este juego, por favor gira tu dispositivo en modo horizontal.
     </div>
 </div>
+
+<button id="fullscreen-btn" onclick="toggleFullscreen()">
+    <span>⛶</span> Pantalla Completa
+</button>
 
 </div>
 <div id="unity-container" class="unity-desktop">
@@ -140,11 +177,44 @@ const config = {
     });
 
     setTimeout(function() {
+        forzarOcultarAviso();
+    }, 5000);
+
+    function forzarOcultarAviso() {
         var aviso = document.getElementById("rotation-overlay");
         if (aviso) {
             aviso.classList.add("ocultar-aviso");
         }
-    }, 5000);
+    }
 
+    function toggleFullscreen() {
+        var el = document.documentElement; 
+        
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            
+            forzarOcultarAviso();
+
+            if (el.requestFullscreen) {
+                el.requestFullscreen();
+            } else if (el.msRequestFullscreen) {
+                el.msRequestFullscreen();
+            } else if (el.mozRequestFullScreen) {
+                el.mozRequestFullScreen();
+            } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            // AL SALIR
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
   </script>
 </body></html>
