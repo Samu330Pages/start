@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Samu330</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
+    <meta property="og:image" content="https://moewalls.com/wp-content/uploads/2026/06/boa-hancock-starry-night-sky-one-piece-thumb.jpg" />
+    <meta name="description" content="👑">
+    <meta name="author" content="Samu330" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --text-primary: #1e293b; 
+            --text-secondary: #64748b; 
+            --accent: #4f46e5;
+            --card-bg: rgba(255, 255, 255, 0.35);
+            --card-border: rgba(255, 255, 255, 0.45);
+        }
+
+        body[data-theme="dark"] {
+            --text-primary: #f8fafc; 
+            --text-secondary: #94a3b8; 
+            --accent: #6366f1;
+            --card-bg: rgba(15, 23, 42, 0.5);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+
+        html, body { 
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Capa de fondo fija */
+        .bg-fixed-layer {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -10; object-fit: cover; pointer-events: none;
+        }
+
+        /* Contenedor de la app */
+        #app-root {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 120px 20px 40px 20px;
+            align-content: start;
+        }
+
+        /* Header flotante superior */
+        .app-bar {
+            position: fixed; 
+            top: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 960px;
+            z-index: 1000;
+            padding: 14px 24px;
+            border-radius: 40px;
+        }
+
+        .nav-container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .nav-title { font-size: 1.25rem; font-weight: 700; margin: 0; }
+        
+        /* Switcher de tema */
+        .switcher {
+            border: none; padding: 4px; background: rgba(0, 0, 0, 0.15);
+            border-radius: 30px; display: inline-flex; position: relative; gap: 4px; margin: 0;
+        }
+        body[data-theme="dark"] .switcher { background: rgba(255, 255, 255, 0.1); }
+        .switcher__legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        .switcher__option { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 32px; cursor: pointer; z-index: 2; }
+        .switcher__input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+        .switcher__icon { width: 18px; height: 18px; z-index: 3; transition: transform 0.3s ease; pointer-events: none; }
+        
+        .switcher__bg {
+            position: absolute; top: 4px; left: 4px; width: 36px; height: 32px;
+            background: #4f46e5; border-radius: 24px; z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        body:has(.switcher__input[value="light"]:checked) .switcher__bg { transform: translateX(0px); background: #4f46e5; }
+        body:has(.switcher__input[value="dark"]:checked) .switcher__bg { transform: translateX(40px); background: #fcd34d; }
+
+        /* Tarjetas de contenido */
+        .card-with-icon { 
+            padding: 35px 24px; 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 220px;
+        }
+
+        .card-icon { font-size: 2.8rem; color: var(--accent); margin-bottom: 12px; }
+        .card-title { font-size: 1.2rem; margin: 0 0 25px 0; font-weight: 600; }
+
+        /* Botones y enlaces con efecto de cristal líquido */
+        .liquid-btn {
+            color: var(--text-primary) !important;
+            font-size: 0.95rem; 
+            font-weight: 500; 
+            text-decoration: none; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 44px;
+            border-radius: 14px;
+        }
+        body[data-theme="dark"] .liquid-btn { color: #ffffff !important; }
+
+        /* Dock de Redes Sociales inferior */
+        .social-dock {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 20px auto 10px auto; 
+            width: 100%;
+        }
+        
+        .liquid-social {
+            width: 50px; 
+            height: 50px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--text-primary) !important; 
+            font-size: 1.3rem; 
+            text-decoration: none;
+            border-radius: 16px;
+        }
+        body[data-theme="dark"] .liquid-social { color: #ffffff !important; }
+
+        .footer { grid-column: 1 / -1; padding: 15px 20px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <img class="bg-fixed-layer" id="bgImage" src="" alt="Fondo">
+
+    <div id="app-root">
+        <nav class="app-bar full-glass-el" id="mainHeader" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 40, "chromAberration": 0.03}'>
+            <div class="nav-container">
+                <h1 class="nav-title">Samu330 🌮</h1>
+                <div class="switcher-wrap">
+                    <fieldset class="switcher">
+                        <legend class="switcher__legend">Elegir Tema</legend>
+                        <div class="switcher__bg"></div>
+                        <label class="switcher__option">
+                            <input class="switcher__input" type="radio" name="theme" value="light" id="theme-light">
+                            <svg class="switcher__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="color: #fff;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </label>
+                        <label class="switcher__option">
+                            <input class="switcher__input" type="radio" name="theme" value="dark" id="theme-dark">
+                            <svg class="switcher__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="color: #64748b;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </label>
+                    </fieldset>
+                </div>
+            </div>
+        </nav>
+
+        <div class="card-with-icon">
+            <i class="fa-brands fa-whatsapp card-icon"></i>
+            <h3 class="card-title">Whatsapp Fake</h3>
+            <a href="./whatsapp/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Generar chats</a>
+        </div>
+        
+        <div class="card-with-icon">
+            <i class="fa-solid fa-train-subway card-icon"></i>
+            <h3 class="card-title">Subway Surfers</h3>
+            <a href="./games/surf" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+        </div>
+
+        <div class="card-with-icon">
+            <i class="fa-solid fa-gamepad card-icon"></i>
+            <h3 class="card-title">Descubre más...</h3>
+            <a href="./games/more" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Entrar</a>
+        </div>
+        
+        <div class="card-with-icon">
+            <i class="fa-solid fa-arrow-pointer card-icon"></i>
+            <h3 class="card-title">Cactus Clicker</h3>
+            <a href="./Cactus/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+        </div>
+
+        <div class="card-with-icon">
+            <i class="fa-solid fa-bus card-icon"></i>
+            <h3 class="card-title">Driver Mad</h3>
+            <a href="./games/drive mad/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+        </div>
+
+        <div class="card-with-icon">
+            <i class="fa-solid fa-bowling-ball card-icon"></i>
+            <h3 class="card-title">Shooter Ball</h3>
+            <a href="./games/shooter/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+        </div>
+
+        <div class="social-dock">
+            <a href="https://wa.me/+5219984907794" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.facebook.com/sm330.io" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.instagram.com/sm330.io" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+
+        <footer class="footer">
+            <div style="font-size: 1.1rem; margin-bottom: 4px;">👑</div>
+            <p>© 2026 Samu330.</p>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { LiquidGlass } from 'https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js';
+
+        let liquidInstance = null;
+
+        // Inicialización y actualización limpia de la instancia WebGL
+        async function runLiquidEngine() {
+            if (liquidInstance) {
+                try { liquidInstance.destroy(); } catch(e) {}
+                liquidInstance = null;
+            }
+
+            const rootEl = document.getElementById('app-root');
+            const glassElements = document.querySelectorAll('.full-glass-el');
+
+            liquidInstance = await LiquidGlass.init({
+                root: rootEl,
+                glassElements: Array.from(glassElements),
+                defaults: { specular: 0.02, fresnel: 0.85 }
+            }).catch(() => {});
+
+            if (liquidInstance) liquidInstance.markChanged();
+        }
+
+        // Switch dinámico de temas alternando el fondo sin romper WebGL
+        window.updateTheme = function(themeName) {
+            document.body.dataset.theme = themeName;
+            localStorage.setItem('theme', themeName);
+            
+            const bgImg = document.getElementById('bgImage');
+            const targetSrc = themeName === 'light' 
+                ? 'https://images-ng.pixai.art/gi/orig/c6e93e74-48ab-4d16-a93c-cf5c5a0f68cd' 
+                : 'https://moewalls.com/wp-content/uploads/2026/06/boa-hancock-starry-night-sky-one-piece-thumb.jpg';
+            
+            if (bgImg) {
+                bgImg.src = targetSrc;
+                bgImg.onload = () => {
+                    setTimeout(() => { runLiquidEngine(); }, 100);
+                };
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.dataset.theme = savedTheme;
+            
+            const activeInput = document.getElementById(`theme-${savedTheme}`);
+            if (activeInput) activeInput.checked = true;
+
+            document.querySelectorAll('.switcher__input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    window.updateTheme(e.target.value);
+                });
+            });
+
+            const bgImg = document.getElementById('bgImage');
+            bgImg.src = savedTheme === 'light' 
+                ? 'https://images-ng.pixai.art/gi/orig/c6e93e74-48ab-4d16-a93c-cf5c5a0f68cd' 
+                : 'https://moewalls.com/wp-content/uploads/2026/06/boa-hancock-starry-night-sky-one-piece-thumb.jpg';
+
+            Promise.all([
+                document.fonts.ready,
+                new Promise(resolve => {
+                    if (bgImg.complete) resolve();
+                    else bgImg.addEventListener('load', resolve);
+                })
+            ]).then(() => {
+                setTimeout(() => {
+                    runLiquidEngine();
+                }, 200);
+            });
+
+            window.addEventListener('scroll', () => {
+                if (liquidInstance) liquidInstance.markChanged();
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                if (liquidInstance) liquidInstance.markChanged();
+            });
+        });
+    </script>
+</body>
+</html>
