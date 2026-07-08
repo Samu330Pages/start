@@ -9,6 +9,7 @@
     <meta name="description" content="👑">
     <meta name="author" content="Samu330" />
     
+    <!-- CDNs Globales Estables -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -17,16 +18,16 @@
             --text-primary: #1e293b; 
             --text-secondary: #64748b; 
             --accent: #4f46e5;
-            --card-bg: rgba(255, 255, 255, 0.35);
-            --card-border: rgba(255, 255, 255, 0.45);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: rgba(255, 255, 255, 0.25);
         }
 
         body[data-theme="dark"] {
             --text-primary: #f8fafc; 
             --text-secondary: #94a3b8; 
             --accent: #6366f1;
-            --card-bg: rgba(15, 23, 42, 0.5);
-            --card-border: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(15, 23, 42, 0.35);
+            --card-border: rgba(255, 255, 255, 0.05);
         }
 
         html, body { 
@@ -35,7 +36,6 @@
             padding: 0;
             background-color: #0f172a;
             touch-action: manipulation;
-            -webkit-text-size-adjust: 100%;
         }
         
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -52,37 +52,35 @@
             z-index: -10; object-fit: cover; pointer-events: none;
         }
 
-        /* Contenedor de la app */
+        /* Contenedor Raíz (Padre Directo de los elementos Glass) */
         #app-root {
             position: relative;
             min-height: 100vh;
             width: 100%;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 24px;
             max-width: 1000px;
             margin: 0 auto;
             padding: 120px 20px 40px 20px;
             align-content: start;
         }
 
-        /* Header flotante superior */
+        /* Header (Hijo directo de #app-root) */
         .app-bar {
-            position: fixed; 
-            top: 20px; 
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 960px;
-            z-index: 1000;
+            grid-column: 1 / -1;
+            width: 100%;
             padding: 14px 24px;
             border-radius: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            margin-bottom: 10px;
         }
 
         .nav-container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
         .nav-title { font-size: 1.25rem; font-weight: 700; margin: 0; }
         
-        /* Switcher de tema */
+        /* Switcher */
         .switcher {
             border: none; padding: 4px; background: rgba(0, 0, 0, 0.15);
             border-radius: 30px; display: inline-flex; position: relative; gap: 4px; margin: 0;
@@ -101,7 +99,7 @@
         body:has(.switcher__input[value="light"]:checked) .switcher__bg { transform: translateX(0px); background: #4f46e5; }
         body:has(.switcher__input[value="dark"]:checked) .switcher__bg { transform: translateX(40px); background: #fcd34d; }
 
-        /* Tarjetas de contenido */
+        /* Tarjetas con Efecto Líquido (Hijos directos de #app-root) */
         .card-with-icon { 
             padding: 35px 24px; 
             text-align: center; 
@@ -112,67 +110,69 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 24px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            min-height: 220px;
+            min-height: 230px;
         }
 
-        .card-icon { font-size: 2.8rem; color: var(--accent); margin-bottom: 12px; }
-        .card-title { font-size: 1.2rem; margin: 0 0 25px 0; font-weight: 600; }
+        .card-icon { font-size: 3rem; color: var(--accent); margin-bottom: 12px; }
+        .card-title { font-size: 1.3rem; margin: 0 0 15px 0; font-weight: 600; }
 
-        /* Botones y enlaces con efecto de cristal líquido */
-        .liquid-btn {
-            color: var(--text-primary) !important;
+        /* Botón plano estilizado dentro de la tarjeta */
+        .normal-btn {
+            color: #ffffff !important;
+            background: var(--accent);
             font-size: 0.95rem; 
             font-weight: 500; 
             text-decoration: none; 
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 150px;
-            height: 44px;
-            border-radius: 14px;
+            width: 160px;
+            height: 42px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease;
         }
-        body[data-theme="dark"] .liquid-btn { color: #ffffff !important; }
+        .normal-btn:active { transform: scale(0.96); }
 
-        /* Dock de Redes Sociales inferior */
+        /* Dock de Redes (Hijo directo de #app-root) */
         .social-dock {
             grid-column: 1 / -1;
             display: flex;
             justify-content: center;
-            gap: 14px;
+            gap: 16px;
             margin: 20px auto 10px auto; 
             width: 100%;
+            padding: 12px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
         }
         
-        .liquid-social {
-            width: 50px; 
-            height: 50px; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            color: var(--text-primary) !important; 
-            font-size: 1.3rem; 
+        .social-dock a {
+            color: var(--text-primary) !important;
+            font-size: 1.5rem;
             text-decoration: none;
-            border-radius: 16px;
+            transition: transform 0.2s ease;
         }
-        body[data-theme="dark"] .liquid-social { color: #ffffff !important; }
+        body[data-theme="dark"] .social-dock a { color: #ffffff !important; }
+        .social-dock a:active { transform: scale(0.9); }
 
-        .footer { grid-column: 1 / -1; padding: 15px 20px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+        .footer { grid-column: 1 / -1; padding: 20px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
+    <!-- Fondo de Pantalla -->
     <img class="bg-fixed-layer" id="bgImage" src="" alt="Fondo">
 
     <div id="app-root">
-        <nav class="app-bar full-glass-el" id="mainHeader" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 40, "chromAberration": 0.03}'>
+        <!-- Barra Superior (Glass) -->
+        <nav class="app-bar full-glass-el" id="mainHeader" data-config='{"blurAmount": 0.4, "refraction": 0.3, "cornerRadius": 40, "chromAberration": 0.02}'>
             <div class="nav-container">
                 <h1 class="nav-title">Samu330 🌮</h1>
                 <div class="switcher-wrap">
                     <fieldset class="switcher">
-                        <legend class="switcher__legend">Elegir Tema</legend>
+                        <legend class="switcher__legend">Tema</legend>
                         <div class="switcher__bg"></div>
                         <label class="switcher__option">
                             <input class="switcher__input" type="radio" name="theme" value="light" id="theme-light">
@@ -191,47 +191,49 @@
             </div>
         </nav>
 
-        <div class="card-with-icon">
+        <!-- Tarjetas del Grid (Cada una es Full Glass directo de la raíz) -->
+        <div class="card-with-icon full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-brands fa-whatsapp card-icon"></i>
             <h3 class="card-title">Whatsapp Fake</h3>
-            <a href="./whatsapp/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Generar chats</a>
+            <a href="./whatsapp/" class="normal-btn">Generar chats</a>
         </div>
         
-        <div class="card-with-icon">
+        <div class="card-with-icon class full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-solid fa-train-subway card-icon"></i>
             <h3 class="card-title">Subway Surfers</h3>
-            <a href="./games/surf" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+            <a href="./games/surf" class="normal-btn">Jugar</a>
         </div>
 
-        <div class="card-with-icon">
+        <div class="card-with-icon full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-solid fa-gamepad card-icon"></i>
             <h3 class="card-title">Descubre más...</h3>
-            <a href="./games/more" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Entrar</a>
+            <a href="./games/more" class="normal-btn">Entrar</a>
         </div>
         
-        <div class="card-with-icon">
+        <div class="card-with-icon full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-solid fa-arrow-pointer card-icon"></i>
             <h3 class="card-title">Cactus Clicker</h3>
-            <a href="./Cactus/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+            <a href="./Cactus/" class="normal-btn">Jugar</a>
         </div>
 
-        <div class="card-with-icon">
+        <div class="card-with-icon full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-solid fa-bus card-icon"></i>
             <h3 class="card-title">Driver Mad</h3>
-            <a href="./games/drive mad/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+            <a href="./games/drive mad/" class="normal-btn">Jugar</a>
         </div>
 
-        <div class="card-with-icon">
+        <div class="card-with-icon full-glass-el" data-config='{"blurAmount": 0.35, "refraction": 0.4, "cornerRadius": 24, "chromAberration": 0.02}'>
             <i class="fa-solid fa-bowling-ball card-icon"></i>
             <h3 class="card-title">Shooter Ball</h3>
-            <a href="./games/shooter/" class="liquid-btn full-glass-el" data-config='{"blurAmount": 0.25, "refraction": 0.5, "cornerRadius": 14, "chromAberration": 0.02}'>Jugar</a>
+            <a href="./games/shooter/" class="normal-btn">Jugar</a>
         </div>
 
-        <div class="social-dock">
-            <a href="https://wa.me/+5219984907794" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-whatsapp"></i></a>
-            <a href="https://www.facebook.com/sm330.io" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://www.instagram.com/sm330.io" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/" class="liquid-social full-glass-el" data-config='{"blurAmount": 0.2, "refraction": 0.6, "cornerRadius": 16, "chromAberration": 0.01}'><i class="fa-brands fa-tiktok"></i></a>
+        <!-- Dock de Redes (También Glass directo de la raíz) -->
+        <div class="social-dock full-glass-el" data-config='{"blurAmount": 0.4, "refraction": 0.3, "cornerRadius": 20, "chromAberration": 0.01}'>
+            <a href="https://wa.me/+5219984907794"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.facebook.com/sm330.io"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.instagram.com/sm330.io"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/"><i class="fa-brands fa-tiktok"></i></a>
         </div>
 
         <footer class="footer">
@@ -245,26 +247,27 @@
 
         let liquidInstance = null;
 
-        // Inicialización y actualización limpia de la instancia WebGL
-        async function runLiquidEngine() {
+        async function initLiquidEngine() {
             if (liquidInstance) {
-                try { liquidInstance.destroy(); } catch(e) {}
+                try { liquidInstance.destroy(); } catch(e){}
                 liquidInstance = null;
             }
 
             const rootEl = document.getElementById('app-root');
             const glassElements = document.querySelectorAll('.full-glass-el');
 
+            // Inicializar de forma completamente válida según la jerarquía estructural de la librería
             liquidInstance = await LiquidGlass.init({
                 root: rootEl,
                 glassElements: Array.from(glassElements),
-                defaults: { specular: 0.02, fresnel: 0.85 }
-            }).catch(() => {});
+                defaults: { specular: 0.03, fresnel: 0.85 }
+            }).catch(err => console.error("Error WebGL:", err));
 
-            if (liquidInstance) liquidInstance.markChanged();
+            if (liquidInstance) {
+                liquidInstance.markChanged();
+            }
         }
 
-        // Switch dinámico de temas alternando el fondo sin romper WebGL
         window.updateTheme = function(themeName) {
             document.body.dataset.theme = themeName;
             localStorage.setItem('theme', themeName);
@@ -277,7 +280,7 @@
             if (bgImg) {
                 bgImg.src = targetSrc;
                 bgImg.onload = () => {
-                    setTimeout(() => { runLiquidEngine(); }, 100);
+                    setTimeout(() => { initLiquidEngine(); }, 100);
                 };
             }
         };
@@ -308,7 +311,7 @@
                 })
             ]).then(() => {
                 setTimeout(() => {
-                    runLiquidEngine();
+                    initLiquidEngine();
                 }, 200);
             });
 
