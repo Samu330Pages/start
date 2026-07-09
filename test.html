@@ -1,65 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Samu330</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Agregamos esto para el contenedor de LiquidGlass */
+        /* Estilos base */
+        :root { --bg-primary: #f0f0f0; --text-primary: #2d2d2d; --accent: #667eea; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg-primary); color: var(--text-primary); margin: 0; }
+        
+        /* Contenedor para LiquidGlass */
         #glass-root {
             position: relative;
-            padding-top: 100px;
+            padding-top: 120px;
+            min-height: 100vh;
         }
-        /* Clase para los elementos que queremos que tengan efecto cristal */
+
+        /* Estilo para las tarjetas */
         .glass {
-            background: transparent !important; /* El efecto toma el control */
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 32px !important;
+            padding: 40px;
+            margin: 20px;
+            text-align: center;
         }
-        /* ... el resto de tus estilos ... */
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; max-width: 1000px; margin: 0 auto;
+        }
+
+        .card-with-icon { background: var(--bg-card); border-radius: 32px; padding: 40px; }
+        .card-icon { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
+        .neumo-button { display: inline-block; padding: 12px 24px; background: var(--accent); color: white; border-radius: 20px; text-decoration: none; margin-top: 15px; }
     </style>
 </head>
 <body>
-    <nav class="app-bar">...</nav>
 
-    <div id="glass-root" class="content-wrapper">
-        <div class="container">
-            <div class="cards-grid">
-                <div class="card-with-icon glass" data-config='{"blurAmount": 0.2, "cornerRadius": 32}'>
-                    <i class="fa-brands fa-whatsapp card-icon"></i>
-                    <h3 class="card-title">Whatsapp Fake</h3>
-                    <div class="card-buttons">
-                        <a href="./whatsapp/" class="neumo-button">Generar chats</a>
-                    </div>
-                </div>
-                
-                <div class="card-with-icon glass" data-config='{"blurAmount": 0.2, "cornerRadius": 32}'>
-                    <i class="fas fa-train-subway card-icon"></i>
-                    <h3 class="card-title">Subway Surfers</h3>
-                    <div class="card-buttons">
-                        <a href="./games/surf" class="neumo-button">Jugar</a>
-                    </div>
-                </div>
+    <div id="glass-root">
+        <div class="cards-grid">
+            <div class="card-with-icon glass" data-config='{"blurAmount": 0.3, "cornerRadius": 32}'>
+                <i class="fa-brands fa-whatsapp card-icon"></i>
+                <h3>Whatsapp Fake</h3>
+                <a href="./whatsapp/" class="neumo-button">Generar chats</a>
+            </div>
 
-                </div>
+            <div class="card-with-icon glass" data-config='{"blurAmount": 0.3, "cornerRadius": 32}'>
+                <i class="fas fa-train-subway card-icon"></i>
+                <h3>Subway Surfers</h3>
+                <a href="./games/surf" class="neumo-button">Jugar</a>
+            </div>
+
+            <div class="card-with-icon glass" data-config='{"blurAmount": 0.3, "cornerRadius": 32}'>
+                <i class="fas fa-arrow-pointer card-icon"></i>
+                <h3>Cactus Clicker</h3>
+                <a href="./Cactus/" class="neumo-button">Jugar</a>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { LiquidGlass } from 'https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js';
 
-        async function initGlass() {
-            const root = document.querySelector('#glass-root');
-            const glassElements = document.querySelectorAll('.glass');
-            
+        async function start() {
             try {
                 await LiquidGlass.init({
-                    root: root,
-                    glassElements: glassElements,
+                    root: document.querySelector('#glass-root'),
+                    glassElements: document.querySelectorAll('.glass'),
                 });
-                console.log("LiquidGlass inicializado con éxito");
-            } catch (error) {
-                console.error("Error al inicializar LiquidGlass:", error);
+            } catch (e) {
+                console.error("Error al cargar LiquidGlass:", e);
             }
         }
-
-        initGlass();
+        start();
     </script>
-
-    </body>
+</body>
 </html>
