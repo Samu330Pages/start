@@ -1,35 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        
-        /* Esta es la clase que da el efecto cristal "líquido" real */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 20px;
-            width: 90%;
-            max-width: 300px;
-            color: white;
-            text-align: center;
+        /* Agregamos esto para el contenedor de LiquidGlass */
+        #glass-root {
+            position: relative;
+            padding-top: 100px;
         }
+        /* Clase para los elementos que queremos que tengan efecto cristal */
+        .glass {
+            background: transparent !important; /* El efecto toma el control */
+        }
+        /* ... el resto de tus estilos ... */
     </style>
 </head>
 <body>
-    <div class="glass-card">
-        <h3>Whatsapp Fake</h3>
-        <p>Efecto cristal nativo</p>
+    <nav class="app-bar">...</nav>
+
+    <div id="glass-root" class="content-wrapper">
+        <div class="container">
+            <div class="cards-grid">
+                <div class="card-with-icon glass" data-config='{"blurAmount": 0.2, "cornerRadius": 32}'>
+                    <i class="fa-brands fa-whatsapp card-icon"></i>
+                    <h3 class="card-title">Whatsapp Fake</h3>
+                    <div class="card-buttons">
+                        <a href="./whatsapp/" class="neumo-button">Generar chats</a>
+                    </div>
+                </div>
+                
+                <div class="card-with-icon glass" data-config='{"blurAmount": 0.2, "cornerRadius": 32}'>
+                    <i class="fas fa-train-subway card-icon"></i>
+                    <h3 class="card-title">Subway Surfers</h3>
+                    <div class="card-buttons">
+                        <a href="./games/surf" class="neumo-button">Jugar</a>
+                    </div>
+                </div>
+
+                </div>
+        </div>
     </div>
-    <div class="glass-card">
-        <h3>Subway Surfers</h3>
-        <p>Efecto cristal nativo</p>
-    </div>
-</body>
+
+    <script type="module">
+        import { LiquidGlass } from 'https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js';
+
+        async function initGlass() {
+            const root = document.querySelector('#glass-root');
+            const glassElements = document.querySelectorAll('.glass');
+            
+            try {
+                await LiquidGlass.init({
+                    root: root,
+                    glassElements: glassElements,
+                });
+                console.log("LiquidGlass inicializado con éxito");
+            } catch (error) {
+                console.error("Error al inicializar LiquidGlass:", error);
+            }
+        }
+
+        initGlass();
+    </script>
+
+    </body>
 </html>
