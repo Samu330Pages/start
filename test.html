@@ -3,83 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samu330 - Liquid Glass</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>LiquidGlass Draggable</title>
     <style>
-        :root { --bg-primary: #1a1a1a; --text-primary: #ffffff; --accent: #667eea; }
-        body { font-family: 'Roboto', sans-serif; background: #0f0f0f; color: var(--text-primary); margin: 0; }
-        
-        /* Fondo para que el efecto de vidrio sea visible */
-        .background-stage {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+        body, html { margin: 0; padding: 0; overflow-x: hidden; }
+
+        #app {
+            position: relative;
+            width: 100vw;
+            height: 200vh; /* Altura para scroll */
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        #bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
             z-index: -1;
         }
 
-        #root { padding-top: 100px; min-height: 100vh; position: relative; }
-
-        .cards-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px; max-width: 1000px; margin: 0 auto; padding: 20px;
+        /* Elementos más pequeños */
+        .glass {
+            width: 150px;
+            height: 150px;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: grab; /* Indica que se puede arrastrar */
         }
-
-        /* Estilos base para las tarjetas glass */
-        .card-with-icon {
-            background: transparent !important;
-            padding: 40px; text-align: center; border-radius: 32px;
-            position: relative; z-index: 10;
-        }
-
-        .card-icon { font-size: 4rem; color: white; margin-bottom: 20px; }
-        .card-title { font-size: 1.5rem; margin-bottom: 20px; }
-
-        .neumo-button {
-            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
-            color: white; padding: 12px 24px; border-radius: 20px;
-            text-decoration: none; display: inline-block; transition: 0.3s;
-        }
-        .neumo-button:hover { background: rgba(255,255,255,0.4); }
     </style>
 </head>
 <body>
 
-    <div class="background-stage"></div>
+    <div id="app">
+        <img id="bg-image" src="https://picsum.photos/1920/1080" alt="Fondo">
 
-    <div id="root">
-        <div class="cards-grid">
-            <div class="card-with-icon glass">
-                <i class="fa-brands fa-whatsapp card-icon"></i>
-                <h3 class="card-title">Whatsapp Fake</h3>
-                <a href="#" class="neumo-button">Generar chats</a>
-            </div>
-            
-            <div class="card-with-icon glass">
-                <i class="fas fa-train-subway card-icon"></i>
-                <h3 class="card-title">Subway Surfers</h3>
-                <a href="#" class="neumo-button">Jugar</a>
-            </div>
+        <div class="glass" data-config='{"blurAmount": 0, "cornerRadius": 40, "floating": true}'>
+            <h3>Arrástrame</h3>
+        </div>
+
+        <div class="glass" data-config='{"brightness": -0.2, "blurAmount": 0.3, "cornerRadius": 20, "floating": true}'>
+            <h3>Yo también</h3>
+        </div>
+
+        <div class="glass" data-config='{"button": true, "cornerRadius": 20, "floating": true}'>
+            <h3>Click & Drag</h3>
         </div>
     </div>
 
-    <script type="module">
-        import { LiquidGlass } from 'https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js';
+<script type="module">
+    import { LiquidGlass } from 'https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js';
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const root = document.getElementById('root');
-            const glassElements = document.querySelectorAll('.glass');
-
-            // Inicialización de la librería
-            await LiquidGlass.init({
-                root: root,
-                glassElements: glassElements,
-                defaults: {
-                    blurAmount: 0.25,
-                    refraction: 0.6,
-                    edgeHighlight: 0.1,
-                    shadowOpacity: 0.3
-                }
-            });
+    window.addEventListener('load', async () => {
+        const instance = await LiquidGlass.init({
+            root: document.querySelector('#app'),
+            glassElements: document.querySelectorAll('.glass'),
         });
-    </script>
+
+        // REFRESH EN SCROLL:
+        // Cada vez que el usuario haga scroll, marcamos como cambiado
+        window.addEventListener('scroll', () => {
+            instance.markChanged(); 
+        }, { passive: true });
+    });
+</script>
+
 </body>
 </html>
