@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samu330 Web</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+     <style>
         :root {
             --bg-img: url('https://images-ng.pixai.art/gi/orig/c6e93e74-48ab-4d16-a93c-cf5c5a0f68cd');
             --card-bg: rgba(255, 255, 255, 0.15);
@@ -20,7 +20,17 @@
         }
 
         body { margin: 0; font-family: sans-serif; overflow-x: hidden; color: var(--text-color); }
-        #app { position: relative; width: 100vw; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 100px; padding-bottom: 50px; box-sizing: border-box; }
+        
+#app {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-items: center;
+    gap: 35px; /* Aumenta este valor para separar más las tarjetas entre sí */
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+
         
         #bg-image { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
@@ -29,11 +39,10 @@
         }
 
         .glass-header { 
+            grid-column: 1 / -1;
             position: fixed; top: 0; width: 100%; height: 60px; 
             display: flex; align-items: center; justify-content: space-between; 
             padding: 0 25px; box-sizing: border-box; z-index: 100;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .custom-dropdown { position: relative; cursor: pointer; }
@@ -47,37 +56,38 @@
         .theme-switch { width: 50px; height: 25px; background: rgba(255, 255, 255, 0.2); border-radius: 25px; cursor: pointer; display: flex; align-items: center; padding: 0 5px; }
         .dark-theme-active { background: #333; justify-content: flex-end; }
 
-        .card { width: 85%; max-width: 300px; height: 320px; margin: 40px 0; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .glass-btn { width: 120px; height: 45px; margin-top: -120px; margin-bottom: 40px; z-index: 10; cursor: pointer; color: var(--text-color); font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 25px; background: rgba(255, 255, 255, 0.1); }
-
-    .social-bar {
-    width: 250px !important;  /* Ajusta el ancho a tu gusto */
-    height: 60px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 15px !important;
-    margin-top: 20px !important;
-    background: rgba(255, 255, 255, 0.1) !important;
+        .card { 
+    margin-bottom: -50px !important; /* Acerca el botón a la tarjeta */
+    width: 300px; height: 150px;
+    display: flex; flex-direction: column; align-items: center; 
+    justify-content: center;
+}
+        
+.glass-btn { 
+    margin-top: 20px !important; /* Espacio real entre el botón y la tarjeta de abajo */
+    width: 150px; height: 45px; z-index: 10; cursor: pointer; color: var(--text-color); 
+    font-weight: bold; display: flex; align-items: center; justify-content: center; 
+    border-radius: 25px; background: rgba(255, 255, 255, 0.2); text-decoration: none;
 }
 
-.social-btn {
-    cursor: pointer;
-    font-size: 1.8rem;
-    color: var(--text-color);
-    transition: transform 0.2s;
-}
-.social-btn:hover { transform: scale(1.2); }
+        .social-bar {
+            grid-column: 1 / -1; margin-top: 20px;
+            width: 250px !important; height: 60px !important; display: flex !important;
+            justify-content: center !important; align-items: center !important;
+            gap: 15px !important; margin-top: 40px !important; background: rgba(255, 255, 255, 0.1) !important;
+        }
 
+        .social-btn { cursor: pointer; font-size: 1.8rem; color: var(--text-color); transition: transform 0.2s; }
+        .social-btn:hover { transform: scale(1.2); }
 
-    canvas { pointer-events: none !important; }
+        canvas { pointer-events: none !important; }
     </style>
 </head>
 <body>
 
     <div id="app">
         <div id="bg-image"></div>
-        <header class="glass-header">
+        <header class="glass-header" data-config='{"blurAmount": 1, "cornerRadius": 20}'>
             <span id="header-text" style="font-weight: bold;">Samu330 🌮</span>
             <div style="display: flex; gap: 10px;">
                 <div class="custom-dropdown">
@@ -90,11 +100,12 @@
                 <div id="theme-toggle" class="theme-switch"><i id="theme-icon" class="fa-solid fa-sun" style="color: #ffd700;"></i></div>
             </div>
         </header>
-
-        <div class="card"><i class="fab fa-whatsapp" style="font-size: 50px;"></i><h1 id="title-1">Whatsapp Fake</h1></div>
-        <a href="./whatsapp/" class="glass-btn" data-config='{"button": true, "cornerRadius": 25}'>Generar chats</a>
-        <div class="card"><i class="fas fa-train-subway" style="font-size: 50px;"></i><h1 id="title-2">Subway Surfers</h1></div>
-        <a href="./games/surf" class="glass-btn" data-config='{"button": true, "cornerRadius": 25}'>Jugar</a>
+        
+        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fab fa-whatsapp" style="font-size: 3rem"></i><h1>Whatsapp</h1></div>
+    <a href="#" class="glass-btn">Generar</a>
+    
+    <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1>Subway</h1></div>
+    <a href="#" class="glass-btn">Jugar</a>
         
         <div class="glass-btn social-bar">
     <div class="social-btn" data-url="https://facebook.com"><i class="fab fa-facebook-f"></i></div>
@@ -115,17 +126,17 @@
             en: { header: "Samu330 🌮", t1: "Title 1", s1: "Interesting subtitle.", t2: "Title 2", s2: "Another cool text.", btn: "Click" }
         };
 
-        // La función initEffects se queda igual, 
-// la librería detectará automáticamente el .glass-btn (la barra)
 async function initEffects() {
     document.querySelectorAll('canvas').forEach(c => c.remove());
     await new Promise(r => setTimeout(r, 300));
     
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('.glass-btn'),
+        // Aquí le decimos que agarre todos los elementos que cumplen la regla
+        glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, #app > .glass-header'),
     });
 }
+
 
 
 
