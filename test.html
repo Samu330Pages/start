@@ -63,7 +63,7 @@
 }
         
 .glass-btn { 
-    margin-top: 20px !important; /* Espacio real entre el botón y la tarjeta de abajo */
+    margin-top: 20px !important;
     width: 150px; height: 45px; z-index: 10; cursor: pointer; color: var(--text-color); 
     font-weight: bold; display: flex; align-items: center; justify-content: center; 
     border-radius: 25px; background: rgba(255, 255, 255, 0.2); text-decoration: none;
@@ -140,6 +140,10 @@
     <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1 id="tt-SF">Subway Surfers</h1>
     <button id="btn-SF" class="button" href="#">Jugar</button>
     </div>
+
+        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1 id="tt-MG">Descubre más juegos...</h1>
+    <button id="btn-MG" class="button" href="./games/more">Entrar</button>
+    </div>
         
         <div class="glass-btn social-bar">
     <div class="social-btn" data-url="https://facebook.com"><i class="fab fa-facebook-f"></i></div>
@@ -156,10 +160,10 @@
 
         let liquidInstance = null;
         const translations = {
-            es: { header: "Samu330 🌮", ttWAG: "WhatsApp Falso", ttSF: "Subway Surfers", btnSF: "Jugar", btnWAG: "Generar" },
-            en: { header: "Samu330 🌭", ttWAG: "WhatsApp Fake", ttSF: "Subway Surfers", btnSF: "Play", btnWAG: "Generate" },
-            in: { header: "Samu330 🇮🇩", ttWAG: "WhatsApp Palsu", ttSF: "Subway Surfers", btnSF: "Bermain", btnWAG: "Buat gambar" },
-            ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", btnSF: "开始游戏", btnWAG: "生成照片" },
+            es: { header: "Samu330 🌮", ttWAG: "WhatsApp Falso", ttSF: "Subway Surfers", ttMG: "Descubre más juegos...", btnSF: "Entrar", btnWAG: "Generar", btnMG: "Entrar", },
+            en: { header: "Samu330 🌭", ttWAG: "WhatsApp Fake", ttSF: "Subway Surfers", ttMG: "Discover more games...", btnSF: "Play", btnWAG: "Generate", btnMG: "Enter", },
+            in: { header: "Samu330 🇮🇩", ttWAG: "WhatsApp Palsu", ttSF: "Subway Surfers", ttMG: "Permainan lainnya...", btnSF: "Bermain", btnWAG: "Buat gambar", btnMG: "Memasuki", },
+            ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", ttMG: "其他游戏……", btnSF: "开始游戏", btnWAG: "生成照片", btnMG: "进入", },
         };
 
 async function initEffects() {
@@ -168,7 +172,6 @@ async function initEffects() {
     
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
-        // Aquí le decimos que agarre todos los elementos que cumplen la regla
         glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, #app > .glass-header'),
     });
 }
@@ -177,12 +180,10 @@ async function initEffects() {
 
 
     
-        // Click Redes Sociales
         document.querySelectorAll('.social-btn').forEach(btn => {
             btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
         });
 
-        // Lógica de Menús
         const langBtn = document.getElementById('lang-btn');
         const langMenu = document.getElementById('lang-menu');
         langBtn.addEventListener('click', () => {
@@ -202,8 +203,10 @@ async function initEffects() {
                 document.getElementById('header-text').innerText = translations[lang].header;
                 document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
                 document.getElementById('tt-SF').innerText = translations[lang].ttSF;
+                document.getElementById('tt-MG').innerText = translations[lang].ttMG;
                 document.getElementById('btn-SF').innerText = translations[lang].btnSF;
                 document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
+                document.getElementById('btn-MG').innerText = translations[lang].btnMG;
                 document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
                 
                 await initEffects();
