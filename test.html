@@ -23,11 +23,11 @@
         
 #app {
     display: flex;
-    flex-direction: column; /* Apila todo verticalmente */
-    align-items: center;    /* Centra horizontalmente */
-    padding: 100px 20px 20px 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 20px;
+    gap: 25px;
     min-height: 100vh;
-    gap: 25px; /* Espacio uniforme entre todo */
 }
 
 
@@ -57,13 +57,20 @@
 
 
 .card { 
-    width: 90%;
-    max-width: 400px;
+    width: 100%; 
+    max-width: 350px;
     min-height: 180px;
+    background: var(--card-bg);
+    border-radius: 65px;
+    backdrop-filter: blur(10px);
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    padding: 20px;
     text-align: center;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-        
+   
 .glass-btn { 
     margin-top: 20px !important;
     width: 150px; height: 45px; z-index: 10; cursor: pointer; color: var(--text-color); 
@@ -72,7 +79,6 @@
 }
 
 .social-bar {
-    margin-top: auto; /* Empuja la barra al fondo */
     width: 250px !important;
     height: 60px !important;
     display: flex !important;
@@ -175,25 +181,14 @@
 
 async function initEffects() {
     document.querySelectorAll('canvas').forEach(c => c.remove());
-    await new Promise(r => setTimeout(r, 400)); 
+    await new Promise(r => setTimeout(r, 300));
     
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('.card, .glass-header, .social-bar'),
+        glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, .glass-header'),
     });
 }
 
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        initEffects();
-    }, 500);
-});
-
-async function updateUI() {
-    await initEffects();
-}
     
         document.querySelectorAll('.social-btn').forEach(btn => {
             btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
@@ -224,7 +219,7 @@ async function updateUI() {
                 document.getElementById('btn-MG').innerText = translations[lang].btnMG;
                 document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
                 
-                updateUI();
+                initEffects();
             });
         });
 
@@ -233,10 +228,10 @@ async function updateUI() {
             document.getElementById('theme-toggle').classList.toggle('dark-theme-active');
             const icon = document.getElementById('theme-icon');
             icon.className = document.body.classList.contains('dark-theme') ? "fa-solid fa-moon" : "fa-solid fa-sun";
-            updateUI();
+            initEffects();
         });
 
-        window.addEventListener('load', updateUI);
+        window.addEventListener('load', initEffects);
         window.addEventListener('scroll', () => { 
             requestAnimationFrame(() => { if(liquidInstance) liquidInstance.markChanged(); });
         }, { passive: true });
