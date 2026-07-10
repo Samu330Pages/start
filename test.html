@@ -22,13 +22,12 @@
         body { margin: 0; font-family: sans-serif; overflow-x: hidden; color: var(--text-color); background: #000; }
         
 #app {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
-    justify-content: center;
-    gap: 30px;
+    display: flex;
+    flex-direction: column; /* Apila todo verticalmente */
+    align-items: center;    /* Centra horizontalmente */
     padding: 100px 20px 20px 20px;
     min-height: 100vh;
-    grid-template-rows: auto 1fr auto;
+    gap: 25px; /* Espacio uniforme entre todo */
 }
 
 
@@ -56,13 +55,13 @@
         .theme-switch { width: 50px; height: 25px; background: rgba(255, 255, 255, 0.2); border-radius: 25px; cursor: pointer; display: flex; align-items: center; padding: 0 5px; }
         .dark-theme-active { background: #333; justify-content: flex-end; }
 
-        .card { 
-    width: 320px;
-    height: 200px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    border-radius: 30px;
-            padding: 20px;
+
+.card { 
+    width: 90%;
+    max-width: 400px;
+    min-height: 180px;
     text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
         
 .glass-btn { 
@@ -73,11 +72,7 @@
 }
 
 .social-bar {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    justify-self: center; 
-    margin-bottom: 20px;
-    
+    margin-top: auto; /* Empuja la barra al fondo */
     width: 250px !important;
     height: 60px !important;
     display: flex !important;
@@ -179,17 +174,22 @@
         };
 
 async function initEffects() {
-    const oldCanvas = document.querySelectorAll('canvas');
-    oldCanvas.forEach(c => c.remove());
-
-    await new Promise(r => setTimeout(r, 100));
+    document.querySelectorAll('canvas').forEach(c => c.remove());
+    await new Promise(r => setTimeout(r, 400)); 
     
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('.card, .glass-btn, .glass-header'),
+        glassElements: document.querySelectorAll('.card, .glass-header, .social-bar'),
     });
 }
 
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        initEffects();
+    }, 500);
+});
 
 async function updateUI() {
     await initEffects();
