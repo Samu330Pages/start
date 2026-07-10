@@ -228,7 +228,7 @@ async function updateUI() {
             updateUI();
         });
 
-        window.addEventListener('load');
+        window.addEventListener('load', updateUI);
         window.addEventListener('scroll', () => { 
             requestAnimationFrame(() => { if(liquidInstance) liquidInstance.markChanged(); });
         }, { passive: true });
