@@ -79,16 +79,11 @@
 }
 
 .social-bar {
-    width: 250px !important;
-    height: 60px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 20px !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 30px;
-    backdrop-filter: blur(10px);
-}
+            grid-column: 1 / -1; margin-top: 20px;
+            width: 250px !important; height: 60px !important; display: flex !important;
+            justify-content: center !important; align-items: center !important;
+            gap: 15px !important; margin-top: 40px !important;
+        }
 
         .social-btn { cursor: pointer; font-size: 1.8rem; color: var(--text-color); transition: transform 0.2s; }
         .social-btn:hover { transform: scale(1.2); }
