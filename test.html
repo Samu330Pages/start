@@ -19,16 +19,15 @@
             --leng-bkg: rgba(0, 0, 0, 0.8)
         }
 
-        body { margin: 0; font-family: sans-serif; overflow-x: hidden; color: var(--text-color); }
+        body { margin: 0; font-family: sans-serif; overflow-x: hidden; color: var(--text-color); background: #000; }
         
 #app {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 35px;
-    padding-top: 100px;
-    padding-bottom: 50px;
-    max-width: 1200px;
+    gap: 30px;
+    padding: 100px 20px 50px 20px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -41,11 +40,10 @@
         }
 
         .glass-header { 
-            grid-column: 1 / -1;
-            position: fixed; top: 0; width: 100%; height: 60px; 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 25px; box-sizing: border-box; z-index: 100;
-        }
+    position: fixed; top: 0; width: 100%; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 25px; box-sizing: border-box; z-index: 1000;
+}
 
         .custom-dropdown { position: relative; cursor: pointer; }
         .lang-display { background: rgba(255, 255, 255, 0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; }
@@ -59,9 +57,12 @@
         .dark-theme-active { background: #333; justify-content: flex-end; }
 
         .card { 
-    width: 20rem; height: 13rem;
-    display: flex; flex-direction: column; align-items: center; 
-    justify-content: center;
+    width: 300px;
+    height: 180px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--card-bg);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
 }
         
 .glass-btn { 
@@ -72,11 +73,12 @@
 }
 
         .social-bar {
-            grid-column: 1 / -1; margin-top: 20px;
-            width: 250px !important; height: 60px !important; display: flex !important;
-            justify-content: center !important; align-items: center !important;
-            gap: 15px !important; margin-top: 40px !important; background: rgba(255, 255, 255, 0.1) !important;
-        }
+    width: 100% !important; 
+    max-width: 300px;
+    height: 60px !important;
+    display: flex !important; justify-content: center !important; align-items: center !important;
+    gap: 20px !important; margin-top: 20px !important;
+}
 
         .social-btn { cursor: pointer; font-size: 1.8rem; color: var(--text-color); transition: transform 0.2s; }
         .social-btn:hover { transform: scale(1.2); }
@@ -168,24 +170,22 @@
             ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", ttMG: "其他游戏……", btnSF: "开始游戏", btnWAG: "生成照片", btnMG: "进入", },
         };
 
-async function initEffects(forceRebuild = false) {
-    if (forceRebuild) {
-        document.querySelectorAll('canvas').forEach(c => c.remove());
-    }
+async function initEffects() {
+    const oldCanvas = document.querySelectorAll('canvas');
+    oldCanvas.forEach(c => c.remove());
+
+    await new Promise(r => setTimeout(r, 100));
     
-    if (!liquidInstance || forceRebuild) {
-        liquidInstance = await LiquidGlass.init({
-            root: document.querySelector('#app'),
-            glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, #app > .glass-header'),
-        });
-    } else {
-        liquidInstance.markChanged();
-    }
+    liquidInstance = await LiquidGlass.init({
+        root: document.querySelector('#app'),
+        glassElements: document.querySelectorAll('.card, .glass-btn, .glass-header'),
+    });
 }
 
 
-
-
+async function updateUI() {
+    await initEffects();
+}
     
         document.querySelectorAll('.social-btn').forEach(btn => {
             btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
@@ -216,7 +216,7 @@ async function initEffects(forceRebuild = false) {
                 document.getElementById('btn-MG').innerText = translations[lang].btnMG;
                 document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
                 
-                await initEffects(false);
+                updateUI();
             });
         });
 
@@ -225,12 +225,10 @@ async function initEffects(forceRebuild = false) {
             document.getElementById('theme-toggle').classList.toggle('dark-theme-active');
             const icon = document.getElementById('theme-icon');
             icon.className = document.body.classList.contains('dark-theme') ? "fa-solid fa-moon" : "fa-solid fa-sun";
-            await initEffects(false);
+            updateUI();
         });
 
-        window.addEventListener('load', () => {
-    setTimeout(() => initEffects(true), 500);
-});
+        window.addEventListener('load');
         window.addEventListener('scroll', () => { 
             requestAnimationFrame(() => { if(liquidInstance) liquidInstance.markChanged(); });
         }, { passive: true });
