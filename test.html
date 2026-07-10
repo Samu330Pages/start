@@ -73,10 +73,9 @@
 }
 
 .social-bar {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    grid-column: 1 / -1;
+    margin-top: auto;
+    margin-bottom: 20px;
     width: 250px !important;
     height: 60px !important;
     display: flex !important;
@@ -84,9 +83,9 @@
     align-items: center !important;
     gap: 20px !important;
     background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px);
     border-radius: 30px;
-    z-index: 999;
+    backdrop-filter: blur(10px);
+    justify-self: center;
 }
 
         .social-btn { cursor: pointer; font-size: 1.8rem; color: var(--text-color); transition: transform 0.2s; }
@@ -157,14 +156,15 @@
         <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1 id="tt-MG">Más juegos...</h1>
     <button id="btn-MG" class="button" href="./games/more">Entrar</button>
     </div>
-    </div>
 
-    <div class="glass-btn social-bar">
+        <div class="glass-btn social-bar">
     <div class="social-btn" data-url="https://facebook.com"><i class="fab fa-facebook-f"></i></div>
     <div class="social-btn" data-url="https://instagram.com"><i class="fab fa-instagram"></i></div>
     <div class="social-btn" data-url="https://wa.me/"><i class="fab fa-whatsapp"></i></div>
     <div class="social-btn" data-url="https://tiktok.com"><i class="fab fa-tiktok"></i></div>
 </div>
+        
+    </div>
 
     <script type="module">
         import { LiquidGlass } from './main/liquidglass.js';
@@ -184,7 +184,7 @@ async function initEffects() {
     await new Promise(r => setTimeout(r, 100));
     
     liquidInstance = await LiquidGlass.init({
-        root: document.body,
+        root: document.querySelector('#app'),
         glassElements: document.querySelectorAll('.card, .glass-btn, .glass-header'),
     });
 }
