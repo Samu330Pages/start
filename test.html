@@ -23,11 +23,13 @@
         
 #app {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
+    justify-content: center;
     gap: 35px;
     padding-top: 100px;
     padding-bottom: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 
@@ -166,14 +168,19 @@
             ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", ttMG: "其他游戏……", btnSF: "开始游戏", btnWAG: "生成照片", btnMG: "进入", },
         };
 
-async function initEffects() {
-    document.querySelectorAll('canvas').forEach(c => c.remove());
-    await new Promise(r => setTimeout(r, 300));
+async function initEffects(forceRebuild = false) {
+    if (forceRebuild) {
+        document.querySelectorAll('canvas').forEach(c => c.remove());
+    }
     
-    liquidInstance = await LiquidGlass.init({
-        root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, #app > .glass-header'),
-    });
+    if (!liquidInstance || forceRebuild) {
+        liquidInstance = await LiquidGlass.init({
+            root: document.querySelector('#app'),
+            glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, #app > .glass-header'),
+        });
+    } else {
+        liquidInstance.markChanged();
+    }
 }
 
 
@@ -209,7 +216,7 @@ async function initEffects() {
                 document.getElementById('btn-MG').innerText = translations[lang].btnMG;
                 document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
                 
-                await initEffects();
+                await initEffects(false);
             });
         });
 
@@ -218,10 +225,12 @@ async function initEffects() {
             document.getElementById('theme-toggle').classList.toggle('dark-theme-active');
             const icon = document.getElementById('theme-icon');
             icon.className = document.body.classList.contains('dark-theme') ? "fa-solid fa-moon" : "fa-solid fa-sun";
-            await initEffects();
+            await initEffects(false);
         });
 
-        window.addEventListener('load', initEffects);
+        window.addEventListener('load', () => {
+    setTimeout(() => initEffects(true), 500);
+});
         window.addEventListener('scroll', () => { 
             requestAnimationFrame(() => { if(liquidInstance) liquidInstance.markChanged(); });
         }, { passive: true });
