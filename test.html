@@ -38,10 +38,11 @@
             background-size: cover; background-position: center;
         }
 
-        .glass-header { 
-    position: fixed; top: 0; width: 100%; height: 60px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 25px; box-sizing: border-box; z-index: 1000;
+.glass-header { 
+            grid-column: 1 / -1;
+            position: fixed; top: 0; width: 100%; height: 60px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 25px; box-sizing: border-box; z-index: 100;
 }
 
         .custom-dropdown { position: relative; cursor: pointer; }
@@ -174,11 +175,9 @@
 
 async function initEffects() {
     document.querySelectorAll('canvas').forEach(c => c.remove());
-    await new Promise(r => setTimeout(r, 300));
-    
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('#app > .card, #app > .glass-btn, .glass-header'),
+        glassElements: document.querySelectorAll('#app > .card, #app > .glass-header, #app > .social-bar'),
     });
 }
 
