@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
      <style>
         :root {
-            --bg-img: url('https://images-ng.pixai.art/gi/orig/c6e93e74-48ab-4d16-a93c-cf5c5a0f68cd');
+            --bg-img: url('https://4kwallpapers.com/images/walls/thumbs_3t/10029.jpg');
             --card-bg: rgba(255, 255, 255, 0.15);
             --text-color: black;
             --leng-bkg: rgba(250, 250, 250, 0.8);
         }
         .dark-theme {
-            --bg-img: url('https://www.xtrafondos.com/wallpapers/castorice-de-juego-honkai-star-rail-14026.jpg');
+            --bg-img: url('https://4kwallpapers.com/images/walls/thumbs_3t/24473.png');
             --card-bg: rgba(0, 0, 0, 0.4);
             --text-color: #f0f0f0;
             --leng-bkg: rgba(0, 0, 0, 0.8)
@@ -57,8 +57,7 @@
         .dark-theme-active { background: #333; justify-content: flex-end; }
 
         .card { 
-    margin-bottom: -50px !important; /* Acerca el botón a la tarjeta */
-    width: 300px; height: 150px;
+    width: 20rem; height: 13rem;
     display: flex; flex-direction: column; align-items: center; 
     justify-content: center;
 }
@@ -81,6 +80,37 @@
         .social-btn:hover { transform: scale(1.2); }
 
         canvas { pointer-events: none !important; }
+    /* From Uiverse.io by SalladShooter */ 
+.button {
+  cursor: pointer;
+  padding: 0.4em;
+  font-size: 0.9em;
+  width: 6em;
+  aspect-ratio: 1/0.25;
+  color: white;
+  background: #010101;
+  background-size: cover;
+  background-blend-mode: overlay;
+  border-radius: 0.8em;
+  outline: 0.1em solid #353535;
+  border: 0;
+  box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 1em 0.45em rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #212121, #252525);
+  background: radial-gradient(
+    circle at bottom,
+    rgba(50, 100, 180, 0.5) 10%,
+    #212121 70%
+  );
+  outline: 0;
+}
+
     </style>
 </head>
 <body>
@@ -95,17 +125,21 @@
                     <div id="lang-menu" class="dropdown-menu">
                         <div class="lang-option" data-lang="es">Español</div>
                         <div class="lang-option" data-lang="en">English</div>
+                        <div class="lang-option" data-lang="in">Indo</div>
+                        <div class="lang-option" data-lang="ch">汉语</div>
                     </div>
                 </div>
                 <div id="theme-toggle" class="theme-switch"><i id="theme-icon" class="fa-solid fa-sun" style="color: #ffd700;"></i></div>
             </div>
         </header>
         
-        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fab fa-whatsapp" style="font-size: 3rem"></i><h1>Whatsapp</h1></div>
-    <a href="#" class="glass-btn">Generar</a>
+        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fab fa-whatsapp" style="font-size: 3rem"></i><h1 id="tt-WAG">WhatsApp Falso</h1>
+    <button id="btn-WAG" class="button" href="#">Generar</button>
+        </div>
     
-    <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1>Subway</h1></div>
-    <a href="#" class="glass-btn">Jugar</a>
+    <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1 id="tt-SF">Subway Surfers</h1>
+    <button id="btn-SF" class="button" href="#">Jugar</button>
+    </div>
         
         <div class="glass-btn social-bar">
     <div class="social-btn" data-url="https://facebook.com"><i class="fab fa-facebook-f"></i></div>
@@ -122,8 +156,10 @@
 
         let liquidInstance = null;
         const translations = {
-            es: { header: "Samu330 🌮", t1: "Título 1", s1: "Subtítulo interesante.", t2: "Título 2", s2: "Otro texto genial.", btn: "Click" },
-            en: { header: "Samu330 🌮", t1: "Title 1", s1: "Interesting subtitle.", t2: "Title 2", s2: "Another cool text.", btn: "Click" }
+            es: { header: "Samu330 🌮", ttWAG: "WhatsApp Falso", ttSF: "Subway Surfers", btnSF: "Jugar", btnWAG: "Generar" },
+            en: { header: "Samu330 🌭", ttWAG: "WhatsApp Fake", ttSF: "Subway Surfers", btnSF: "Play", btnWAG: "Generate" },
+            in: { header: "Samu330 🇮🇩", ttWAG: "WhatsApp Palsu", ttSF: "Subway Surfers", btnSF: "Bermain", btnWAG: "Buat gambar" },
+            ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", btnSF: "开始游戏", btnWAG: "生成照片" },
         };
 
 async function initEffects() {
@@ -164,10 +200,10 @@ async function initEffects() {
                 langBtn.querySelector('i').className = 'fas fa-chevron-down';
                 
                 document.getElementById('header-text').innerText = translations[lang].header;
-                document.getElementById('title-1').innerText = translations[lang].t1;
-                document.getElementById('sub-1').innerText = translations[lang].s1;
-                document.getElementById('title-2').innerText = translations[lang].t2;
-                document.getElementById('sub-2').innerText = translations[lang].s2;
+                document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
+                document.getElementById('tt-SF').innerText = translations[lang].ttSF;
+                document.getElementById('btn-SF').innerText = translations[lang].btnSF;
+                document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
                 document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
                 
                 await initEffects();
