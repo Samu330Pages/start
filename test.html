@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samu330 Web</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous">
      <style>
         :root {
             --bg-img: url('./main/images/light.jpg');
@@ -13,7 +13,7 @@
             --leng-bkg: rgba(250, 250, 250, 0.8);
         }
         .dark-theme {
-            --bg-img: url('./main/images/dark.png');
+            --bg-img: url('./main/images/dark.jpg');
             --card-bg: rgba(0, 0, 0, 0.4);
             --text-color: #f0f0f0;
             --leng-bkg: rgba(0, 0, 0, 0.8)
@@ -128,7 +128,13 @@
             <span id="header-text" style="font-weight: bold;">Samu330 🌮</span>
             <div style="display: flex; gap: 10px;">
                 <div class="custom-dropdown">
-                    <div id="lang-btn" class="lang-display">ES <i class="fas fa-chevron-down"></i></div>
+<div id="lang-btn" class="lang-display">
+    <i class="fas fa-language" id="lang-icon-fixed"></i>
+    <span id="lang-text" style="margin: 0 5px;">ES</span> 
+    <i class="fas fa-chevron-down" id="chevron-icon"></i>
+</div>
+
+
                     <div id="lang-menu" class="dropdown-menu">
                         <div class="lang-option" data-lang="es">Español</div>
                         <div class="lang-option" data-lang="en">English</div>
@@ -148,7 +154,7 @@
     <button id="btn-SF" class="button" href="#">Jugar</button>
     </div>
 
-        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-train" style="font-size: 3rem"></i><h1 id="tt-MG">Más juegos...</h1>
+        <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'><i class="fas fa-gamepad" style="font-size: 3rem"></i><h1 id="tt-MG">Más juegos...</h1>
     <button id="btn-MG" class="button" href="./games/more">Entrar</button>
     </div>
 
@@ -173,6 +179,10 @@
         };
 
 async function initEffects() {
+    // 1. Actualizamos el data-config antes de inicializar
+    updateCardConfigs();
+    
+    // 2. Limpiamos y reiniciamos
     document.querySelectorAll('canvas').forEach(c => c.remove());
     liquidInstance = await LiquidGlass.init({
         root: document.querySelector('#app'),
@@ -185,41 +195,68 @@ async function initEffects() {
             btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
         });
 
-        const langBtn = document.getElementById('lang-btn');
-        const langMenu = document.getElementById('lang-menu');
-        langBtn.addEventListener('click', () => {
-            const isMenuVisible = langMenu.style.display === 'flex';
-            langMenu.style.display = isMenuVisible ? 'none' : 'flex';
-            langBtn.querySelector('i').className = isMenuVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
-        });
+const langBtn = document.getElementById('lang-btn');
+const langMenu = document.getElementById('lang-menu');
+const chevron = document.getElementById('chevron-icon'); // Asegúrate de tener este ID en tu HTML
 
-        document.querySelectorAll('.lang-option').forEach(opt => {
-            opt.addEventListener('click', async (e) => {
-                const lang = e.target.getAttribute('data-lang');
-                const currentIconClass = langBtn.querySelector('i').className;
-                langBtn.innerHTML = `${lang.toUpperCase()} <i class="${currentIconClass}"></i>`;
-                langMenu.style.display = 'none';
-                langBtn.querySelector('i').className = 'fas fa-chevron-down';
-                
-                document.getElementById('header-text').innerText = translations[lang].header;
-                document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
-                document.getElementById('tt-SF').innerText = translations[lang].ttSF;
-                document.getElementById('tt-MG').innerText = translations[lang].ttMG;
-                document.getElementById('btn-SF').innerText = translations[lang].btnSF;
-                document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
-                document.getElementById('btn-MG').innerText = translations[lang].btnMG;
-                document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
-                
-                initEffects();
-            });
-        });
+langBtn.addEventListener('click', () => {
+    const isMenuVisible = langMenu.style.display === 'flex';
+    langMenu.style.display = isMenuVisible ? 'none' : 'flex';
+    
+    // Solo cambiamos la clase del icono de la flecha
+    chevron.className = isMenuVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+});
+
+document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.addEventListener('click', async (e) => {
+        const lang = e.target.getAttribute('data-lang');
+        
+        // 1. Actualizamos SOLO el span del texto
+        document.getElementById('lang-text').innerText = lang.toUpperCase();
+        
+        // 2. Cerramos el menú
+        langMenu.style.display = 'none';
+        
+        // 3. Resetear el icono de la flecha a "hacia abajo"
+        chevron.className = 'fas fa-chevron-down';
+        
+        // 4. Actualizamos los textos de la página
+        document.getElementById('header-text').innerText = translations[lang].header;
+        document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
+        document.getElementById('tt-SF').innerText = translations[lang].ttSF;
+        document.getElementById('tt-MG').innerText = translations[lang].ttMG;
+        document.getElementById('btn-SF').innerText = translations[lang].btnSF;
+        document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
+        document.getElementById('btn-MG').innerText = translations[lang].btnMG;
+        
+        // Actualizamos botones generales
+        document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
+        
+        // 5. Reiniciamos efectos
+        initEffects();
+    });
+});
+    
+    const cardConfigs = {
+    light: '{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}',
+    dark: '{"brightness": -0.3, "blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'
+};
+
+    function updateCardConfigs() {
+    const isDark = document.body.classList.contains('dark-theme');
+    const newConfig = isDark ? cardConfigs.dark : cardConfigs.light;
+    
+    document.querySelectorAll('.card').forEach(card => {
+        card.setAttribute('data-config', newConfig);
+    });
+}
 
         document.getElementById('theme-toggle').addEventListener('click', async () => {
             document.body.classList.toggle('dark-theme');
             document.getElementById('theme-toggle').classList.toggle('dark-theme-active');
             const icon = document.getElementById('theme-icon');
             icon.className = document.body.classList.contains('dark-theme') ? "fa-solid fa-moon" : "fa-solid fa-sun";
-            initEffects();
+            await initEffects();
         });
 
         window.addEventListener('load', initEffects);
