@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samu330 Web</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous">
-     <style>
+    <style>
         :root {
             --bg-img: url('./main/images/light.jpg');
             --card-bg: rgba(255, 255, 255, 0.15);
@@ -18,6 +17,22 @@
             --text-color: #f0f0f0;
             --leng-bkg: rgba(0, 0, 0, 0.8)
         }
+    
+    /* Elimina el recuadro azul en Android/iOS */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* Para navegadores basados en WebKit */
+    outline: none;
+}
+
+/* Opcional: Asegúrate de que los botones no tengan outline al ser presionados */
+button:focus, 
+.lang-display:focus, 
+.theme-switch:focus, 
+.social-btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
 
         body { margin: 0; font-family: sans-serif; overflow-x: hidden; color: var(--text-color); background: #000; }
         
@@ -118,21 +133,50 @@
   outline: 0;
 }
 
+    
+    #loader {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #000; /* Fondo negro para que no se vea nada detrás */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #333;
+    border-top: 5px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
+<div id="loader">
+    <div class="spinner"></div>
+</div>
 
     <div id="app">
         <div id="bg-image"></div>
-        <header class="glass-header" data-config='{"blurAmount": 1, "cornerRadius": 20}'>
+        <header class="glass-header" data-config='{"blurAmount": 0, "cornerRadius": 20, "chromAberration": 0.2, "refraction": 1, "zRadius": 10}'>
             <span id="header-text" style="font-weight: bold;">Samu330 🌮</span>
             <div style="display: flex; gap: 10px;">
                 <div class="custom-dropdown">
 <div id="lang-btn" class="lang-display">
-    <i class="fas fa-language" id="lang-icon-fixed"></i>
+    <i class="fas fa-language"></i>
     <span id="lang-text" style="margin: 0 5px;">ES</span> 
-    <i class="fas fa-chevron-down" id="chevron-icon"></i>
+    <!-- En lugar de una flecha que cambia, tenemos dos iconos -->
+    <i class="fas fa-chevron-down" id="icon-down"></i>
+    <i class="fas fa-chevron-up" id="icon-up" style="display: none;"></i>
 </div>
+
 
 
                     <div id="lang-menu" class="dropdown-menu">
@@ -168,9 +212,45 @@
     </div>
 
     <script type="module">
-        import { LiquidGlass } from './main/liquidglass.js';
+import { LiquidGlass } from './main/js/liquidglass.js';
 
         let liquidInstance = null;
+        const backgrounds = [
+            './main/images/light.jpg',
+            './main/images/dark.jpg'
+        ];
+
+        // Función de precarga
+        function preloadImages(array) {
+            array.forEach(src => { new Image().src = src; });
+        }
+
+        // Función principal única
+        async function initEffects() {
+            updateCardConfigs();
+            document.querySelectorAll('canvas').forEach(c => c.remove());
+            
+            liquidInstance = await LiquidGlass.init({
+                root: document.querySelector('#app'),
+                glassElements: document.querySelectorAll('#app > .card, #app > .glass-header, #app > .social-bar'),
+            });
+
+            // Ocultar loader
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }
+        }
+
+        // --- INICIO DE EJECUCIÓN ---
+        window.addEventListener('load', async () => {
+            preloadImages(backgrounds);
+            // Pequeña pausa para asegurar que las imágenes se registren en caché
+            await new Promise(r => setTimeout(r, 300)); 
+            await initEffects();
+        });
+    
         const translations = {
             es: { header: "Samu330 🌮", ttWAG: "WhatsApp Falso", ttSF: "Subway Surfers", ttMG: "Más juegos...", btnSF: "Entrar", btnWAG: "Generar", btnMG: "Entrar", },
             en: { header: "Samu330 🌭", ttWAG: "WhatsApp Fake", ttSF: "Subway Surfers", ttMG: "More games...", btnSF: "Play", btnWAG: "Generate", btnMG: "Enter", },
@@ -178,64 +258,54 @@
             ch: { header: "Samu330 🐉", ttWAG: "虚假 WhatsApp", ttSF: "地铁跑酷", ttMG: "其他游戏……", btnSF: "开始游戏", btnWAG: "生成照片", btnMG: "进入", },
         };
 
-async function initEffects() {
-    // 1. Actualizamos el data-config antes de inicializar
-    updateCardConfigs();
-    
-    // 2. Limpiamos y reiniciamos
-    document.querySelectorAll('canvas').forEach(c => c.remove());
-    liquidInstance = await LiquidGlass.init({
-        root: document.querySelector('#app'),
-        glassElements: document.querySelectorAll('#app > .card, #app > .glass-header, #app > .social-bar'),
-    });
-}
-
     
         document.querySelectorAll('.social-btn').forEach(btn => {
             btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
         });
-
-const langBtn = document.getElementById('lang-btn');
-const langMenu = document.getElementById('lang-menu');
-const chevron = document.getElementById('chevron-icon'); // Asegúrate de tener este ID en tu HTML
-
-langBtn.addEventListener('click', () => {
-    const isMenuVisible = langMenu.style.display === 'flex';
-    langMenu.style.display = isMenuVisible ? 'none' : 'flex';
     
-    // Solo cambiamos la clase del icono de la flecha
-    chevron.className = isMenuVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+ document.getElementById('lang-btn').addEventListener('click', () => {
+    const menu = document.getElementById('lang-menu');
+    const iconDown = document.getElementById('icon-down');
+    const iconUp = document.getElementById('icon-up');
+    
+    const isVisible = menu.style.display === 'flex';
+    menu.style.display = isVisible ? 'none' : 'flex';
+    
+    // Cambiamos visibilidad
+    iconDown.style.display = isVisible ? 'inline-block' : 'none';
+    iconUp.style.display = isVisible ? 'none' : 'inline-block';
 });
 
+// En tu función de selección de idioma:
 document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', async (e) => {
         const lang = e.target.getAttribute('data-lang');
         
-        // 1. Actualizamos SOLO el span del texto
+        // 1. Actualizamos el texto pequeño del botón
         document.getElementById('lang-text').innerText = lang.toUpperCase();
         
-        // 2. Cerramos el menú
-        langMenu.style.display = 'none';
-        
-        // 3. Resetear el icono de la flecha a "hacia abajo"
-        chevron.className = 'fas fa-chevron-down';
-        
-        // 4. Actualizamos los textos de la página
+        // 2. ACTUALIZACIÓN DE TEXTOS (Esto era lo que faltaba)
         document.getElementById('header-text').innerText = translations[lang].header;
         document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
         document.getElementById('tt-SF').innerText = translations[lang].ttSF;
         document.getElementById('tt-MG').innerText = translations[lang].ttMG;
+        
         document.getElementById('btn-SF').innerText = translations[lang].btnSF;
         document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
         document.getElementById('btn-MG').innerText = translations[lang].btnMG;
         
-        // Actualizamos botones generales
-        document.querySelectorAll('.glass-btn:not(.social-bar)').forEach(b => b.innerText = translations[lang].btn);
+        // 3. Cerramos el menú y reseteamos iconos
+        document.getElementById('lang-menu').style.display = 'none';
+        document.getElementById('icon-down').style.display = 'inline-block';
+        document.getElementById('icon-up').style.display = 'none';
         
-        // 5. Reiniciamos efectos
-        initEffects();
+        // 4. Reiniciamos efectos
+        await initEffects();
     });
 });
+
+
+
     
     const cardConfigs = {
     light: '{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}',
@@ -251,18 +321,29 @@ document.querySelectorAll('.lang-option').forEach(opt => {
     });
 }
 
-        document.getElementById('theme-toggle').addEventListener('click', async () => {
-            document.body.classList.toggle('dark-theme');
-            document.getElementById('theme-toggle').classList.toggle('dark-theme-active');
-            const icon = document.getElementById('theme-icon');
-            icon.className = document.body.classList.contains('dark-theme') ? "fa-solid fa-moon" : "fa-solid fa-sun";
-            await initEffects();
-        });
+document.getElementById('theme-toggle').addEventListener('click', async () => {
+    document.body.classList.toggle('dark-theme');
+    const toggleBtn = document.getElementById('theme-toggle');
+    toggleBtn.classList.toggle('dark-theme-active');
+    
+    // FORMA SEGURA: buscar el icono dentro del contenedor del botón
+    const icon = toggleBtn.querySelector('i'); 
+    
+    if (icon) {
+        // Usamos replace para no borrar otras clases necesarias
+        const isDark = document.body.classList.contains('dark-theme');
+        icon.className = isDark ? "fa-solid fa-moon" : "fa-solid fa-sun";
+        // Si usas el Kit de FA, forzamos la actualización
+        if (window.FontAwesome) window.FontAwesome.dom.i2svg();
+    }
 
-        window.addEventListener('load', initEffects);
+    await initEffects();
+});
+
         window.addEventListener('scroll', () => { 
             requestAnimationFrame(() => { if(liquidInstance) liquidInstance.markChanged(); });
         }, { passive: true });
     </script>
+    <script src="https://kit.fontawesome.com/1e415e3bac.js" crossorigin="anonymous"></script>
 </body>
 </html>
