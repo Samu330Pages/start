@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samu330 Web</title>
+    <title>Samu330</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
+    <meta property="og:image" content="https://wallpapercave.com/wp/2HXC2I9.jpg" />
+    <meta name="description" content="👑">
+    <meta name="author" content="Samu330" />
+    <meta name="copyright" content="Samu330" />
+    <meta name="keywords" content="samu330, juegos, game, online, clicker" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
@@ -107,7 +113,7 @@
       }
 
       .lang-option {
-        padding: 10px;
+        padding: 5px;
         text-align: center;
         border-bottom: 1px solid #333;
       }
@@ -377,7 +383,7 @@
       }
 
       .model-option {
-        padding: 10px;
+        padding: 5px;
         text-align: center;
         border-bottom: 1px solid #333;
       }
@@ -634,11 +640,7 @@
       };
       
       let currentLang = 'es';
-      
-      function t(key) {
-        return translations[currentLang] || key;
-      };
-      
+
       document.querySelectorAll('.social-btn').forEach(btn => {
         btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
       });
@@ -753,7 +755,6 @@
       let shouldAutoPlay = false;
 
       async function loadSong(url) {
-        console.log(translations[currentLang].loading);
     audio.src = url;
     songTitle.innerText = translations[currentLang].loading; 
     
@@ -770,8 +771,8 @@
         
         jsmediatags.read(blob, {
             onSuccess: function(tag) {
-                songTitle.innerText = tag.tags.title || t('xsong');
-                songArtist.innerText = tag.tags.artist || t('xartist');
+                songTitle.innerText = tag.tags.title || translations[currentLang].xsong;
+                songArtist.innerText = tag.tags.artist || translations[currentLang].xartist;
                 
                 if (tag.tags.picture) {
                     const data = tag.tags.picture.data;
@@ -784,8 +785,8 @@
                 }
             },
             onError: function(error) {
-                songTitle.innerText = t('xsong');
-                songArtist.innerText = t('xartist');
+                songTitle.innerText = translations[currentLang].xsong;
+                songArtist.innerText = translations[currentLang].xartist;
             }
         });
         
