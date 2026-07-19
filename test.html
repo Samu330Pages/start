@@ -535,7 +535,7 @@
       });
       
       //TRADUCCION xD
-      const lang = e.target.getAttribute('data-lang');
+      const langNow = "es";
       const translations = {
         es: {
           header: "Samu330 🌮",
@@ -647,6 +647,7 @@
       });
       document.querySelectorAll('.lang-option').forEach(opt => {
         opt.addEventListener('click', async (e) => {
+          const lang = e.target.getAttribute('data-lang');
           document.getElementById('lang-text').innerText = lang.toUpperCase();
           document.getElementById('header-text').innerText = translations[lang].header;
           document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
@@ -665,6 +666,7 @@
           document.getElementById('lang-menu').style.display = 'none';
           document.getElementById('icon-down').style.display = 'inline-block';
           document.getElementById('icon-up').style.display = 'none';
+          langNow = lang;
           await initEffects();
         });
       });
