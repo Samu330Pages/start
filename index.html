@@ -401,16 +401,27 @@
           <div class="custom-dropdown">
             <div id="lang-btn" class="lang-display">
               <i class="fas fa-language"></i>
-              <span id="lang-text" style="margin: 0 5px;">ES</span>
+              <img id="flags" src="https://flagcdn.com/40x30/mx.png">
+              <span id="lang-text" style="margin: 0 5px;">MX</span>
               <i class="fas fa-chevron-down" id="icon-down"></i>
               <i class="fas fa-chevron-up" id="icon-up" style="display: none;"></i>
             </div>
             <div id="lang-menu" class="dropdown-menu">
-              <div class="lang-option" data-lang="es">Español 🇲🇽</div>
-              <div class="lang-option" data-lang="en">English 🇺🇸</div>
-              <div class="lang-option" data-lang="in">Indo 🇮🇩</div>
-              <div class="lang-option" data-lang="ch">汉语 🇨🇳</div>
-              <div class="lang-option" data-lang="ar">عربي 🇦🇪</div>
+              <div class="lang-option" data-lang="mx">
+                <img src="https://flagcdn.com/40x30/mx.png" width="20"> Español
+              </div>
+              <div class="lang-option" data-lang="us">
+                <img src="https://flagcdn.com/40x30/us.png" width="20"> English
+                </div>
+              <div class="lang-option" data-lang="id">
+                <img src="https://flagcdn.com/40x30/id.png" width="20"> Indo
+                </div>
+              <div class="lang-option" data-lang="cn">
+                <img src="https://flagcdn.com/40x30/cn.png" width="20"> 汉语
+                </div>
+              <div class="lang-option" data-lang="ae">
+                <img src="https://flagcdn.com/40x30/ae.png" width="20"> عربي
+                </div>
             </div>
           </div>
           <div id="theme-toggle" class="theme-switch">
@@ -542,7 +553,7 @@
       
       //TRADUCCION xD
       const translations = {
-        es: {
+        mx: {
           header: "Samu330 🌮",
           ttWAG: "WhatsApp Falso",
           ttSF: "Subway Surfers",
@@ -561,7 +572,7 @@
           xsong: "Canción desconocida!",
           xartist: "Artista desconocido!"
         },
-        en: {
+        us: {
           header: "Samu330 🌭",
           ttWAG: "WhatsApp Fake",
           ttSF: "Subway Surfers",
@@ -580,7 +591,7 @@
           xsong: "Unknown song!",
           xartist: "Unknown artist!"
         },
-        in : {
+        id: {
           header: "Samu330 🇮🇩",
           ttWAG: "WhatsApp Palsu",
           ttSF: "Subway Surfers",
@@ -599,7 +610,7 @@
           xsong: "Lagu tidak dikenal!",
           xartist: "Seniman tak dikenal!"
         },
-        ch: {
+        cn: {
           header: "Samu330 🐉",
           ttWAG: "虚假 WhatsApp",
           ttSF: "地铁跑酷",
@@ -618,7 +629,7 @@
           xsong: "未知歌曲！",
           xartist: "无名艺术家！"
         },
-        ar: {
+        ae: {
           header: "Samu330 🐪",
           ttWAG: "واتساب مزيف",
           ttSF: "سيرفرز صب واي",
@@ -658,6 +669,7 @@
           const lang = e.target.getAttribute('data-lang');
           currentLang = lang;
           document.getElementById('lang-text').innerText = lang.toUpperCase();
+          document.getElementById('flags').src = `https://flagcdn.com/40x30/${lag}.png`;
           document.getElementById('header-text').innerText = translations[lang].header;
           document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
           document.getElementById('tt-SF').innerText = translations[lang].ttSF;
