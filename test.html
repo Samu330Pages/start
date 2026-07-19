@@ -745,8 +745,47 @@
       let currentSongIndex = 0;
       let isPlaying = false;
       let shouldAutoPlay = false;
+
+      async function loadSong(url) {
+    audio.src = url;
+    songTitle.innerText = "Cargando..."; 
+    
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error("No se pudo cargar el archivo");
+        }
+
+        const blob = await response.blob();
+        
+        jsmediatags.read(blob, {
+            onSuccess: function(tag) {
+                songTitle.innerText = tag.tags.title || "Canción Desconocida";
+                songArtist.innerText = tag.tags.artist || "Artista Desconocido";
+                
+                if (tag.tags.picture) {
+                    const data = tag.tags.picture.data;
+                    const format = tag.tags.picture.format;
+                    let base64String = "";
+                    for (let i = 0; i < data.length; i++) base64String += String.fromCharCode(data[i]);
+                    songArt.src = data:${format};base64,${window.btoa(base64String)};
+                } else {
+                    songArt.src = ""; 
+                }
+            },
+            onError: function(error) {
+                songTitle.innerText = "Título no disponible";
+                songArtist.innerText = "Artista desconocido";
+            }
+        });
+        
+    } catch (error) {
+        songTitle.innerText = "Error al cargar";
+    }
+}
       
-      function loadSong(url) {
+    /*  function loadSong(url) {
         audio.src = url;
         songTitle.innerText = translations[langNow].loading;
         jsmediatags.read(url, {
@@ -762,7 +801,7 @@
             }
           }
         });
-      }
+      }*/
 
       function updatePlayButton() {
         playBtn.innerHTML = isPlaying ? ' < i class = "fa-solid fa-pause" > < /i>' : ' < i class = "fa-solid fa-play" > < /i>';
