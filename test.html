@@ -632,6 +632,13 @@
           xartist: "فنان مجهول!"
         }
       };
+      
+      let currentLang = 'es';
+      
+      function t(key) {
+        return translations[currentLang] || key;
+      };
+      
       document.querySelectorAll('.social-btn').forEach(btn => {
         btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
       });
@@ -647,6 +654,7 @@
       document.querySelectorAll('.lang-option').forEach(opt => {
         opt.addEventListener('click', async (e) => {
           const lang = e.target.getAttribute('data-lang');
+          currentLang = lang;
           document.getElementById('lang-text').innerText = lang.toUpperCase();
           document.getElementById('header-text').innerText = translations[lang].header;
           document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
@@ -746,11 +754,11 @@
 
       async function loadSong(url) {
     audio.src = url;
-    songTitle.innerText = "Cargando..."; 
+    songTitle.innerText = t("loading"); 
     
     try {
         const response = await fetch(url, {
-          headers: {'range': 'bytes=0-500000'}
+          headers: {'range': 'bytes=0-150000'}
         });
         
         if (!response.ok) {
@@ -761,8 +769,8 @@
         
         jsmediatags.read(blob, {
             onSuccess: function(tag) {
-                songTitle.innerText = tag.tags.title || "Canción Desconocida";
-                songArtist.innerText = tag.tags.artist || "Artista Desconocido";
+                songTitle.innerText = tag.tags.title || t("xsong");
+                songArtist.innerText = tag.tags.artist || t("xartist");
                 
                 if (tag.tags.picture) {
                     const data = tag.tags.picture.data;
@@ -775,8 +783,8 @@
                 }
             },
             onError: function(error) {
-                songTitle.innerText = "Título no disponible";
-                songArtist.innerText = "Artista desconocido";
+                songTitle.innerText = t("xsong");
+                songArtist.innerText = t("xartist");
             }
         });
         
