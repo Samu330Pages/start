@@ -414,7 +414,7 @@
       </header>
       <div class="card music-player" data-config='{"blurAmount": 0.40, "cornerRadius": 20, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
         <div class="music-info">
-          <img id="song-art" class="album-art" src="">
+          <img id="song-art" class="album-art" src="" crossorigin="anonymous">
           <div class="music-text">
             <h3 id="song-title">Cargando...</h3>
             <p id="song-artist">Artista</p>
@@ -461,12 +461,12 @@
         <button id="btn-CC" class="button" href="./Cactus/">Jugar</button>
       </div>
       <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
-        <i class="fas fa-arrow-pointer" style="font-size: 3rem"></i>
+        <i class="fas fa-bus" style="font-size: 3rem"></i>
         <h1 id="tt-DM">Driver Mad</h1>
         <button id="btn-DM" class="button" href="./games/drive mad/">Jugar</button>
       </div>
       <div class="card" data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
-        <i class="fas fa-arrow-pointer" style="font-size: 3rem"></i>
+        <i class="fas fa-bowling-ball" style="font-size: 3rem"></i>
         <h1 id="tt-SB">Shooter Ball</h1>
         <button id="btn-SB" class="button" href="./games/shooter/">Jugar</button>
       </div>
@@ -739,8 +739,8 @@
       const progressBar = document.getElementById('progress-bar');
       const currentTimeEl = document.getElementById('current-time');
       const totalDurationEl = document.getElementById('total-duration');
-      const playlist = ["./main/main/music/Creedence Clearwater Revival - Have You Ever Seen The Rain.flac",
-                        "./main/main/music/Caloncho - Bálsamo.flac",
+      const playlist = ["./main/music/Creedence Clearwater Revival - Have You Ever Seen The Rain.flac",
+                        "./main/music/Caloncho - Bálsamo.flac",
                         "./main/music/Caloncho - LELELELELELE.flac"];
       let currentSongIndex = 0;
       let isPlaying = false;
