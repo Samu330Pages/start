@@ -401,7 +401,7 @@
           <div class="custom-dropdown">
             <div id="lang-btn" class="lang-display">
               <i class="fas fa-language"></i>
-              <img id="flags" src="https://flagcdn.com/40x30/mx.png">
+              <img id="flags" src="https://flagcdn.com/40x30/mx.png" width="20">
               <span id="lang-text" style="margin: 0 5px;">MX</span>
               <i class="fas fa-chevron-down" id="icon-down"></i>
               <i class="fas fa-chevron-up" id="icon-up" style="display: none;"></i>
@@ -669,7 +669,7 @@
           const lang = e.target.getAttribute('data-lang');
           currentLang = lang;
           document.getElementById('lang-text').innerText = lang.toUpperCase();
-          document.getElementById('flags').src = `https://flagcdn.com/40x30/${lag}.png`;
+          document.getElementById('flags').src = `https://flagcdn.com/40x30/${lang}.png`;
           document.getElementById('header-text').innerText = translations[lang].header;
           document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
           document.getElementById('tt-SF').innerText = translations[lang].ttSF;
