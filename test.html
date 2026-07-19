@@ -754,7 +754,7 @@
 
       async function loadSong(url) {
     audio.src = url;
-    songTitle.innerText = t("loading"); 
+    songTitle.innerText = t('loading'); 
     
     try {
         const response = await fetch(url, {
@@ -769,8 +769,8 @@
         
         jsmediatags.read(blob, {
             onSuccess: function(tag) {
-                songTitle.innerText = tag.tags.title || t("xsong");
-                songArtist.innerText = tag.tags.artist || t("xartist");
+                songTitle.innerText = tag.tags.title || t('xsong');
+                songArtist.innerText = tag.tags.artist || t('xartist');
                 
                 if (tag.tags.picture) {
                     const data = tag.tags.picture.data;
@@ -783,8 +783,8 @@
                 }
             },
             onError: function(error) {
-                songTitle.innerText = t("xsong");
-                songArtist.innerText = t("xartist");
+                songTitle.innerText = t('xsong');
+                songArtist.innerText = t('xartist');
             }
         });
         
