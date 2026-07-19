@@ -769,7 +769,7 @@
                     const format = tag.tags.picture.format;
                     let base64String = "";
                     for (let i = 0; i < data.length; i++) base64String += String.fromCharCode(data[i]);
-                    songArt.src = data:${format};base64,${window.btoa(base64String)};
+                    songArt.src = `data:${format};base64,${window.btoa(base64String)}`;
                 } else {
                     songArt.src = ""; 
                 }
