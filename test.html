@@ -414,7 +414,7 @@
       </header>
       <div class="card music-player" data-config='{"blurAmount": 0.40, "cornerRadius": 20, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
         <div class="music-info">
-          <img id="song-art" class="album-art" src="" crossorigin="anonymous">
+          <img id="song-art" class="album-art" src="./main/images/no-artwork.png">
           <div class="music-text">
             <h3 id="song-title">Cargando...</h3>
             <p id="song-artist">Artista</p>
@@ -751,7 +751,9 @@
     songTitle.innerText = "Cargando..."; 
     
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {'range': 'bytes=0-500000'}
+        });
         
         if (!response.ok) {
             throw new Error("No se pudo cargar el archivo");
@@ -771,7 +773,7 @@
                     for (let i = 0; i < data.length; i++) base64String += String.fromCharCode(data[i]);
                     songArt.src = `data:${format};base64,${window.btoa(base64String)}`;
                 } else {
-                    songArt.src = ""; 
+                    songArt.src = "./main/images/no-artwork.png"; 
                 }
             },
             onError: function(error) {
@@ -804,7 +806,7 @@
       }*/
 
       function updatePlayButton() {
-        playBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : ' <iclass="fa-solid fa-play"></i>';
+        playBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<iclass="fa-solid fa-play"></i>';
       }
 
       function togglePlay() {
