@@ -414,7 +414,7 @@
       </header>
       <div class="card music-player" data-config='{"blurAmount": 0.40, "cornerRadius": 20, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
         <div class="music-info">
-          <img id="song-art" class="album-art" src="https://via.placeholder.com/60">
+          <img id="song-art" class="album-art" src="">
           <div class="music-text">
             <h3 id="song-title">Cargando...</h3>
             <p id="song-artist">Artista</p>
@@ -543,7 +543,7 @@
           ttSF: "Subway Surfers",
           ttMG: "Más juegos...",
           ttCC: "Cactus Clicker",
-          ttMD: "Driver Mad",
+          ttDM: "Driver Mad",
           ttSB: "Shooter Ball",
           btnSF: "Jugar",
           btnWAG: "Generar",
@@ -562,7 +562,7 @@
           ttSF: "Subway Surfers",
           ttMG: "More games...",
           ttCC: "Cactus Clicker",
-          ttMD: "Driver Mad",
+          ttDM: "Driver Mad",
           ttSB: "Shooter Ball",
           btnSF: "Play",
           btnWAG: "Generate",
@@ -581,7 +581,7 @@
           ttSF: "Subway Surfers",
           ttMG: "Permainan lainnya...",
           ttCC: "Pengklik Kaktus",
-          ttMD: "Driver Mad",
+          ttDM: "Driver Mad",
           ttSB: "Shooter Ball",
           btnSF: "Bermain",
           btnWAG: "Buat gambar",
@@ -600,7 +600,7 @@
           ttSF: "地铁跑酷",
           ttMG: "其他游戏……",
           ttCC: "仙人掌点击器",
-          ttMD: "疯狂驾驶",
+          ttDM: "疯狂驾驶",
           ttSB: "泡泡射击",
           btnSF: "开始游戏",
           btnWAG: "生成照片",
@@ -619,7 +619,7 @@
           ttSF: "سيرفرز صب واي",
           ttMG: "المزيد من الألعاب...",
           ttCC: "كاكتوس كليكر",
-          ttMD: "درايفر ماد",
+          ttDM: "درايفر ماد",
           ttSB: "كرة التصويب",
           btnSF: "العب اللعبة",
           btnWAG: "أنشئ صورة",
@@ -654,7 +654,7 @@
           document.getElementById('tt-SF').innerText = translations[lang].ttSF;
           document.getElementById('tt-MG').innerText = translations[lang].ttMG;
           document.getElementById('tt-CC').innerText = translations[lang].ttCC;
-          document.getElementById('tt-MD').innerText = translations[lang].ttMD;
+          document.getElementById('tt-DM').innerText = translations[lang].ttDM;
           document.getElementById('tt-SB').innerText = translations[lang].ttSB;
           document.getElementById('btn-SF').innerText = translations[lang].btnSF;
           document.getElementById('btn-WAG').innerText = translations[lang].btnWAG;
@@ -748,11 +748,11 @@
       
       function loadSong(url) {
         audio.src = url;
-        songTitle.innerText = translations[lang].loading;
+        songTitle.innerText = translations[langNow].loading;
         jsmediatags.read(url, {
           onSuccess: function(tag) {
-            songTitle.innerText = tag.tags.title || translations[lang].xsong;
-            songArtist.innerText = tag.tags.artist || translations[lang].xartist;
+            songTitle.innerText = tag.tags.title || translations[langNow].xsong;
+            songArtist.innerText = tag.tags.artist || translations[langNow].xartist;
             if (tag.tags.picture) {
               const data = tag.tags.picture.data;
               const format = tag.tags.picture.format;
