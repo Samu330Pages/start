@@ -753,9 +753,9 @@
       let shouldAutoPlay = false;
 
       async function loadSong(url) {
-        console.log(t('loading'));
+        console.log(translations[currentLang].loading);
     audio.src = url;
-    songTitle.innerText = t('loading'); 
+    songTitle.innerText = translations[currentLang].loading; 
     
     try {
         const response = await fetch(url, {
