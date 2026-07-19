@@ -753,6 +753,7 @@
       let shouldAutoPlay = false;
 
       async function loadSong(url) {
+        console.log(t('loading'));
     audio.src = url;
     songTitle.innerText = t('loading'); 
     
