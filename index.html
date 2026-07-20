@@ -422,7 +422,6 @@
       <div style="display: flex; gap: 10px;">
         <div id="fps-counter" class="info-display">60 FPS</div>
         <div id="mem-counter" class="info-display">RAM: -- MB</div>
-        <div id="net-counter" class="info-display">Net: --</div>
         <div class="custom-dropdown">
           <div id="lang-btn" class="lang-display">
             <i class="fas fa-language"></i>
@@ -988,22 +987,11 @@
     let lastTime = performance.now();
     const fpsElement = document.getElementById('fps-counter');
     const memElement = document.getElementById('mem-counter');
-    const netElement = document.getElementById('net-counter');
 
     function updateSystemStats() {
       if (performance.memory) {
         const usedMB = (performance.memory.usedJSHeapSize / 1048576).toFixed(1);
         memElement.innerText = `RAM: ${usedMB} MB`;
-        memElement.style.display = 'flex';
-      } else {
-        memElement.style.display = 'none';
-      }
-
-      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      if (conn) {
-        const type = conn.effectiveType;
-        const rtt = conn.rtt;
-        netElement.innerText = `Net: ${type} (${rtt}ms)`;
         memElement.style.display = 'flex';
       } else {
         memElement.style.display = 'none';
@@ -1028,8 +1016,6 @@
 
       requestAnimationFrame(updateFPS);
     }
-
-    // Iniciar el contador
     requestAnimationFrame(updateFPS);
 
     //PARA QUE LA ANIMACION SIGA AL HACER SCROLL
