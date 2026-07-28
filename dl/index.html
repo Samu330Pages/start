@@ -9,23 +9,12 @@
   <meta property="og:image" content="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/cover.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-
   <meta name="twitter:image" content="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/cover.jpg">
   
-  <meta name="description" content="Busca, descarga y convierte videos y audios de YouTube en diferentes calidades, formatos MP3 y fusión avanzada de forma rápida y segura.">
-  <meta name="keywords" content="descargar youtube, convertidor mp3 youtube, bajar videos de youtube, yt-dlp web, musica de youtube">
+  <meta name="description" content="Busca, descarga y convierte videos y audios de diferentes plataformas de forma rápida y segura.">
   <meta name="author" content="Samu330">
   <meta name="robots" content="index, follow">
 
-  <meta property="og:title" content="Media Downloader">
-  <meta property="og:description" content="Descarga videos y audios de YouTube en la máxima calidad disponible de forma fácil, rápida y segura.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Media Downloader">
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Media Downloader">
-  <meta name="twitter:description" content="Descarga videos y audios de YouTube en diferentes formatos y calidades de forma sencilla.">
-  
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link id="theme-stylesheet" rel="stylesheet" href="blue-teal/light.css">
@@ -47,6 +36,8 @@
 
 <body class="light">
   <div class="main-container">
+    
+    <!-- PANTALLA 1: Búsqueda Global (Universal) -->
     <div id="searchView" class="card">
       <div class="theme-controls" style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
 
@@ -96,7 +87,7 @@
       </div>
       <div class="header-text">
         <h1>Media Downloader (BETA)</h1>
-        <p>¡busca videos, selecciona entre diferentes formatos y calidades... y descarga fácilmente!</p>
+        <p>¡Busca videos y descarga fácilmente desde tus plataformas favoritas!</p>
       </div>
       <div class="info-section">
         <h3>
@@ -104,25 +95,17 @@
         </h3>
         <ul>
           <li>
-            <strong>YouTube:</strong> Pega el enlace de YouTube y presiona Enter para descargar.
+            <strong>Enlaces directos:</strong> Pega enlaces compatibles de YouTube, TikTok, etc.
           </li>
           <li>
-            <strong>Búsqueda:</strong> Ingresa palabras claves para realizar una búsqueda de videos en YouTube.
-          </li>
-          <li>
-            <strong>Descarga:</strong> Selecciona entre las opciones disponibles, la opción que mejor te convenga para
-            descargar, convierte a MP3 los archivos de audio, y fusiona videos con audios de una manera sencilla, rápida
-            y segura.
-          </li>
-          <li>
-            <strong>API:</strong> Este servicio esta aun en desarrollo, por el momento solo se tiene soporte a descargas de YouTube, pero se estarán agregando más servicios!
+            <strong>Búsqueda:</strong> Ingresa palabras clave para buscar contenido directamente.
           </li>
         </ul>
       </div>
       <form id="actionForm">
         <div class="input-row">
-          <md-outlined-text-field id="userInput" label="Búsqueda o link de YouTube"
-            error-text="Por el momento solo enlaces de YouTube." autocomplete="off" maxLength="40">
+          <md-outlined-text-field id="userInput" label="Búsqueda o link multimedia"
+            error-text="Plataforma no soportada todavía." autocomplete="off">
             <md-icon-button slot="trailing-icon" id="clearBtn" type="button" title="Limpiar campo"
               style="display: none;">
               <i class="fa-solid fa-xmark"></i>
@@ -142,6 +125,7 @@
       <div class="footer-credit"> Funcionamiento impulsado por <span>yt-dlp</span> 🚀 </div>
     </div>
 
+    <!-- PANTALLA 2: Resultados de búsqueda global (Universal) -->
     <div id="resultsView" class="card hidden-view">
       <div class="results-header">
         <div>
@@ -155,118 +139,14 @@
 
       <div id="loadingIndicator" class="loading-container">
         <md-circular-progress indeterminate></md-circular-progress>
-        <span>Buscando videos...</span>
+        <span>Buscando contenido...</span>
       </div>
 
       <div id="resultsContainer" class="results-list hidden-view"></div>
     </div>
 
-    <div id="detailsView" class="card hidden-view">
-      <div class="results-header">
-        <h2>Detalles del Video</h2>
-        <md-outlined-button id="detailsBackBtn">
-          <i class="fa-solid fa-arrow-left" slot="icon"></i> Volver
-        </md-outlined-button>
-      </div>
-
-      <div id="detailsLoading" class="loading-container">
-        <md-circular-progress indeterminate></md-circular-progress>
-        <span>Obteniendo información...</span>
-      </div>
-
-      <div id="detailsContent" class="details-scroll-container hidden-view">
-        <div class="video-hero">
-          <div class="video-hero-thumb-container">
-            <img id="infoThumb" class="video-hero-thumb" src="" alt="Thumbnail">
-          </div>
-          <div class="video-hero-meta">
-            <h3 id="infoTitle" class="video-hero-title"></h3>
-            <div class="video-hero-stats">
-              <span>
-                <i class="fa-solid fa-user-tag"></i>
-                <strong id="infoChannel"></strong>
-              </span>
-              <span>
-                <i class="fa-solid fa-clock"></i>
-                <span id="infoDuration"></span>
-              </span>
-              <span>
-                <i class="fa-solid fa-eye"></i>
-                <span id="infoViews"></span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <details class="description-box">
-          <summary>Ver Descripción</summary>
-          <div id="infoDescription" class="description-text"></div>
-        </details>
-        
-        <div class="download-options-card">
-          <h4 class="options-title">
-            <i class="fa-solid fa-sliders"></i> Opciones de Descarga
-          </h4>
-
-          <div class="codec-info-banner" style="margin: 12px 0; padding: 12px; border-radius: 8px; background: var(--md-sys-color-surface-container-low, #f1f3f4); font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
-            <div style="font-weight: 500; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-primary);">
-              <i class="fa-solid fa-circle-info"></i>
-              <span>Guía de Compatibilidad de Códecs</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <i class="fa-solid fa-circle-check" style="color: #2e7d32;"></i>
-              <span><strong>Alta compatibilidad (AVC1/H.264):</strong> Reproducción universal en cualquier dispositivo o TV.</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <i class="fa-solid fa-triangle-exclamation" style="color: #ed6c02;"></i>
-              <span><strong>Alta eficiencia (AV1 / VP9):</strong> Excelente calidad/peso, pero requiere reproductores modernos.</span>
-            </div>
-          </div>
-
-          <div class="type-selector">
-            <div class="type-chip active" data-type="audio_only">
-              <i class="fa-solid fa-music"></i>
-              <span>Audio</span>
-            </div>
-            <div class="type-chip" data-type="video+audio">
-              <i class="fa-solid fa-film"></i>
-              <span>Vídeo + Audio</span>
-            </div>
-            <div class="type-chip" data-type="fusion">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-              <span>Fusionar</span>
-            </div>
-          </div>
-
-          <div id="audioSwitchContainer">
-            <md-switch id="mp3Switch" icons></md-switch>
-            <span>Convertir audio a MP3</span>
-          </div>
-
-          <div id="singleSelectContainer">
-            <md-outlined-select id="formatSelect" label="Calidad / Formato">
-              <md-select-option value="" disabled selected></md-select-option>
-            </md-outlined-select>
-          </div>
-
-          <div id="fusionSelectContainer" class="hidden-view" style="display: flex; flex-direction: column; gap: 12px;">
-            <div class="warning-badge">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <span>Selecciona el formato de vídeo y de audio deseado para convertir y fusionar.</span>
-            </div>
-            <md-outlined-select id="videoFormatSelect" label="Formato de Vídeo">
-              <md-select-option value="" disabled selected></md-select-option>
-            </md-outlined-select>
-            <md-outlined-select id="audioFormatSelect" label="Formato de Audio">
-              <md-select-option value="" disabled selected></md-select-option>
-            </md-outlined-select>
-          </div>
-          <md-filled-button id="startDownloadBtn" disabled style="width: 100%;">
-            <i class="fa-solid fa-download" slot="icon"></i> Descargar / Procesar
-          </md-filled-button>
-        </div>
-      </div>
-      <div id="detailsError" class="error-box hidden-view"></div>
-    </div>
+    <!-- PANTALLA 3: Contenedor Dinámico Maestro (Aquí cada módulo inyecta su propia pantalla de detalles única) -->
+    <div id="platformDetailsView" class="hidden-view"></div>
     
     <md-dialog id="warningDialog">
       <div slot="headline">Acción no permitida</div>
@@ -302,7 +182,7 @@
       </div>
     </footer>
   </div>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 
 </html>
