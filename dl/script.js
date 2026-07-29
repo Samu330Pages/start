@@ -149,7 +149,7 @@ window.addEventListener('DOMContentLoaded', () => {
         let value = userInput.value;
 
         if (currentPlatform === 'instagram' && !instagramPlatform.regex.test(value)) {
-            value = value.replace(/\s+/g, '');
+            value = value.replace(/\s+/g, '').toLowerCase();
             userInput.value = value;
         }
 
@@ -243,7 +243,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 youtubePlatform.handleSearchAction(val);
             } else if (currentPlatform === 'instagram') {
                 if (!val.startsWith('http')) {
-                    val = `https://www.instagram.com/${val}`;
+                    val = `https://www.instagram.com/${val.toLowerCase()}`;
                 }
                 instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
