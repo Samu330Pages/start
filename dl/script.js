@@ -1,4 +1,5 @@
 import { youtubePlatform } from './yt/yt.js';
+import { instagramPlatform } from './instagram/instagram.js';
 //import { tiktokPlatform } from './tiktok/tiktok.js';
 
 document.addEventListener('contextmenu', (event) => {
@@ -21,7 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const queryLabel = document.getElementById('queryLabel');
     const platformDetailsView = document.getElementById('platformDetailsView');
 
-    // Temas y diálogos
     const themeStylesheet = document.getElementById('theme-stylesheet');
     const modeToggleBtn = document.getElementById('modeToggleBtn');
     const modeIcon = document.getElementById('modeIcon');
@@ -32,6 +32,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const themeMenu = document.getElementById('themeMenu');
     const dialog = document.getElementById('warningDialog');
     const closeDialogBtn = document.getElementById('closeWarningBtn');
+    const inputPrefix = document.getElementById('inputPrefix');
+
+    let currentPlatform = 'youtube';
 
     const generalUrlRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i;
 
@@ -50,14 +53,42 @@ window.addEventListener('DOMContentLoaded', () => {
         resultsContainer
     });
 
-    //tiktokPlatform.init(sharedDom);
+    instagramPlatform.init({
+        ...sharedDom,
+        queryLabel,
+        loadingIndicator,
+        resultsContainer
+    });
+
+    function updatePlatformInputMode() {
+        let value = userInput.value.trim();
+
+        if (youtubePlatform.regex.test(value)) {
+            userInput.label = "Enlace de YouTube detectado";
+            inputPrefix.innerHTML = `<i class="fa-brands fa-youtube" style="color: #ff0000; font-size: 1.2rem;"></i>`;
+            return;
+        }
+
+        if (instagramPlatform.regex.test(value)) {
+            userInput.label = "Enlace o perfil de Instagram detectado";
+            inputPrefix.innerHTML = `<i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 1.2rem;"></i>`;
+            return;
+        }
+
+        if (currentPlatform === 'instagram') {
+            userInput.label = "Nombre de usuario de Instagram";
+            inputPrefix.innerHTML = `<span style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 1.2rem; line-height: 1;">@</span>`;
+        } else {
+            userInput.label = "Búsqueda o link multimedia";
+            inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
+        }
+    }
 
     // --- CREACIÓN DE CHIPS 🥔 ---
     let platformChipsContainer = document.getElementById('platformChipsContainer');
     if (!platformChipsContainer) {
         platformChipsContainer = document.createElement('div');
         platformChipsContainer.id = 'platformChipsContainer';
-        platformChipsContainer.className = 'hidden-view';
         platformChipsContainer.style.cssText = 'display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 16px;';
         platformChipsContainer.innerHTML = `
             <md-chip-set id="platformChipSet">
@@ -72,12 +103,17 @@ window.addEventListener('DOMContentLoaded', () => {
         const chips = platformChipsContainer.querySelectorAll('md-filter-chip');
         chips.forEach(chip => {
             chip.addEventListener('click', () => {
-                chips.forEach(c => c.selected = false);
-                chip.selected = true;
+                currentPlatform = chip.getAttribute('data-platform');
 
-                const platform = chip.getAttribute('data-platform');
-                if (platform !== 'youtube') {
-                    showUnavailableModal(platform);
+                chips.forEach(c => {
+                    c.selected = (c === chip);
+                });
+
+                updatePlatformInputMode();
+                processInput();
+
+                if (currentPlatform !== 'youtube' && currentPlatform !== 'instagram') {
+                    showUnavailableModal(currentPlatform);
                 }
             });
         });
@@ -110,32 +146,51 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function processInput() {
-        let value = userInput.value.trim();
+        let value = userInput.value;
+
+        if (currentPlatform === 'instagram' && !instagramPlatform.regex.test(value)) {
+            value = value.replace(/\s+/g, '');
+            userInput.value = value;
+        }
+
+        updatePlatformInputMode();
+
+        value = value.trim();
         userInput.error = false;
         actionBtn.classList.add('hidden-view');
+
+        if (platformChipsContainer) {
+            platformChipsContainer.classList.remove('hidden-view');
+        }
 
         if (value === '') {
             clearBtn.style.display = 'none';
             setEnterKeyHint('search');
-            if (platformChipsContainer) platformChipsContainer.classList.add('hidden-view');
             return;
         }
         clearBtn.style.display = 'inline-flex';
 
-        if (youtubePlatform.regex.test(value) /*|| tiktokPlatform.regex.test(value)*/) {
+        if (youtubePlatform.regex.test(value) || instagramPlatform.regex.test(value)) {
             setButtonState('download', 'Descargar', 'fa-solid fa-download');
             setEnterKeyHint('send');
             actionBtn.classList.remove('hidden-view');
-            if (platformChipsContainer) platformChipsContainer.classList.add('hidden-view');
-        } else if (generalUrlRegex.test(value)) {
-            userInput.error = true;
-            setEnterKeyHint('done');
-            if (platformChipsContainer) platformChipsContainer.classList.add('hidden-view');
-        } else {
+            if (platformChipsContainer) {
+                platformChipsContainer.classList.add('hidden-view');
+            }
+        }
+        else if (currentPlatform === 'instagram') {
             setButtonState('search', 'Buscar', 'fa-solid fa-magnifying-glass');
             setEnterKeyHint('search');
             actionBtn.classList.remove('hidden-view');
-            if (platformChipsContainer) platformChipsContainer.classList.remove('hidden-view');
+        }
+        else if (generalUrlRegex.test(value)) {
+            userInput.error = true;
+            setEnterKeyHint('done');
+        }
+        else {
+            setButtonState('search', 'Buscar', 'fa-solid fa-magnifying-glass');
+            setEnterKeyHint('search');
+            actionBtn.classList.remove('hidden-view');
         }
     }
 
@@ -174,23 +229,25 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     actionBtn.addEventListener('click', () => {
-        const val = userInput.value.trim();
+        let val = userInput.value.trim();
         const currentAction = actionBtn.getAttribute('data-action');
 
         if (currentAction === 'download') {
-            if (tiktokPlatform.regex.test(val)) {
-                tiktokPlatform.handleDownloadAction(val, 'searchView');
+            if (instagramPlatform.regex.test(val)) {
+                instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
                 youtubePlatform.handleDownloadAction(val, 'searchView');
             }
         } else if (currentAction === 'search') {
-            const selectedChip = platformChipsContainer ? platformChipsContainer.querySelector('md-filter-chip[selected]') : null;
-            const targetPlatform = selectedChip ? selectedChip.getAttribute('data-platform') : 'youtube';
-
-            if (targetPlatform === 'youtube') {
+            if (currentPlatform === 'youtube') {
                 youtubePlatform.handleSearchAction(val);
+            } else if (currentPlatform === 'instagram') {
+                if (!val.startsWith('http')) {
+                    val = `https://www.instagram.com/${val}`;
+                }
+                instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
-                showUnavailableModal(targetPlatform);
+                showUnavailableModal(currentPlatform);
             }
         }
     });
