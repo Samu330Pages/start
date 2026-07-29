@@ -34,7 +34,7 @@ export const instagramPlatform = {
 
             json.data.forEach((item, index) => {
                 const isVideo = item.type === 'video';
-                const badgeText = isVideo ? 'Video de Instagram' : 'Foto de Instagram';
+                const badgeText = isVideo ? 'Video' : 'Foto';
                 const badgeIcon = isVideo ? 'fa-solid fa-video' : 'fa-solid fa-image';
                 const downloadText = isVideo ? 'Descargar Video' : 'Descargar Foto';
 
