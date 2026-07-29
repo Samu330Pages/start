@@ -93,8 +93,8 @@ window.addEventListener('DOMContentLoaded', () => {
         platformChipsContainer.innerHTML = `
             <md-chip-set id="platformChipSet">
                 <md-filter-chip label="YouTube" data-platform="youtube" selected></md-filter-chip>
-                <md-filter-chip label="Spotify" data-platform="spotify"></md-filter-chip>
                 <md-filter-chip label="Instagram" data-platform="instagram"></md-filter-chip>
+                <md-filter-chip label="Spotify" data-platform="spotify"></md-filter-chip>
                 <md-filter-chip label="Imágenes" data-platform="images"></md-filter-chip>
             </md-chip-set>
         `;
