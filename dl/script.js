@@ -70,7 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         if (instagramPlatform.regex.test(value)) {
-            userInput.label = "Enlace o perfil de Instagram detectado";
+            userInput.label = "Enlace de Instagram detectado";
             inputPrefix.innerHTML = `<i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 1.2rem;"></i>`;
             return;
         }
@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
             userInput.label = "Nombre de usuario de Instagram";
             inputPrefix.innerHTML = `<span style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 1.2rem; line-height: 1;">@</span>`;
         } else {
-            userInput.label = "Búsqueda o link multimedia";
+            userInput.label = "Búsqueda o link de Youtube";
             inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
         }
     }
