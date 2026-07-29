@@ -39,7 +39,6 @@
 <body class="light">
   <div class="main-container">
 
-    <!-- PANTALLA 1: Búsqueda Global (Universal) -->
     <div id="searchView" class="card">
       <div class="theme-controls" style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
 
@@ -106,7 +105,7 @@
       </div>
       <form id="actionForm">
         <div class="input-row">
-          <md-outlined-text-field id="userInput" label="Búsqueda o link multimedia"
+          <md-outlined-text-field id="userInput" label="Búsqueda o link de YouTube"
             error-text="Plataforma no soportada todavía." autocomplete="off">
             <div slot="leading-icon" id="inputPrefix"
               style="display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--md-sys-color-on-surface-variant);">
@@ -133,7 +132,6 @@
       <div class="footer-credit"> Funcionamiento impulsado por <span>yt-dlp</span> 🚀 </div>
     </div>
 
-    <!-- PANTALLA 2: Resultados de búsqueda global (Universal) -->
     <div id="resultsView" class="card hidden-view">
       <div class="results-header">
         <div>
@@ -153,7 +151,6 @@
       <div id="resultsContainer" class="results-list hidden-view"></div>
     </div>
 
-    <!-- PANTALLA 3: Contenedor Dinámico Maestro (Aquí cada módulo inyecta su propia pantalla de detalles única) -->
     <div id="platformDetailsView" class="hidden-view"></div>
 
     <md-dialog id="warningDialog">
