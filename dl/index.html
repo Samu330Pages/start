@@ -5,13 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Media Downloader</title>
-  <link rel="icon" href="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/icon.png" type="image/png">
+  <link rel="icon" href="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/icon.png"
+    type="image/png">
   <meta property="og:image" content="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/cover.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/Samu330Pages/start/main/dl/yt/images/cover.jpg">
-  
-  <meta name="description" content="Busca, descarga y convierte videos y audios de diferentes plataformas de forma rápida y segura.">
+
+  <meta name="description"
+    content="Busca, descarga y convierte videos y audios de diferentes plataformas de forma rápida y segura.">
   <meta name="author" content="Samu330">
   <meta name="robots" content="index, follow">
 
@@ -36,7 +38,7 @@
 
 <body class="light">
   <div class="main-container">
-    
+
     <!-- PANTALLA 1: Búsqueda Global (Universal) -->
     <div id="searchView" class="card">
       <div class="theme-controls" style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
@@ -106,11 +108,17 @@
         <div class="input-row">
           <md-outlined-text-field id="userInput" label="Búsqueda o link multimedia"
             error-text="Plataforma no soportada todavía." autocomplete="off">
+            <div slot="leading-icon" id="inputPrefix"
+              style="display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--md-sys-color-on-surface-variant);">
+              <i class="fa-solid fa-magnifying-glass" id="prefixIcon"></i>
+            </div>
+
             <md-icon-button slot="trailing-icon" id="clearBtn" type="button" title="Limpiar campo"
               style="display: none;">
               <i class="fa-solid fa-xmark"></i>
             </md-icon-button>
           </md-outlined-text-field>
+
           <md-icon-button type="button" id="pasteBtn" title="Pegar del portapapeles" style="margin-top: 8px;">
             <i class="fa-solid fa-paste"></i>
           </md-icon-button>
@@ -147,10 +155,11 @@
 
     <!-- PANTALLA 3: Contenedor Dinámico Maestro (Aquí cada módulo inyecta su propia pantalla de detalles única) -->
     <div id="platformDetailsView" class="hidden-view"></div>
-    
+
     <md-dialog id="warningDialog">
       <div slot="headline">Acción no permitida</div>
-      <div slot="content">Hay una descarga en proceso. No puedes salir ni regresar hasta que finalice o se cancele.</div>
+      <div slot="content">Hay una descarga en proceso. No puedes salir ni regresar hasta que finalice o se cancele.
+      </div>
       <div slot="actions">
         <md-text-button id="closeWarningBtn" form="warningDialog" value="ok">Okas!</md-text-button>
       </div>
