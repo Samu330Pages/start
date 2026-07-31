@@ -1,5 +1,5 @@
-import { youtubePlatform } from './yt/yt.js';
-import { instagramPlatform } from './instagram/instagram.js';
+import { youtubePlatform } from './services/yt/yt.js';
+import { instagramPlatform } from './services/instagram/instagram.js';
 //import { tiktokPlatform } from './tiktok/tiktok.js';
 
 document.addEventListener('contextmenu', (event) => {
