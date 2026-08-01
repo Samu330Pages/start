@@ -1,5 +1,6 @@
 import { youtubePlatform } from './services/yt/yt.js';
 import { instagramPlatform } from './services/instagram/instagram.js';
+import { facebookPlatform } from './services/facebook/facebook.js';
 //import { tiktokPlatform } from './tiktok/tiktok.js';
 
 document.addEventListener('contextmenu', (event) => {
@@ -60,12 +61,25 @@ window.addEventListener('DOMContentLoaded', () => {
         resultsContainer
     });
 
+    facebookPlatform.init({
+        ...sharedDom,
+        queryLabel,
+        loadingIndicator,
+        resultsContainer
+    });
+
     function updatePlatformInputMode() {
         let value = userInput.value.trim();
 
         if (youtubePlatform.regex.test(value)) {
             userInput.label = "Enlace de YouTube detectado";
             inputPrefix.innerHTML = `<i class="fa-brands fa-youtube" style="color: #ff0000; font-size: 1.2rem;"></i>`;
+            return;
+        }
+
+        if (facebookPlatform.regex.test(value)) {
+            userInput.label = "Enlace de Facebook detectado";
+            inputPrefix.innerHTML = `<i class="fa-brands fa-facebook" style="color: #1877f2; font-size: 1.2rem;"></i>`;
             return;
         }
 
@@ -79,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
             userInput.label = "Nombre de usuario de Instagram";
             inputPrefix.innerHTML = `<span style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 1.2rem; line-height: 1;">@</span>`;
         } else {
-            userInput.label = "Búsqueda o link de Youtube";
+            userInput.label = "Búsqueda o link de YouTube";
             inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
         }
     }
@@ -93,8 +107,8 @@ window.addEventListener('DOMContentLoaded', () => {
         platformChipsContainer.innerHTML = `
             <md-chip-set id="platformChipSet">
                 <md-filter-chip label="YouTube" data-platform="youtube" selected></md-filter-chip>
-                <md-filter-chip label="Instagram" data-platform="instagram"></md-filter-chip>
                 <md-filter-chip label="Spotify" data-platform="spotify"></md-filter-chip>
+                <md-filter-chip label="Instagram" data-platform="instagram"></md-filter-chip>
                 <md-filter-chip label="Imágenes" data-platform="images"></md-filter-chip>
             </md-chip-set>
         `;
@@ -149,7 +163,7 @@ window.addEventListener('DOMContentLoaded', () => {
         let value = userInput.value;
 
         if (currentPlatform === 'instagram' && !instagramPlatform.regex.test(value)) {
-            value = value.replace(/\s+/g, '').toLowerCase();
+            value = value.replace(/\s+/g, '');
             userInput.value = value;
         }
 
@@ -170,7 +184,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         clearBtn.style.display = 'inline-flex';
 
-        if (youtubePlatform.regex.test(value) || instagramPlatform.regex.test(value)) {
+        if (youtubePlatform.regex.test(value) || facebookPlatform.regex.test(value) || instagramPlatform.regex.test(value)) {
             setButtonState('download', 'Descargar', 'fa-solid fa-download');
             setEnterKeyHint('send');
             actionBtn.classList.remove('hidden-view');
@@ -233,7 +247,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const currentAction = actionBtn.getAttribute('data-action');
 
         if (currentAction === 'download') {
-            if (instagramPlatform.regex.test(val)) {
+            if (facebookPlatform.regex.test(val)) {
+                facebookPlatform.handleDownloadAction(val, 'searchView');
+            } else if (instagramPlatform.regex.test(val)) {
                 instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
                 youtubePlatform.handleDownloadAction(val, 'searchView');
@@ -243,7 +259,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 youtubePlatform.handleSearchAction(val);
             } else if (currentPlatform === 'instagram') {
                 if (!val.startsWith('http')) {
-                    val = `https://www.instagram.com/${val.toLowerCase()}`;
+                    val = `https://www.instagram.com/${val}`;
                 }
                 instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
