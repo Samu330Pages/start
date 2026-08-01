@@ -280,7 +280,7 @@ export const youtubePlatform = {
         `;
 
         const dialog = wrapper.querySelector('#downloadProgressDialog');
-        // Evitar que se cierre al hacer clic fuera del diálogo o presionar Escape
+        
         dialog.addEventListener('cancel', (e) => {
             e.preventDefault();
         });
@@ -496,7 +496,6 @@ export const youtubePlatform = {
             return;
         }
 
-        // Temporizador de 15 segundos para cambiar textos si la descarga tarda en iniciar la transmisión
         let timeoutTriggered = false;
         const speedTimer = setTimeout(() => {
             timeoutTriggered = true;
@@ -507,14 +506,14 @@ export const youtubePlatform = {
         }, 15000);
 
         try {
-            // Se realiza la petición. El diálogo se abrirá únicamente al recibir respuesta exitosa y empezar a procesar chunks.
+            
             const response = await fetch(downloadUrl);
 
             if (!response.ok) {
                 throw new Error('Error al procesar la descarga en el servidor.');
             }
 
-            // AHORA SÍ: Abrir diálogo al iniciar la descarga real
+            
             if (dialog) dialog.show();
             if (statusText) statusText.textContent = 'Iniciando descarga...';
             if (percentText) percentText.textContent = '0%';
