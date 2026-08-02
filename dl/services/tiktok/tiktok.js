@@ -83,9 +83,10 @@ export const tiktokPlatform = {
 
                     const author = video.author || {};
                     const musicInfo = video.music_info || {};
+                    const thumbnail = video.cover_ia || video.cover || '';
+                    const audioUrl = musicInfo.url || musicInfo.play || '';
 
                     card.innerHTML = `
-                        <!-- Info del Autor -->
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--md-sys-color-surface-variant); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                                 <img src="${author.avatar || ''}" alt="Avatar" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -99,27 +100,36 @@ export const tiktokPlatform = {
 
                         <p style="font-size: 0.9rem; color: var(--md-sys-color-on-surface); margin: 0; line-height: 1.4;">${video.title || ''}</p>
                         
-                        <!-- Reproductor de Video Directo -->
                         <div style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid var(--md-sys-color-outline-variant);">
-                            <video controls preload="metadata" style="width: 100%; max-height: 420px; display: block; object-fit: contain;">
+                            <video controls preload="metadata" poster="${thumbnail}" style="width: 100%; max-height: 420px; display: block; object-fit: contain;">
                                 <source src="${video.play}" type="video/mp4">
                                 Tu navegador no soporta la reproducción de video.
                             </video>
                         </div>
 
-                        <!-- Información de la Música -->
-                        <div style="display: flex; align-items: center; gap: 10px; background: var(--md-sys-color-surface); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant);">
-                            <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
-                                <img src="${musicInfo.cover || ''}" alt="Cover" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <i class="fa-solid fa-music" style="display: ${musicInfo.cover ? 'none' : 'flex'}; font-size: 0.9rem;"></i>
+                        <div style="display: flex; flex-direction: column; gap: 8px; background: var(--md-sys-color-surface); padding: 12px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
+                                    <img src="${musicInfo.cover || ''}" alt="Cover" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fa-solid fa-music" style="display: ${musicInfo.cover ? 'none' : 'flex'}; font-size: 0.9rem;"></i>
+                                </div>
+                                <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
+                                    <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
+                                </div>
                             </div>
-                            <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
-                                <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
-                                <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
-                            </div>
+                            
+                            ${audioUrl ? `
+                                <audio controls preload="none" style="width: 100%; height: 36px; border-radius: 6px;">
+                                    <source src="${audioUrl}" type="audio/mp3">
+                                    Tu navegador no soporta audio.
+                                </audio>
+                                <md-filled-button class="audio-dl-btn" data-url="${audioUrl}" data-name="tiktok_audio_${video.id || 'music'}.mp3" style="width: 100%; font-size: 0.75rem;">
+                                    <i class="fa-solid fa-download" slot="icon"></i> Descargar Audio (.mp3)
+                                </md-filled-button>
+                            ` : ''}
                         </div>
 
-                        <!-- Estadísticas -->
                         <div style="display: flex; justify-content: space-around; font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); background: var(--md-sys-color-surface-variant); padding: 8px; border-radius: 10px;">
                             <span><i class="fa-solid fa-eye"></i> ${this.formatNumber(video.play_count)}</span>
                             <span><i class="fa-solid fa-heart"></i> ${this.formatNumber(video.digg_count)}</span>
@@ -127,6 +137,26 @@ export const tiktokPlatform = {
                             <span><i class="fa-solid fa-share"></i> ${this.formatNumber(video.share_count)}</span>
                         </div>
                     `;
+
+                    const audioDlBtn = card.querySelector('.audio-dl-btn');
+                    if (audioDlBtn) {
+                        audioDlBtn.addEventListener('click', async () => {
+                            try {
+                                const res = await fetch(audioUrl);
+                                const blob = await res.blob();
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = blobUrl;
+                                a.download = `tiktok_audio_${video.id || 'music'}.mp3`;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                window.URL.revokeObjectURL(blobUrl);
+                            } catch (e) {
+                                window.open(audioUrl, '_blank');
+                            }
+                        });
+                    }
 
                     contentWrapper.appendChild(card);
                 });
