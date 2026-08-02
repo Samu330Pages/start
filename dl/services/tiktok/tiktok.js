@@ -241,7 +241,7 @@ export const tiktokPlatform = {
                                     <div style="position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 3/4;">
                                         <img src="${imgUrl}" alt="Imagen ${idx + 1}" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.style.display='none';">
                                     </div>
-                                    <md-filled-button class="single-dl-btn" data-url="${dlItem.url}" data-name="tiktok_${data.id}_img_${idx + 1}.jpg" style="width: 100%; font-size: 0.75rem;">
+                                    <md-filled-button class="single-dl-btn" data-url="${dlItem.url}" data-name="samu330.com_tiktok_${data.id}_img_${idx + 1}.jpg" style="width: 100%; font-size: 0.75rem;">
                                         <i class="fa-solid fa-download" slot="icon"></i> Descargar
                                     </md-filled-button>
                                 </div>
@@ -289,6 +289,33 @@ export const tiktokPlatform = {
                 <span style="font-size: 0.85rem; color: var(--md-sys-color-primary); font-weight: 500;">Opciones de descarga:</span>
                 <div style="display: flex; flex-direction: column; gap: 8px;" id="downloadsContainer"></div>
             `;
+
+            card.querySelectorAll('.single-dl-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const dlUrl = btn.getAttribute('data-url');
+                    const fileName = btn.getAttribute('data-name');
+                    try {
+                        btn.disabled = true;
+                        btn.textContent = 'Descargando...';
+                        const fileRes = await fetch(dlUrl);
+                        const blob = await fileRes.blob();
+                        const blobUrl = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(blobUrl);
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-download" slot="icon"></i> Descargar`;
+                    } catch (e) {
+                        window.open(dlUrl, '_blank');
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-download" slot="icon"></i> Descargar`;
+                    }
+                });
+            });
 
             const downloadsContainer = card.querySelector('#downloadsContainer');
 
