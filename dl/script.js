@@ -105,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (currentPlatform === 'instagram') {
             userInput.label = "Nombre de usuario de Instagram";
             inputPrefix.innerHTML = `<span style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 1.2rem; line-height: 1;">@</span>`;
-        } if else (currentPlatform === 'tiktok') {
+        } else if (currentPlatform === 'tiktok') {
             userInput.label = "Buscar en TikTok";
             inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
         } else {
