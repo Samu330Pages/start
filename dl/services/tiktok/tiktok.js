@@ -96,7 +96,7 @@ export const tiktokPlatform = {
 
                     const author = video.author || {};
                     const musicInfo = video.music_info || {};
-                    const thumbnail = video.cover_ia || video.cover || '';
+                    const thumbnail = video.ai_dynamic_cover || video.cover || '';
                     const audioUrl = musicInfo.url || musicInfo.play || '';
 
                     card.innerHTML = `
@@ -147,26 +147,6 @@ export const tiktokPlatform = {
                             <span><i class="fa-solid fa-share"></i> ${this.formatNumber(video.share_count)}</span>
                         </div>
                     `;
-
-                    const audioDlBtn = card.querySelector('.audio-dl-btn');
-                    if (audioDlBtn) {
-                        audioDlBtn.addEventListener('click', async () => {
-                            try {
-                                const res = await fetch(audioUrl);
-                                const blob = await res.blob();
-                                const blobUrl = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = blobUrl;
-                                a.download = `tiktok_audio_${video.id || 'music'}.mp3`;
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-                                window.URL.revokeObjectURL(blobUrl);
-                            } catch (e) {
-                                window.open(audioUrl, '_blank');
-                            }
-                        });
-                    }
 
                     contentWrapper.appendChild(card);
                 });
@@ -334,7 +314,7 @@ export const tiktokPlatform = {
                             const blobUrl = window.URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = blobUrl;
-                            a.download = `tiktok_${data.id || 'media'}.${dl.type === 'audio' ? 'mp3' : 'mp4'}`;
+                            a.download = `samu330.com_tiktok_${data.id || 'media'}.${dl.type === 'audio' ? 'mp3' : 'mp4'}`;
                             document.body.appendChild(a);
                             a.click();
                             a.remove();
