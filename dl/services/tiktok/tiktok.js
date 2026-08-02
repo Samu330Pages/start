@@ -138,10 +138,34 @@ export const tiktokPlatform = {
                     `;
 
                     card.querySelectorAll('.dl-btn').forEach(btn => {
-                        btn.addEventListener('click', () => {
+                        btn.addEventListener('click', async () => {
                             const fileUrl = btn.getAttribute('data-url');
+                            const fileName = btn.getAttribute('data-name') || 'tiktok_media.mp4';
                             if (!fileUrl) return;
-                            window.open(fileUrl, '_blank');
+
+                            try {
+                                const originalHTML = btn.innerHTML;
+                                btn.disabled = true;
+                                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin" slot="icon"></i> Descargando...`;
+
+                                const fileRes = await fetch(fileUrl);
+                                const blob = await fileRes.blob();
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = blobUrl;
+                                a.download = fileName;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                window.URL.revokeObjectURL(blobUrl);
+
+                                btn.disabled = false;
+                                btn.innerHTML = originalHTML;
+                            } catch (e) {
+                                window.open(fileUrl, '_blank');
+                                btn.disabled = false;
+                                btn.innerHTML = originalHTML;
+                            }
                         });
                     });
 
