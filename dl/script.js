@@ -1,7 +1,7 @@
 import { youtubePlatform } from './services/yt/yt.js';
 import { instagramPlatform } from './services/instagram/instagram.js';
 import { facebookPlatform } from './services/facebook/facebook.js';
-//import { tiktokPlatform } from './tiktok/tiktok.js';
+import { tiktokPlatform } from './services/tiktok/tiktok.js';
 
 document.addEventListener('contextmenu', (event) => {
     event.preventDefault();
@@ -68,6 +68,13 @@ window.addEventListener('DOMContentLoaded', () => {
         resultsContainer
     });
 
+    tiktokPlatform.init({
+        ...sharedDom,
+        queryLabel,
+        loadingIndicator,
+        resultsContainer
+    });
+
     function updatePlatformInputMode() {
         let value = userInput.value.trim();
 
@@ -83,6 +90,12 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (tiktokPlatform.regex.test(value)) {
+            userInput.label = "Enlace de TikTok detectado";
+            inputPrefix.innerHTML = `<i class="fa-brands fa-tiktok" style="color: var(--md-sys-color-primary); font-size: 1.2rem;"></i>`;
+            return;
+        }
+
         if (instagramPlatform.regex.test(value)) {
             userInput.label = "Enlace de Instagram detectado";
             inputPrefix.innerHTML = `<i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 1.2rem;"></i>`;
@@ -92,6 +105,9 @@ window.addEventListener('DOMContentLoaded', () => {
         if (currentPlatform === 'instagram') {
             userInput.label = "Nombre de usuario de Instagram";
             inputPrefix.innerHTML = `<span style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 1.2rem; line-height: 1;">@</span>`;
+        } if else (currentPlatform === 'tiktok') {
+            userInput.label = "Buscar en TikTok";
+            inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
         } else {
             userInput.label = "Búsqueda o link de YouTube";
             inputPrefix.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i>`;
@@ -107,8 +123,9 @@ window.addEventListener('DOMContentLoaded', () => {
         platformChipsContainer.innerHTML = `
             <md-chip-set id="platformChipSet">
                 <md-filter-chip label="YouTube" data-platform="youtube" selected></md-filter-chip>
-                <md-filter-chip label="Spotify" data-platform="spotify"></md-filter-chip>
                 <md-filter-chip label="Instagram" data-platform="instagram"></md-filter-chip>
+                <md-filter-chip label="TikTok" data-platform="tiktok"></md-filter-chip>
+                <md-filter-chip label="Spotify" data-platform="spotify"></md-filter-chip>
                 <md-filter-chip label="Imágenes" data-platform="images"></md-filter-chip>
             </md-chip-set>
         `;
@@ -126,7 +143,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 updatePlatformInputMode();
                 processInput();
 
-                if (currentPlatform !== 'youtube' && currentPlatform !== 'instagram') {
+                if (currentPlatform !== 'youtube' && currentPlatform !== 'instagram' && currentPlatform !== 'tiktok') {
                     showUnavailableModal(currentPlatform);
                 }
             });
@@ -184,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         clearBtn.style.display = 'inline-flex';
 
-        if (youtubePlatform.regex.test(value) || facebookPlatform.regex.test(value) || instagramPlatform.regex.test(value)) {
+        if (youtubePlatform.regex.test(value) || facebookPlatform.regex.test(value) || instagramPlatform.regex.test(value) || tiktokPlatform.regex.test(value)) {
             setButtonState('download', 'Descargar', 'fa-solid fa-download');
             setEnterKeyHint('send');
             actionBtn.classList.remove('hidden-view');
@@ -249,6 +266,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (currentAction === 'download') {
             if (facebookPlatform.regex.test(val)) {
                 facebookPlatform.handleDownloadAction(val, 'searchView');
+            } else if (tiktokPlatform.regex.test(val)) {
+                tiktokPlatform.handleDownloadAction(val, 'searchView');
             } else if (instagramPlatform.regex.test(val)) {
                 instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
@@ -257,9 +276,11 @@ window.addEventListener('DOMContentLoaded', () => {
         } else if (currentAction === 'search') {
             if (currentPlatform === 'youtube') {
                 youtubePlatform.handleSearchAction(val);
+            } else if (currentPlatform === 'tiktok') {
+                tiktokPlatform.handleSearchAction(val);
             } else if (currentPlatform === 'instagram') {
                 if (!val.startsWith('http')) {
-                    val = `https://www.instagram.com/${val}`;
+                    val = `https://www.instagram.com/${val.toLowerCase()}`;
                 }
                 instagramPlatform.handleDownloadAction(val, 'searchView');
             } else {
