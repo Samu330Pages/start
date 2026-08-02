@@ -3,6 +3,19 @@ export const tiktokPlatform = {
 
     init(dom) {
         this.dom = dom;
+
+        if (!window._mediaMutexInitialized) {
+            window._mediaMutexInitialized = true;
+            document.addEventListener('play', (e) => {
+                const target = e.target;
+                if (target && (target.tagName === 'VIDEO' || target.tagName === 'AUDIO')) {
+                    if (window._currentActiveMedia && window._currentActiveMedia !== target) {
+                        window._currentActiveMedia.pause();
+                    }
+                    window._currentActiveMedia = target;
+                }
+            }, true);
+        }
     },
 
     formatNumber(num) {
@@ -120,13 +133,10 @@ export const tiktokPlatform = {
                             </div>
                             
                             ${audioUrl ? `
-                                <audio controls preload="none" style="width: 100%; height: 36px; border-radius: 6px;">
+                                <audio class="managed-audio" controls preload="none" style="width: 100%; height: 36px; border-radius: 6px;">
                                     <source src="${audioUrl}" type="audio/mp3">
                                     Tu navegador no soporta audio.
                                 </audio>
-                                <md-filled-button class="audio-dl-btn" data-url="${audioUrl}" data-name="tiktok_audio_${video.id || 'music'}.mp3" style="width: 100%; font-size: 0.75rem;">
-                                    <i class="fa-solid fa-download" slot="icon"></i> Descargar Audio (.mp3)
-                                </md-filled-button>
                             ` : ''}
                         </div>
 
