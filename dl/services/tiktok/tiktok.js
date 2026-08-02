@@ -107,13 +107,14 @@ export const tiktokPlatform = {
                         </div>
 
                         <div style="display: flex; align-items: center; gap: 10px; background: var(--md-sys-color-surface); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant);">
-                            <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
-                                <i class="fa-solid fa-music" style="font-size: 0.9rem;"></i>
-                            </div>
-                            <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
-                                <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
-                                <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
-                            </div>
+                        <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
+                        <img src="${musicInfo.cover || ''}" alt="Cover" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fa-solid fa-music" style="display: ${musicInfo.cover ? 'none' : 'flex'}; font-size: 0.9rem;"></i>
+                        </div>
+                        <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
+                        <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
+                        </div>
                         </div>
 
                         <div style="display: flex; justify-content: space-around; font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); background: var(--md-sys-color-surface-variant); padding: 8px; border-radius: 10px;">
@@ -191,7 +192,7 @@ export const tiktokPlatform = {
         resultsView.classList.remove('hidden-view');
 
         queryLabel.textContent = url;
-        loadingIndicator.classList.add('hidden-view');
+        loadingIndicator.classList.remove('hidden-view');
         resultsContainer.classList.add('hidden-view');
         resultsContainer.innerHTML = '';
 
