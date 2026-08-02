@@ -283,7 +283,7 @@ export const tiktokPlatform = {
                     <span><i class="fa-solid fa-comment"></i> ${this.formatNumber(stats.comments)}</span>
                 </div>
 
-                <span style="font-size: 0.85rem; color: var(--md-sys-color-primary); font-weight: 500;">Opciones de descarga generales:</span>
+                <span style="font-size: 0.85rem; color: var(--md-sys-color-primary); font-weight: 500;">Opciones de descarga:</span>
                 <div style="display: flex; flex-direction: column; gap: 8px;" id="downloadsContainer"></div>
             `;
 
