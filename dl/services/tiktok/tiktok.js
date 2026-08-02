@@ -83,9 +83,9 @@ export const tiktokPlatform = {
 
                     const author = video.author || {};
                     const musicInfo = video.music_info || {};
-                    const coverImg = video.ai_dynamic_cover || video.cover || '';
 
                     card.innerHTML = `
+                        <!-- Info del Autor -->
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--md-sys-color-surface-variant); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                                 <img src="${author.avatar || ''}" alt="Avatar" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -99,72 +99,34 @@ export const tiktokPlatform = {
 
                         <p style="font-size: 0.9rem; color: var(--md-sys-color-on-surface); margin: 0; line-height: 1.4;">${video.title || ''}</p>
                         
-                        <div style="position: relative; width: 100%; max-height: 350px; border-radius: 12px; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; border: 1px solid var(--md-sys-color-outline-variant);">
-                            <img src="${coverImg}" alt="Vista previa" referrerpolicy="no-referrer" style="width: 100%; max-height: 350px; object-fit: contain; display: block;" onerror="this.style.display='none';">
-                            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">
-                                <i class="fa-solid fa-clock"></i> ${this.formatDuration(video.duration)}
-                            </span>
+                        <!-- Reproductor de Video Directo -->
+                        <div style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid var(--md-sys-color-outline-variant);">
+                            <video controls preload="metadata" style="width: 100%; max-height: 420px; display: block; object-fit: contain;">
+                                <source src="${video.play}" type="video/mp4">
+                                Tu navegador no soporta la reproducción de video.
+                            </video>
                         </div>
 
+                        <!-- Información de la Música -->
                         <div style="display: flex; align-items: center; gap: 10px; background: var(--md-sys-color-surface); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant);">
-                        <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
-                        <img src="${musicInfo.cover || ''}" alt="Cover" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <i class="fa-solid fa-music" style="display: ${musicInfo.cover ? 'none' : 'flex'}; font-size: 0.9rem;"></i>
-                        </div>
-                        <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
-                        <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
-                        </div>
+                            <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--md-sys-color-primary-container); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--md-sys-color-on-primary-container);">
+                                <img src="${musicInfo.cover || ''}" alt="Cover" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <i class="fa-solid fa-music" style="display: ${musicInfo.cover ? 'none' : 'flex'}; font-size: 0.9rem;"></i>
+                            </div>
+                            <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                                <span style="font-size: 0.8rem; font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.title || 'Audio original'}</span>
+                                <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${musicInfo.author || author.nickname || 'Artista'}</span>
+                            </div>
                         </div>
 
+                        <!-- Estadísticas -->
                         <div style="display: flex; justify-content: space-around; font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); background: var(--md-sys-color-surface-variant); padding: 8px; border-radius: 10px;">
                             <span><i class="fa-solid fa-eye"></i> ${this.formatNumber(video.play_count)}</span>
                             <span><i class="fa-solid fa-heart"></i> ${this.formatNumber(video.digg_count)}</span>
                             <span><i class="fa-solid fa-comment"></i> ${this.formatNumber(video.comment_count)}</span>
                             <span><i class="fa-solid fa-share"></i> ${this.formatNumber(video.share_count)}</span>
                         </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
-                            <md-filled-button class="dl-btn" data-url="${video.play}" data-name="tiktok_${video.video_id}_clean.mp4">
-                                <i class="fa-solid fa-download" slot="icon"></i> Descargar sin marca de agua
-                            </md-filled-button>
-                            <md-outlined-button class="dl-btn" data-url="${video.wmplay}" data-name="tiktok_${video.video_id}_watermark.mp4">
-                                <i class="fa-solid fa-download" slot="icon"></i> Descargar con marca de agua
-                            </md-outlined-button>
-                            <md-text-button class="dl-btn" data-url="${musicInfo.play || video.music}" data-name="tiktok_${video.video_id}_audio.mp3">
-                                <i class="fa-solid fa-music" slot="icon"></i> Descargar Audio (MP3)
-                            </md-text-button>
-                        </div>
                     `;
-
-                    card.querySelectorAll('.dl-btn').forEach(btn => {
-                        btn.addEventListener('click', async () => {
-                            const fileUrl = btn.getAttribute('data-url');
-                            const fileName = btn.getAttribute('data-name') || 'tiktok_media.mp4';
-                            if (!fileUrl) return;
-
-                            btn.disabled = true;
-                            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin" slot="icon"></i> Descargando...`;
-
-                            try {
-                                const fileRes = await fetch(fileUrl);
-                                const blob = await fileRes.blob();
-                                const blobUrl = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = blobUrl;
-                                a.download = fileName;
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-                                window.URL.revokeObjectURL(blobUrl);
-                            } catch (e) {
-                                window.open(fileUrl, '_blank');
-                            } finally {
-                                btn.disabled = false;
-                                btn.innerHTML = btn.innerHTML;
-                            }
-                        });
-                    });
 
                     contentWrapper.appendChild(card);
                 });
