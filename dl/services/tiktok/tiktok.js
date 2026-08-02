@@ -143,11 +143,10 @@ export const tiktokPlatform = {
                             const fileName = btn.getAttribute('data-name') || 'tiktok_media.mp4';
                             if (!fileUrl) return;
 
-                            try {
-                                const originalHTML = btn.innerHTML;
-                                btn.disabled = true;
-                                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin" slot="icon"></i> Descargando...`;
+                            btn.disabled = true;
+                            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin" slot="icon"></i> Descargando...`;
 
+                            try {
                                 const fileRes = await fetch(fileUrl);
                                 const blob = await fileRes.blob();
                                 const blobUrl = window.URL.createObjectURL(blob);
@@ -158,13 +157,11 @@ export const tiktokPlatform = {
                                 a.click();
                                 a.remove();
                                 window.URL.revokeObjectURL(blobUrl);
-
-                                btn.disabled = false;
-                                btn.innerHTML = originalHTML;
                             } catch (e) {
                                 window.open(fileUrl, '_blank');
+                            } finally {
                                 btn.disabled = false;
-                                btn.innerHTML = originalHTML;
+                                btn.innerHTML = btn.innerHTML;
                             }
                         });
                     });
