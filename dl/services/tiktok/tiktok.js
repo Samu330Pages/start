@@ -250,15 +250,13 @@ export const tiktokPlatform = {
                     </div>
                 `;
             } else {
-                const videoPlayUrl = (data.downloads && (data.downloads.find(d => d.type === 'video' || d.type === 'hd')?.url)) || '';
+                const videoThumbnail = data.thumbnail || '';
                 mediaPreviewHTML = `
                     <div style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #000;">
-                        <video controls preload="metadata" style="width: 100%; max-height: 450px; display: block; object-fit: contain;">
-                            <source src="${videoPlayUrl}" type="video/mp4">
-                            Tu navegador no soporta la reproducción de video.
-                        </video>
+                        <img src="${videoThumbnail}" alt="Thumbnail" style="width: 100%; max-height: 450px; display: block; object-fit: contain;">
                     </div>
                 `;
+            }
 
             const stats = data.stats || {};
 
