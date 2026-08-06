@@ -357,7 +357,7 @@ export const tiktokPlatform = {
 
             resultsContainer.appendChild(card);
 
-        } catch (err) {
+        } catch(err) {
             loadingIndicator.classList.add('hidden-view');
             resultsContainer.classList.remove('hidden-view');
             resultsContainer.innerHTML = `
