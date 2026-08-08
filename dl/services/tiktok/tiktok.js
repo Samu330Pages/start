@@ -97,7 +97,7 @@ export const tiktokPlatform = {
                     const author = video.author || {};
                     const musicInfo = video.music_info || {};
                     const thumbnail = video.cover || '';
-                    const audioUrl = musicInfo.url || musicInfo.play || '';
+                    const audioUrl = video.music || musicInfo.play || '';
 
                     card.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 12px;">
