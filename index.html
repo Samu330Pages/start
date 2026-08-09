@@ -7,10 +7,10 @@
   <title>Samu330</title>
   <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4663/4663426.png" />
   <meta property="og:image" content="https://wallpapercave.com/wp/2HXC2I9.jpg" />
-  <meta name="description" content="👑">
+  <meta name="description" content="Descarga fácilmente multimedia de diversas plataformas, crea conversaciones falsa de WhatsApp y diviértete con múltiples minijuegos!!">
   <meta name="author" content="Samu330" />
   <meta name="copyright" content="Samu330" />
-  <meta name="keywords" content="samu330, juegos, game, online, clicker" />
+  <meta name="keywords" content="samu330, juegos, game, online, clicker, descargar videos youtube, descargador, downnloader, media downloader, descargar facebok, descargar tiktok, descargar videos, descargar spotify" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
@@ -445,6 +445,12 @@
     </div>
     <div class="card"
       data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
+      <i class="fas fa-download" style="font-size: 3rem"></i>
+      <h1 id="tt-DL">Media Downloader</h1>
+      <a id="btn-DL" class="button" href="./dl/">Entrar</a>
+    </div>
+    <div class="card"
+      data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
       <i class="fab fa-whatsapp" style="font-size: 3rem"></i>
       <h1 id="tt-WAG">WhatsApp Falso</h1>
       <a id="btn-WAG" class="button" href="./whatsapp/">Generar</a>
@@ -550,6 +556,7 @@
     const translations = {
       mx: {
         header: "Samu330 🌮",
+        ttDl: "Entrar",
         ttWAG: "WhatsApp Falso",
         ttSF: "Subway Surfers",
         ttMG: "Más juegos...",
@@ -569,6 +576,7 @@
       },
       us: {
         header: "Samu330 🌭",
+        ttDl: "Enter",
         ttWAG: "WhatsApp Fake",
         ttSF: "Subway Surfers",
         ttMG: "More games...",
@@ -588,6 +596,7 @@
       },
       id: {
         header: "Samu330 🇮🇩",
+        ttDl: "Memasuki",
         ttWAG: "WhatsApp Palsu",
         ttSF: "Subway Surfers",
         ttMG: "Permainan lainnya...",
@@ -607,6 +616,7 @@
       },
       cn: {
         header: "Samu330 🐉",
+        ttDl: "进入",
         ttWAG: "虚假 WhatsApp",
         ttSF: "地铁跑酷",
         ttMG: "其他游戏……",
@@ -626,6 +636,7 @@
       },
       ae: {
         header: "Samu330 🐪",
+        ttDl: "لنَدخُل.",
         ttWAG: "واتساب مزيف",
         ttSF: "سيرفرز صب واي",
         ttMG: "المزيد من الألعاب...",
@@ -666,6 +677,7 @@
         document.getElementById('lang-text').innerText = lang.toUpperCase();
         document.getElementById('flags').src = `https://flagcdn.com/40x30/${lang}.png`;
         document.getElementById('header-text').innerText = translations[lang].header;
+        document.getElementById('tt-DL').innerText = translations[lang].ttDL;
         document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
         document.getElementById('tt-SF').innerText = translations[lang].ttSF;
         document.getElementById('tt-MG').innerText = translations[lang].ttMG;
