@@ -446,7 +446,7 @@
     <div class="card"
       data-config='{"blurAmount": 0.40, "chromAberration": 0.2, "refraction": 1, "shadowOpacity": 0.70}'>
       <i class="fas fa-download" style="font-size: 3rem"></i>
-      <h1 id="tt-DL">Media Downloader</h1>
+      <h1 id="media-DL">Media Downloader</h1>
       <a id="btn-DL" class="button" href="./dl/">Entrar</a>
     </div>
     <div class="card"
@@ -556,7 +556,8 @@
     const translations = {
       mx: {
         header: "Samu330 🌮",
-        ttDl: "Entrar",
+        mediaDl: "Media Downloader",
+        btnDl: "Entrar",
         ttWAG: "WhatsApp Falso",
         ttSF: "Subway Surfers",
         ttMG: "Más juegos...",
@@ -576,7 +577,8 @@
       },
       us: {
         header: "Samu330 🌭",
-        ttDl: "Enter",
+        mediaDl: "Media Downloader",
+        btnDl: "Enter",
         ttWAG: "WhatsApp Fake",
         ttSF: "Subway Surfers",
         ttMG: "More games...",
@@ -596,7 +598,8 @@
       },
       id: {
         header: "Samu330 🇮🇩",
-        ttDl: "Memasuki",
+        mediaDl: "Pengunduh Media",
+        btnDl: "Memasuki",
         ttWAG: "WhatsApp Palsu",
         ttSF: "Subway Surfers",
         ttMG: "Permainan lainnya...",
@@ -616,7 +619,8 @@
       },
       cn: {
         header: "Samu330 🐉",
-        ttDl: "进入",
+        mediaDl: "媒体下载器",
+        btnDl: "进入",
         ttWAG: "虚假 WhatsApp",
         ttSF: "地铁跑酷",
         ttMG: "其他游戏……",
@@ -636,7 +640,8 @@
       },
       ae: {
         header: "Samu330 🐪",
-        ttDl: "لنَدخُل.",
+        mediaDl: "أداة تنزيل الوسائط",
+        btnDl: "لنَدخُل.",
         ttWAG: "واتساب مزيف",
         ttSF: "سيرفرز صب واي",
         ttMG: "المزيد من الألعاب...",
@@ -677,7 +682,8 @@
         document.getElementById('lang-text').innerText = lang.toUpperCase();
         document.getElementById('flags').src = `https://flagcdn.com/40x30/${lang}.png`;
         document.getElementById('header-text').innerText = translations[lang].header;
-        document.getElementById('tt-DL').innerText = translations[lang].ttDL;
+        document.getElementById('media-DL').innerText = translations[lang].mediaDL;
+        document.getElementById('btn-DL').innerText = translations[lang].btnDL;
         document.getElementById('tt-WAG').innerText = translations[lang].ttWAG;
         document.getElementById('tt-SF').innerText = translations[lang].ttSF;
         document.getElementById('tt-MG').innerText = translations[lang].ttMG;
