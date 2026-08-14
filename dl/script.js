@@ -10,7 +10,7 @@ document.addEventListener('contextmenu', (event) => {
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeDialog = document.getElementById('welcomeDialog');
     const linkWelcomeBtn = document.getElementById('linkWelcomeBtn');
-    const dismissWelcomeBtn = document.getElementById('dismissWelcomeBtn'); // Opcional
+    const dismissWelcomeBtn = document.getElementById('dismissWelcomeBtn');
 
     if (welcomeDialog) {
         setTimeout(() => {
