@@ -8,6 +8,31 @@ document.addEventListener('contextmenu', (event) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+    const welcomeDialog = document.getElementById('welcomeDialog');
+    const linkWelcomeBtn = document.getElementById('linkWelcomeBtn');
+    const dismissWelcomeBtn = document.getElementById('dismissWelcomeBtn'); // Opcional
+
+    if (welcomeDialog) {
+        setTimeout(() => {
+            welcomeDialog.show();
+        }, 100);
+
+        if (linkWelcomeBtn) {
+            linkWelcomeBtn.addEventListener('click', () => {
+                window.open('https://samu330.com/dl/Media%20Downloader', '_blank'); 
+                welcomeDialog.close();
+            });
+        }
+
+        if (dismissWelcomeBtn) {
+            dismissWelcomeBtn.addEventListener('click', () => {
+                welcomeDialog.close();
+            });
+        }
+    }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
     const searchView = document.getElementById('searchView');
     const actionForm = document.getElementById('actionForm');
     const userInput = document.getElementById('userInput');
