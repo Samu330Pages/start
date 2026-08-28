@@ -6,7 +6,7 @@ export const youtubePlatform = {
 
     dom: {},
     apiFormatsData: [],
-    selectedType: 'audio_only',
+    selectedType: 'mixed', // Cambiado a mixed por defecto según la nueva API
     currentVideoUrl: '',
     currentNavigationSource: 'searchView',
     isDownloading: false,
@@ -144,8 +144,9 @@ export const youtubePlatform = {
 
             if (data.success && data.metadata) {
                 detailsContent.classList.remove('hidden-view');
-                this.apiFormatsData = data.formats || [];
-                this.selectedType = 'audio_only';
+                // Adaptado para recolectar mixed y estructurar las opciones
+                this.apiFormatsData = data.formats?.mixed || [];
+                this.selectedType = 'mixed';
                 this.renderDetailsUI(detailsContent, data.metadata);
             } else {
                 detailsError.classList.remove('hidden-view');
@@ -166,6 +167,18 @@ export const youtubePlatform = {
     },
 
     renderDetailsUI(wrapper, meta) {
+        // Formatear duración de segundos a MM:SS o HH:MM:SS
+        const formatDuration = (sec) => {
+            if (!sec) return '00:00';
+            const hrs = Math.floor(sec / 3600);
+            const mins = Math.floor((sec % 3600) / 60);
+            const secs = sec % 60;
+            if (hrs > 0) {
+                return `${hrs}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        };
+
         wrapper.innerHTML = `
             <div class="video-hero">
                 <div class="video-hero-thumb-container">
@@ -176,11 +189,13 @@ export const youtubePlatform = {
                     <div class="video-hero-stats">
                         <span>
                             <i class="fa-solid fa-user-tag"></i>
-                            <strong id="infoChannel">${this.escapeHtml(meta.channel)}</strong>
+                            <strong id="infoChannel" style="cursor: pointer; color: var(--md-sys-color-primary); text-decoration: underline;" title="Ver canal">
+                                ${this.escapeHtml(meta.channel)} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
+                            </strong>
                         </span>
                         <span>
                             <i class="fa-solid fa-clock"></i>
-                            <span id="infoDuration">${meta.duration_formatted}</span>
+                            <span id="infoDuration">${formatDuration(meta.duration_seconds)}</span>
                         </span>
                         <span>
                             <i class="fa-solid fa-eye"></i>
@@ -189,76 +204,64 @@ export const youtubePlatform = {
                     </div>
                 </div>
             </div>
+
             <details class="description-box">
                 <summary>Ver Descripción</summary>
                 <div id="infoDescription" class="description-text">${this.escapeHtml(meta.description || 'Sin descripción disponible.')}</div>
             </details>
+
+            <!-- Chips de Material 3 para Categorías y Tags -->
+            <div style="margin: 12px 0; display: flex; flex-direction: column; gap: 8px;">
+                ${meta.categories && meta.categories.length > 0 ? `
+                    <div style="font-size: 0.85rem; font-weight: 500; color: var(--md-sys-color-on-surface-variant);">Categorías:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="categoriesChipsContainer">
+                        ${meta.categories.map(cat => `<md-filter-chip label="${this.escapeHtml(cat)}" class="search-trigger-chip" data-query="${this.escapeHtml(cat)}"></md-filter-chip>`).join('')}
+                    </div>
+                ` : ''}
+                ${meta.tags && meta.tags.length > 0 ? `
+                    <div style="font-size: 0.85rem; font-weight: 500; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">Etiquetas:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="tagsChipsContainer">
+                        ${meta.tags.map(tag => `<md-suggestion-chip label="${this.escapeHtml(tag)}" class="search-trigger-chip" data-query="${this.escapeHtml(tag)}"></md-suggestion-chip>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
             
             <div class="download-options-card">
                 <h4 class="options-title">
                     <i class="fa-solid fa-sliders"></i> Opciones de Descarga
                 </h4>
 
+                <!-- Botón rápido para descargar Audio M4A -->
+                <div style="margin-bottom: 16px;">
+                    <md-filled-tonal-button id="downloadAudioBtn" style="width: 100%;">
+                        <i class="fa-solid fa-music" slot="icon"></i>
+                        Descargar Audio (M4A)
+                    </md-filled-tonal-button>
+                </div>
+
                 <div class="codec-info-banner" style="margin: 12px 0; padding: 12px; border-radius: 8px; background: var(--md-sys-color-surface-container-low, #f1f3f4); font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
                     <div style="font-weight: 500; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-primary);">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span>Guía de Compatibilidad de Códecs</span>
+                        <span>Guía de Calidades y Códecs</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-circle-check" style="color: #2e7d32;"></i>
-                        <span><strong>Alta compatibilidad (AVC1/H.264):</strong> Reproducción universal en cualquier dispositivo o TV.</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-triangle-exclamation" style="color: #ed6c02;"></i>
-                        <span><strong>Alta eficiencia (AV1 / VP9):</strong> Excelente calidad/peso, pero requiere reproductores modernos.</span>
+                        <span><strong>AVC1:</strong> Máxima compatibilidad con cualquier dispositivo o reproductor.</span>
                     </div>
                 </div>
 
-                <div class="type-selector">
-                    <div class="type-chip ${this.selectedType === 'audio_only' ? 'active' : ''}" data-type="audio_only">
-                        <i class="fa-solid fa-music"></i>
-                        <span>Audio</span>
-                    </div>
-                    <div class="type-chip ${this.selectedType === 'video+audio' ? 'active' : ''}" data-type="video+audio">
-                        <i class="fa-solid fa-film"></i>
-                        <span>Vídeo + Audio</span>
-                    </div>
-                    <div class="type-chip ${this.selectedType === 'fusion' ? 'active' : ''}" data-type="fusion">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Fusionar</span>
-                    </div>
-                </div>
-
-                <div id="audioSwitchContainer" style="display: ${this.selectedType === 'audio_only' ? 'flex' : 'none'};">
-                    <md-switch id="mp3Switch" icons></md-switch>
-                    <span>Convertir audio a MP3</span>
-                </div>
-
-                <div id="singleSelectContainer" class="${this.selectedType === 'fusion' ? 'hidden-view' : ''}">
-                    <md-outlined-select id="formatSelect" label="Calidad / Formato">
-                        <md-select-option value="" disabled selected></md-select-option>
-                    </md-outlined-select>
-                </div>
-
-                <div id="fusionSelectContainer" class="${this.selectedType === 'fusion' ? '' : 'hidden-view'}" style="display: flex; flex-direction: column; gap: 12px;">
-                    <div class="warning-badge">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span>Selecciona el formato de vídeo y de audio deseado para convertir y fusionar.</span>
-                    </div>
-                    <md-outlined-select id="videoFormatSelect" label="Formato de Vídeo">
-                        <md-select-option value="" disabled selected></md-select-option>
-                    </md-outlined-select>
-                    <md-outlined-select id="audioFormatSelect" label="Formato de Audio">
+                <div id="singleSelectContainer">
+                    <md-outlined-select id="formatSelect" label="Calidad de Vídeo Disponible">
                         <md-select-option value="" disabled selected></md-select-option>
                     </md-outlined-select>
                 </div>
                 
-                <md-filled-button id="startDownloadBtn" disabled style="width: 100%;">
-                    <i class="fa-solid fa-download" slot="icon"></i> Descargar / Procesar
+                <md-filled-button id="startDownloadBtn" disabled style="width: 100%; margin-top: 12px;">
+                    <i class="fa-solid fa-download" slot="icon"></i> Descargar Vídeo Seleccionado
                 </md-filled-button>
             </div>
 
-            <!-- Diálogo Material Web nativo con barra de progreso (bloqueado contra clics externos) -->
+            <!-- Diálogo Material Web nativo con barra de progreso -->
             <md-dialog id="downloadProgressDialog" style="min-width: 320px;">
                 <div slot="headline">Descargando archivo</div>
                 <div slot="content" style="display: flex; flex-direction: column; gap: 16px; padding-top: 8px;">
@@ -279,8 +282,31 @@ export const youtubePlatform = {
             </md-dialog>
         `;
 
+        // Evento para abrir el canal en una nueva pestaña si existe channel_url
+        const channelEl = wrapper.querySelector('#infoChannel');
+        if (meta.channel_url) {
+            channelEl.addEventListener('click', () => {
+                window.open(meta.channel_url, '_blank');
+            });
+        }
+
+        // Evento para los chips de búsqueda de categorías y tags
+        wrapper.querySelectorAll('.search-trigger-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const query = chip.getAttribute('data-query');
+                if (query) {
+                    this.dom.platformDetailsView.classList.add('hidden-view');
+                    this.executeSearch(query);
+                }
+            });
+        });
+
+        // Botón directo de descarga de audio
+        wrapper.querySelector('#downloadAudioBtn').addEventListener('click', () => {
+            this.executeDirectAudioDownload(wrapper);
+        });
+
         const dialog = wrapper.querySelector('#downloadProgressDialog');
-        
         dialog.addEventListener('cancel', (e) => {
             e.preventDefault();
         });
@@ -290,23 +316,8 @@ export const youtubePlatform = {
             dialog.close();
         });
 
-        const typeChips = wrapper.querySelectorAll('.type-chip');
-        typeChips.forEach(chip => {
-            chip.addEventListener('click', () => {
-                if (this.isDownloading) return;
-                this.selectedType = chip.getAttribute('data-type');
-                this.updateTypeSelectorUI(wrapper);
-                this.populateFormatDropdowns(wrapper);
-            });
-        });
-
         const formatSelect = wrapper.querySelector('#formatSelect');
-        const videoFormatSelect = wrapper.querySelector('#videoFormatSelect');
-        const audioFormatSelect = wrapper.querySelector('#audioFormatSelect');
-
         formatSelect.addEventListener('input', () => this.checkDownloadButtonState(wrapper));
-        videoFormatSelect.addEventListener('input', () => this.checkDownloadButtonState(wrapper));
-        audioFormatSelect.addEventListener('input', () => this.checkDownloadButtonState(wrapper));
 
         wrapper.querySelector('#startDownloadBtn').addEventListener('click', () => {
             this.executeDownload(wrapper);
@@ -315,112 +326,35 @@ export const youtubePlatform = {
         this.populateFormatDropdowns(wrapper);
     },
 
-    updateTypeSelectorUI(wrapper) {
-        const typeChips = wrapper.querySelectorAll('.type-chip');
-        typeChips.forEach(chip => {
-            if (chip.getAttribute('data-type') === this.selectedType) {
-                chip.classList.add('active');
-            } else {
-                chip.classList.remove('active');
-            }
-        });
-
-        const audioSwitchContainer = wrapper.querySelector('#audioSwitchContainer');
-        if (this.selectedType === 'audio_only') {
-            audioSwitchContainer.style.display = 'flex';
-        } else {
-            audioSwitchContainer.style.display = 'none';
-        }
-
-        const singleSelectContainer = wrapper.querySelector('#singleSelectContainer');
-        const fusionSelectContainer = wrapper.querySelector('#fusionSelectContainer');
-        if (this.selectedType === 'fusion') {
-            singleSelectContainer.classList.add('hidden-view');
-            fusionSelectContainer.classList.remove('hidden-view');
-        } else {
-            singleSelectContainer.classList.remove('hidden-view');
-            fusionSelectContainer.classList.add('hidden-view');
-        }
-    },
-
-    getFormattedSize(f) {
-        if (f.filesize_mb && f.filesize_mb !== 'Desconocido' && f.filesize_mb !== 'null') {
-            return ` - ${f.filesize_mb}`;
-        }
-        if (f.filesize) {
-            const mb = (f.filesize / (1024 * 1024)).toFixed(2);
-            return ` - ${mb} MB`;
-        }
-        return '';
-    },
-
     populateFormatDropdowns(wrapper) {
         const formatSelect = wrapper.querySelector('#formatSelect');
-        const videoFormatSelect = wrapper.querySelector('#videoFormatSelect');
-        const audioFormatSelect = wrapper.querySelector('#audioFormatSelect');
-
         this.checkDownloadButtonState(wrapper);
 
-        if (this.selectedType === 'fusion') {
-            videoFormatSelect.innerHTML = '<md-select-option value="" disabled selected></md-select-option>';
-            const videoFormats = this.apiFormatsData.filter(f => f.type === 'video_only');
-            videoFormats.forEach(f => {
-                const opt = document.createElement('md-select-option');
-                opt.value = f.format_id;
-                const codecIndicator = this.getCodecInfo(f.vcodec);
-                const label = `${f.resolution}${codecIndicator} [.${f.ext}]${this.getFormattedSize(f)}`;
-                const div = document.createElement('div');
-                div.slot = 'headline';
-                div.textContent = label;
-                opt.appendChild(div);
-                videoFormatSelect.appendChild(opt);
-            });
-
-            audioFormatSelect.innerHTML = '<md-select-option value="" disabled selected></md-select-option>';
-            const audioFormats = this.apiFormatsData.filter(f => f.type === 'audio_only');
-            audioFormats.forEach(f => {
-                const opt = document.createElement('md-select-option');
-                opt.value = f.format_id;
-                const bitrate = f.audio_bitrate ? f.audio_bitrate : 'Estándar';
-                const label = `Audio (${bitrate}) [.${f.ext}]${this.getFormattedSize(f)}`;
-                const div = document.createElement('div');
-                div.slot = 'headline';
-                div.textContent = label;
-                opt.appendChild(div);
-                audioFormatSelect.appendChild(opt);
-            });
-        } else {
-            formatSelect.innerHTML = '<md-select-option value="" disabled selected></md-select-option>';
-            const filteredFormats = this.apiFormatsData.filter(f => f.type === this.selectedType);
-            if (filteredFormats.length === 0) {
-                const opt = document.createElement('md-select-option');
-                opt.disabled = true;
-                const div = document.createElement('div');
-                div.slot = 'headline';
-                div.textContent = 'No hay formatos disponibles';
-                opt.appendChild(div);
-                formatSelect.appendChild(opt);
-                return;
-            }
-            filteredFormats.forEach(f => {
-                const opt = document.createElement('md-select-option');
-                opt.value = f.format_id;
-                let label = '';
-                if (f.type === 'audio_only') {
-                    const bitrate = f.audio_bitrate ? f.audio_bitrate : 'Estándar';
-                    label = `Audio (${bitrate}) [.${f.ext}]${this.getFormattedSize(f)}`;
-                } else {
-                    const audioNote = f.audio_ext ? ` (${f.audio_ext})` : '';
-                    const codecIndicator = this.getCodecInfo(f.vcodec);
-                    label = `${f.resolution}${codecIndicator} [.${f.ext}]${audioNote}${this.getFormattedSize(f)}`;
-                }
-                const div = document.createElement('div');
-                div.slot = 'headline';
-                div.textContent = label;
-                opt.appendChild(div);
-                formatSelect.appendChild(opt);
-            });
+        formatSelect.innerHTML = '<md-select-option value="" disabled selected></md-select-option>';
+        
+        if (this.apiFormatsData.length === 0) {
+            const opt = document.createElement('md-select-option');
+            opt.disabled = true;
+            const div = document.createElement('div');
+            div.slot = 'headline';
+            div.textContent = 'No hay formatos disponibles';
+            opt.appendChild(div);
+            formatSelect.appendChild(opt);
+            return;
         }
+
+        this.apiFormatsData.forEach(f => {
+            const opt = document.createElement('md-select-option');
+            opt.value = f.format_id;
+            const sizeText = f.size ? ` - ${f.size}` : '';
+            const label = `Resolución: ${f.quality} [.${f.ext}]${sizeText}`;
+            
+            const div = document.createElement('div');
+            div.slot = 'headline';
+            div.textContent = label;
+            opt.appendChild(div);
+            formatSelect.appendChild(opt);
+        });
     },
 
     checkDownloadButtonState(wrapper) {
@@ -433,87 +367,56 @@ export const youtubePlatform = {
         }
 
         const formatSelect = wrapper.querySelector('#formatSelect');
-        const videoFormatSelect = wrapper.querySelector('#videoFormatSelect');
-        const audioFormatSelect = wrapper.querySelector('#audioFormatSelect');
-
-        if (this.selectedType === 'fusion') {
-            if (videoFormatSelect && audioFormatSelect && videoFormatSelect.value && audioFormatSelect.value) {
-                startDownloadBtn.disabled = false;
-            } else {
-                startDownloadBtn.disabled = true;
-            }
+        if (formatSelect && formatSelect.value) {
+            startDownloadBtn.disabled = false;
         } else {
-            if (formatSelect && formatSelect.value) {
-                startDownloadBtn.disabled = false;
-            } else {
-                startDownloadBtn.disabled = true;
-            }
+            startDownloadBtn.disabled = true;
         }
+    },
+
+    async executeDirectAudioDownload(wrapper) {
+        if (!this.currentVideoUrl || this.isDownloading) return;
+        const audioUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&type=audio`;
+        this.processFileDownload(wrapper, audioUrl);
     },
 
     async executeDownload(wrapper) {
         if (!this.currentVideoUrl || this.isDownloading) return;
 
+        const formatSelect = wrapper.querySelector('#formatSelect');
+        const formatId = formatSelect.value;
+        if (!formatId) return;
+
+        // Lógica de descarga intacta usando format_id
+        const downloadUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&format=${formatId}`;
+        this.processFileDownload(wrapper, downloadUrl);
+    },
+
+    async processFileDownload(wrapper, downloadUrl) {
         this.isDownloading = true;
         this.checkDownloadButtonState(wrapper);
         history.pushState({ downloading: true }, '', window.location.href);
 
         const startDownloadBtn = wrapper.querySelector('#startDownloadBtn');
-        const formatSelect = wrapper.querySelector('#formatSelect');
-        const videoFormatSelect = wrapper.querySelector('#videoFormatSelect');
-        const audioFormatSelect = wrapper.querySelector('#audioFormatSelect');
-        const mp3Switch = wrapper.querySelector('#mp3Switch');
-
         const dialog = wrapper.querySelector('#downloadProgressDialog');
         const statusText = wrapper.querySelector('#dialogStatusText');
         const percentText = wrapper.querySelector('#dialogPercentText');
         const linearProgress = wrapper.querySelector('#downloadLinearProgress');
 
-        const originalContent = startDownloadBtn.innerHTML;
-        startDownloadBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin" slot="icon"></i> Preparando...`;
-
-        let downloadUrl = '';
-        if (this.selectedType === 'fusion') {
-            const videoFormatId = videoFormatSelect.value;
-            const audioFormatId = audioFormatSelect.value;
-            if (videoFormatId && audioFormatId) {
-                downloadUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&format=${videoFormatId}+${audioFormatId}`;
-            }
-        } else {
-            const formatId = formatSelect.value;
-            if (formatId) {
-                downloadUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&format=${formatId}`;
-                if (this.selectedType === 'audio_only' && mp3Switch && mp3Switch.selected) {
-                    downloadUrl += `&audio_format=mp3`;
-                }
-            }
-        }
-
-        if (!downloadUrl) {
-            this.isDownloading = false;
-            this.checkDownloadButtonState(wrapper);
-            startDownloadBtn.innerHTML = originalContent;
-            return;
-        }
-
         let timeoutTriggered = false;
         const speedTimer = setTimeout(() => {
             timeoutTriggered = true;
             if (this.isDownloading) {
-                if (startDownloadBtn) startDownloadBtn.innerHTML = `<i class="fa-solid fa-clock fa-spin" slot="icon"></i> Descarga segura...`;
                 if (statusText) statusText.textContent = 'Proceso tardado, descarga segura...';
             }
         }, 15000);
 
         try {
-            
             const response = await fetch(downloadUrl);
-
             if (!response.ok) {
                 throw new Error('Error al procesar la descarga en el servidor.');
             }
 
-            
             if (dialog) dialog.show();
             if (statusText) statusText.textContent = 'Iniciando descarga...';
             if (percentText) percentText.textContent = '0%';
@@ -521,7 +424,6 @@ export const youtubePlatform = {
 
             const disposition = response.headers.get('content-disposition');
             let filename = 'video_descargado.mp4';
-
             if (disposition) {
                 const match = disposition.match(/filename="?([^"]+)"?/);
                 if (match && match[1]) {
@@ -547,13 +449,11 @@ export const youtubePlatform = {
 
                 if (total > 0) {
                     const percent = Math.round((receivedLength / total) * 100);
-                    if (startDownloadBtn) startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando: ${percent}%`;
                     if (percentText) percentText.textContent = `${percent}%`;
                     if (linearProgress) linearProgress.value = percent / 100;
                     if (statusText && !timeoutTriggered) statusText.textContent = `Descargando archivo... (${percent}%)`;
                 } else {
                     const mbReceived = (receivedLength / (1024 * 1024)).toFixed(1);
-                    if (startDownloadBtn) startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando... (${mbReceived} MB)`;
                     if (statusText && !timeoutTriggered) statusText.textContent = `Descargando... (${mbReceived} MB)`;
                 }
             }
@@ -570,7 +470,6 @@ export const youtubePlatform = {
             a.remove();
             window.URL.revokeObjectURL(blobUrl);
 
-            if (startDownloadBtn) startDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check" slot="icon"></i> ¡Completado!`;
             if (statusText) statusText.textContent = '¡Descarga completada y guardada en su dispositivo!';
             if (percentText) percentText.textContent = '100%';
             if (linearProgress) linearProgress.value = 1;
@@ -578,26 +477,12 @@ export const youtubePlatform = {
         } catch (error) {
             clearTimeout(speedTimer);
             console.error('Error en la descarga:', error);
-            if (startDownloadBtn) startDownloadBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation" slot="icon"></i> Error`;
             if (dialog && !dialog.open) dialog.show();
             if (statusText) statusText.textContent = 'Ocurrió un error en el proceso de descarga.';
         } finally {
             this.isDownloading = false;
-            setTimeout(() => {
-                this.checkDownloadButtonState(wrapper);
-                if (startDownloadBtn && !this.isDownloading) {
-                    startDownloadBtn.innerHTML = originalContent;
-                }
-            }, 4000);
+            this.checkDownloadButtonState(wrapper);
         }
-    },
-
-    getCodecInfo(vcodec = '') {
-        if (!vcodec) return '';
-        if (vcodec.toLowerCase().includes('avc1')) {
-            return ' 🟢';
-        }
-        return ' ⚠️';
     },
 
     formatViews(views) {
