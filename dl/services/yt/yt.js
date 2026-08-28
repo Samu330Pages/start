@@ -6,7 +6,7 @@ export const youtubePlatform = {
 
     dom: {},
     apiFormatsData: [],
-    selectedType: 'mixed', // Cambiado a mixed por defecto según la nueva API
+    selectedType: 'mixed',
     currentVideoUrl: '',
     currentNavigationSource: 'searchView',
     isDownloading: false,
@@ -144,7 +144,6 @@ export const youtubePlatform = {
 
             if (data.success && data.metadata) {
                 detailsContent.classList.remove('hidden-view');
-                // Adaptado para recolectar mixed y estructurar las opciones
                 this.apiFormatsData = data.formats?.mixed || [];
                 this.selectedType = 'mixed';
                 this.renderDetailsUI(detailsContent, data.metadata);
@@ -167,7 +166,6 @@ export const youtubePlatform = {
     },
 
     renderDetailsUI(wrapper, meta) {
-        // Formatear duración de segundos a MM:SS o HH:MM:SS
         const formatDuration = (sec) => {
             if (!sec) return '00:00';
             const hrs = Math.floor(sec / 3600);
@@ -210,17 +208,16 @@ export const youtubePlatform = {
                 <div id="infoDescription" class="description-text">${this.escapeHtml(meta.description || 'Sin descripción disponible.')}</div>
             </details>
 
-            <!-- Chips de Material 3 para Categorías y Tags -->
             <div style="margin: 12px 0; display: flex; flex-direction: column; gap: 8px;">
                 ${meta.categories && meta.categories.length > 0 ? `
                     <div style="font-size: 0.85rem; font-weight: 500; color: var(--md-sys-color-on-surface-variant);">Categorías:</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="categoriesChipsContainer">
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                         ${meta.categories.map(cat => `<md-filter-chip label="${this.escapeHtml(cat)}" class="search-trigger-chip" data-query="${this.escapeHtml(cat)}"></md-filter-chip>`).join('')}
                     </div>
                 ` : ''}
                 ${meta.tags && meta.tags.length > 0 ? `
                     <div style="font-size: 0.85rem; font-weight: 500; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">Etiquetas:</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="tagsChipsContainer">
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                         ${meta.tags.map(tag => `<md-suggestion-chip label="${this.escapeHtml(tag)}" class="search-trigger-chip" data-query="${this.escapeHtml(tag)}"></md-suggestion-chip>`).join('')}
                     </div>
                 ` : ''}
@@ -231,23 +228,11 @@ export const youtubePlatform = {
                     <i class="fa-solid fa-sliders"></i> Opciones de Descarga
                 </h4>
 
-                <!-- Botón rápido para descargar Audio M4A -->
                 <div style="margin-bottom: 16px;">
                     <md-filled-tonal-button id="downloadAudioBtn" style="width: 100%;">
                         <i class="fa-solid fa-music" slot="icon"></i>
                         Descargar Audio (M4A)
                     </md-filled-tonal-button>
-                </div>
-
-                <div class="codec-info-banner" style="margin: 12px 0; padding: 12px; border-radius: 8px; background: var(--md-sys-color-surface-container-low, #f1f3f4); font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
-                    <div style="font-weight: 500; display: flex; align-items: center; gap: 6px; color: var(--md-sys-color-primary);">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <span>Guía de Calidades y Códecs</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-circle-check" style="color: #2e7d32;"></i>
-                        <span><strong>AVC1:</strong> Máxima compatibilidad con cualquier dispositivo o reproductor.</span>
-                    </div>
                 </div>
 
                 <div id="singleSelectContainer">
@@ -261,7 +246,6 @@ export const youtubePlatform = {
                 </md-filled-button>
             </div>
 
-            <!-- Diálogo Material Web nativo con barra de progreso -->
             <md-dialog id="downloadProgressDialog" style="min-width: 320px;">
                 <div slot="headline">Descargando archivo</div>
                 <div slot="content" style="display: flex; flex-direction: column; gap: 16px; padding-top: 8px;">
@@ -282,7 +266,6 @@ export const youtubePlatform = {
             </md-dialog>
         `;
 
-        // Evento para abrir el canal en una nueva pestaña si existe channel_url
         const channelEl = wrapper.querySelector('#infoChannel');
         if (meta.channel_url) {
             channelEl.addEventListener('click', () => {
@@ -290,7 +273,6 @@ export const youtubePlatform = {
             });
         }
 
-        // Evento para los chips de búsqueda de categorías y tags
         wrapper.querySelectorAll('.search-trigger-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 const query = chip.getAttribute('data-query');
@@ -301,7 +283,6 @@ export const youtubePlatform = {
             });
         });
 
-        // Botón directo de descarga de audio
         wrapper.querySelector('#downloadAudioBtn').addEventListener('click', () => {
             this.executeDirectAudioDownload(wrapper);
         });
@@ -387,7 +368,6 @@ export const youtubePlatform = {
         const formatId = formatSelect.value;
         if (!formatId) return;
 
-        // Lógica de descarga intacta usando format_id
         const downloadUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&format=${formatId}`;
         this.processFileDownload(wrapper, downloadUrl);
     },
@@ -402,6 +382,11 @@ export const youtubePlatform = {
         const statusText = wrapper.querySelector('#dialogStatusText');
         const percentText = wrapper.querySelector('#dialogPercentText');
         const linearProgress = wrapper.querySelector('#downloadLinearProgress');
+
+        const originalBtnHtml = startDownloadBtn ? startDownloadBtn.innerHTML : '';
+        if (startDownloadBtn) {
+            startDownloadBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin" slot="icon"></i> Preparando...`;
+        }
 
         let timeoutTriggered = false;
         const speedTimer = setTimeout(() => {
@@ -449,12 +434,22 @@ export const youtubePlatform = {
 
                 if (total > 0) {
                     const percent = Math.round((receivedLength / total) * 100);
+                    if (startDownloadBtn) {
+                        startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando: ${percent}%`;
+                    }
                     if (percentText) percentText.textContent = `${percent}%`;
                     if (linearProgress) linearProgress.value = percent / 100;
-                    if (statusText && !timeoutTriggered) statusText.textContent = `Descargando archivo... (${percent}%)`;
+                    if (statusText && !timeoutTriggered) {
+                        statusText.textContent = `Descargando archivo... (${percent}%)`;
+                    }
                 } else {
                     const mbReceived = (receivedLength / (1024 * 1024)).toFixed(1);
-                    if (statusText && !timeoutTriggered) statusText.textContent = `Descargando... (${mbReceived} MB)`;
+                    if (startDownloadBtn) {
+                        startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando... (${mbReceived} MB)`;
+                    }
+                    if (statusText && !timeoutTriggered) {
+                        statusText.textContent = `Descargando... (${mbReceived} MB)`;
+                    }
                 }
             }
 
@@ -470,6 +465,9 @@ export const youtubePlatform = {
             a.remove();
             window.URL.revokeObjectURL(blobUrl);
 
+            if (startDownloadBtn) {
+                startDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check" slot="icon"></i> ¡Completado!`;
+            }
             if (statusText) statusText.textContent = '¡Descarga completada y guardada en su dispositivo!';
             if (percentText) percentText.textContent = '100%';
             if (linearProgress) linearProgress.value = 1;
@@ -477,11 +475,19 @@ export const youtubePlatform = {
         } catch (error) {
             clearTimeout(speedTimer);
             console.error('Error en la descarga:', error);
+            if (startDownloadBtn) {
+                startDownloadBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation" slot="icon"></i> Error`;
+            }
             if (dialog && !dialog.open) dialog.show();
             if (statusText) statusText.textContent = 'Ocurrió un error en el proceso de descarga.';
         } finally {
             this.isDownloading = false;
-            this.checkDownloadButtonState(wrapper);
+            setTimeout(() => {
+                this.checkDownloadButtonState(wrapper);
+                if (startDownloadBtn && !this.isDownloading) {
+                    startDownloadBtn.innerHTML = originalBtnHtml;
+                }
+            }, 4000);
         }
     },
 
