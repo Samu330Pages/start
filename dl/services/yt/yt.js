@@ -244,6 +244,11 @@ export const youtubePlatform = {
                 <md-filled-button id="startDownloadBtn" disabled style="width: 100%; margin-top: 12px;">
                     <i class="fa-solid fa-download" slot="icon"></i> Descargar Vídeo Seleccionado
                 </md-filled-button>
+
+                <div id="downloadStatusBanner" class="hidden-view" style="margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--md-sys-color-surface-container-highest, #eceef1); font-size: 0.85rem; display: flex; align-items: center; gap: 8px; color: var(--md-sys-color-on-surface-variant);">
+                    <i class="fa-solid fa-spinner fa-spin" style="color: var(--md-sys-color-primary);"></i>
+                    <span id="downloadStatusMsg">Preparando descarga, por favor espere...</span>
+                </div>
             </div>
 
             <md-dialog id="downloadProgressDialog" style="min-width: 320px;">
@@ -340,14 +345,21 @@ export const youtubePlatform = {
 
     checkDownloadButtonState(wrapper) {
         const startDownloadBtn = wrapper.querySelector('#startDownloadBtn');
-        if (!startDownloadBtn) return;
+        const downloadAudioBtn = wrapper.querySelector('#downloadAudioBtn');
+        const formatSelect = wrapper.querySelector('#formatSelect');
+        
+        if (!startDownloadBtn || !downloadAudioBtn) return;
 
         if (this.isDownloading) {
             startDownloadBtn.disabled = true;
+            downloadAudioBtn.disabled = true;
+            if (formatSelect) formatSelect.disabled = true;
             return;
         }
 
-        const formatSelect = wrapper.querySelector('#formatSelect');
+        if (formatSelect) formatSelect.disabled = false;
+        downloadAudioBtn.disabled = false;
+
         if (formatSelect && formatSelect.value) {
             startDownloadBtn.disabled = false;
         } else {
@@ -358,10 +370,10 @@ export const youtubePlatform = {
     async executeDirectAudioDownload(wrapper) {
         if (!this.currentVideoUrl || this.isDownloading) return;
         const audioUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&type=audio`;
-        this.processFileDownload(wrapper, audioUrl);
+        this.processFileDownload(wrapper, audioUrl, true);
     },
 
-    async executeDownload(wrapper) {
+    aasync executeDownload(wrapper) {
         if (!this.currentVideoUrl || this.isDownloading) return;
 
         const formatSelect = wrapper.querySelector('#formatSelect');
@@ -369,30 +381,41 @@ export const youtubePlatform = {
         if (!formatId) return;
 
         const downloadUrl = `https://api.samu330.com/yt/download?url=${encodeURIComponent(this.currentVideoUrl)}&format=${formatId}`;
-        this.processFileDownload(wrapper, downloadUrl);
+        this.processFileDownload(wrapper, downloadUrl, false);
     },
 
-    async processFileDownload(wrapper, downloadUrl) {
+    async processFileDownload(wrapper, downloadUrl, isAudio = false) {
         this.isDownloading = true;
         this.checkDownloadButtonState(wrapper);
         history.pushState({ downloading: true }, '', window.location.href);
 
         const startDownloadBtn = wrapper.querySelector('#startDownloadBtn');
+        const downloadAudioBtn = wrapper.querySelector('#downloadAudioBtn');
+        const statusBanner = wrapper.querySelector('#downloadStatusBanner');
+        const statusMsg = wrapper.querySelector('#downloadStatusMsg');
+        
         const dialog = wrapper.querySelector('#downloadProgressDialog');
         const statusText = wrapper.querySelector('#dialogStatusText');
         const percentText = wrapper.querySelector('#dialogPercentText');
         const linearProgress = wrapper.querySelector('#downloadLinearProgress');
 
-        const originalBtnHtml = startDownloadBtn ? startDownloadBtn.innerHTML : '';
-        if (startDownloadBtn) {
-            startDownloadBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin" slot="icon"></i> Preparando...`;
+        const originalVideoBtnHtml = startDownloadBtn ? startDownloadBtn.innerHTML : '';
+        const originalAudioBtnHtml = downloadAudioBtn ? downloadAudioBtn.innerHTML : '';
+
+        if (isAudio && downloadAudioBtn) {
+            downloadAudioBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin" slot="icon"></i> Preparando audio...`;
+        } else if (startDownloadBtn) {
+            startDownloadBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin" slot="icon"></i> Preparando vídeo...`;
         }
+
+        if (statusBanner) statusBanner.classList.remove('hidden-view');
+        if (statusMsg) statusMsg.textContent = isAudio ? 'Conectando al servidor para extraer el audio...' : 'Conectando al servidor para empaquetar el vídeo...';
 
         let timeoutTriggered = false;
         const speedTimer = setTimeout(() => {
             timeoutTriggered = true;
-            if (this.isDownloading) {
-                if (statusText) statusText.textContent = 'Proceso tardado, descarga segura...';
+            if (this.isDownloading && statusMsg) {
+                statusMsg.textContent = 'Proceso tardado, manteniendo conexión segura...';
             }
         }, 15000);
 
@@ -408,7 +431,7 @@ export const youtubePlatform = {
             if (linearProgress) linearProgress.indeterminate = true;
 
             const disposition = response.headers.get('content-disposition');
-            let filename = 'video_descargado.mp4';
+            let filename = isAudio ? 'audio_samu330.com.m4a' : 'samu330.com.mp4';
             if (disposition) {
                 const match = disposition.match(/filename="?([^"]+)"?/);
                 if (match && match[1]) {
@@ -434,21 +457,25 @@ export const youtubePlatform = {
 
                 if (total > 0) {
                     const percent = Math.round((receivedLength / total) * 100);
-                    if (startDownloadBtn) {
+                    if (isAudio && downloadAudioBtn) {
+                        downloadAudioBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando: ${percent}%`;
+                    } else if (startDownloadBtn) {
                         startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando: ${percent}%`;
                     }
                     if (percentText) percentText.textContent = `${percent}%`;
                     if (linearProgress) linearProgress.value = percent / 100;
-                    if (statusText && !timeoutTriggered) {
-                        statusText.textContent = `Descargando archivo... (${percent}%)`;
+                    if (statusMsg && !timeoutTriggered) {
+                        statusMsg.textContent = `Descargando archivo... (${percent}%)`;
                     }
                 } else {
                     const mbReceived = (receivedLength / (1024 * 1024)).toFixed(1);
-                    if (startDownloadBtn) {
+                    if (isAudio && downloadAudioBtn) {
+                        downloadAudioBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando... (${mbReceived} MB)`;
+                    } else if (startDownloadBtn) {
                         startDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down fa-bounce" slot="icon"></i> Descargando... (${mbReceived} MB)`;
                     }
-                    if (statusText && !timeoutTriggered) {
-                        statusText.textContent = `Descargando... (${mbReceived} MB)`;
+                    if (statusMsg && !timeoutTriggered) {
+                        statusMsg.textContent = `Descargando... (${mbReceived} MB)`;
                     }
                 }
             }
@@ -465,28 +492,34 @@ export const youtubePlatform = {
             a.remove();
             window.URL.revokeObjectURL(blobUrl);
 
-            if (startDownloadBtn) {
-                startDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check" slot="icon"></i> ¡Completado!`;
+            if (isAudio && downloadAudioBtn) {
+                downloadAudioBtn.innerHTML = `<i class="fa-solid fa-circle-check" slot="icon"></i> ¡Audio Completado!`;
+            } else if (startDownloadBtn) {
+                startDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check" slot="icon"></i> ¡Vídeo Completado!`;
             }
-            if (statusText) statusText.textContent = '¡Descarga completada y guardada en su dispositivo!';
+            if (statusMsg) statusMsg.textContent = '¡Descarga completada!';
+            if (statusText) statusText.textContent = '¡Descarga completada!';
             if (percentText) percentText.textContent = '100%';
             if (linearProgress) linearProgress.value = 1;
 
         } catch (error) {
             clearTimeout(speedTimer);
             console.error('Error en la descarga:', error);
-            if (startDownloadBtn) {
+            if (isAudio && downloadAudioBtn) {
+                downloadAudioBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation" slot="icon"></i> Error`;
+            } else if (startDownloadBtn) {
                 startDownloadBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation" slot="icon"></i> Error`;
             }
             if (dialog && !dialog.open) dialog.show();
-            if (statusText) statusText.textContent = 'Ocurrió un error en el proceso de descarga.';
+            if (statusMsg) statusMsg.textContent = 'Ocurrió un error en el proceso de descarga.';
+            if (statusText) statusText.textContent = 'Ocurrió un error en el proceso.';
         } finally {
             this.isDownloading = false;
             setTimeout(() => {
+                if (statusBanner) statusBanner.classList.add('hidden-view');
                 this.checkDownloadButtonState(wrapper);
-                if (startDownloadBtn && !this.isDownloading) {
-                    startDownloadBtn.innerHTML = originalBtnHtml;
-                }
+                if (downloadAudioBtn) downloadAudioBtn.innerHTML = originalAudioBtnHtml;
+                if (startDownloadBtn) startDownloadBtn.innerHTML = originalVideoBtnHtml;
             }, 4000);
         }
     },
