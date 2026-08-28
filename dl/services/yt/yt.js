@@ -373,7 +373,7 @@ export const youtubePlatform = {
         this.processFileDownload(wrapper, audioUrl, true);
     },
 
-    aasync executeDownload(wrapper) {
+    async executeDownload(wrapper) {
         if (!this.currentVideoUrl || this.isDownloading) return;
 
         const formatSelect = wrapper.querySelector('#formatSelect');
@@ -431,7 +431,7 @@ export const youtubePlatform = {
             if (linearProgress) linearProgress.indeterminate = true;
 
             const disposition = response.headers.get('content-disposition');
-            let filename = isAudio ? 'audio_samu330.com.m4a' : 'samu330.com.mp4';
+            let filename = isAudio ? 'audio_descargado.m4a' : 'video_descargado.mp4';
             if (disposition) {
                 const match = disposition.match(/filename="?([^"]+)"?/);
                 if (match && match[1]) {
