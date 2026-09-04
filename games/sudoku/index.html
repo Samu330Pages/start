@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sudoku</title>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        :root {
+            --bg-app: #090d16;
+            --bg-card: #121824;
+            --text-main: #ffffff;
+            --text-secondary: #7a92b8;
+            --cell-bg-card: #121824;
+            --cell-prefilled: #7a92b8;
+            --cell-user: #60a5fa;
+            --border: #1f2e46;
+            --border-thick: #3b82f6;
+            --col-highlight: #1a2538;
+            --cell-selected: #22334f;
+            --cell-conflict: #ef4444;
+            --keypad-btn-bg: #1a2538;
+            --keypad-btn-hover: #263856;
+            --action-btn-bg: #2563eb;
+            --action-btn-hover: #3b82f6;
+            --reset-btn-bg: #dc2626;
+            --reset-btn-hover: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus, input:focus, div:focus {
+            outline: none !important;
+        }
+
+        .app-container {
+            background-color: var(--bg-card);
+            width: 390px;
+            max-width: 95vw;
+            border-radius: 24px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            box-sizing: border-box;
+            margin: 10px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-group h1 {
+            font-size: 19px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .title-group p {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin: 2px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .timer {
+            text-align: right;
+        }
+
+        .timer-time {
+            font-size: 21px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: #60a5fa;
+        }
+
+        .timer-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 1px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .sdk-table {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            border: 3px solid var(--border-thick);
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            background-color: var(--cell-bg-card);
+            transition: opacity 0.3s ease;
+            width: 100%;
+        }
+
+        .sdk-no-show {
+            opacity: 0;
+        }
+
+        .sdk-row {
+            display: contents;
+        }
+
+        .sdk-col {
+            background-color: var(--cell-bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 19px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            aspect-ratio: 1 / 1;
+            transition: background-color 0.1s, color 0.1s;
+        }
+
+        .sdk-col[data-col="2"], .sdk-col[data-col="5"] {
+            border-right: 3px solid var(--border-thick);
+        }
+        .sdk-row.sdk-border-bottom .sdk-col {
+            border-bottom: 3px solid var(--border-thick);
+        }
+
+        .sdk-col[data-col="4"] {
+            background-color: rgba(37, 99, 235, 0.12);
+        }
+
+        .sdk-col.sdk-prefilled {
+            color: var(--cell-prefilled);
+            pointer-events: none;
+        }
+
+        .sdk-col.sdk-user-input {
+            color: var(--cell-user);
+        }
+
+        .sdk-col.sdk-selected {
+            background-color: var(--cell-selected) !important;
+            box-shadow: inset 0 0 0 2px #3b82f6;
+        }
+        
+        .sdk-col.sdk-helper {
+            background-color: var(--col-highlight);
+        }
+
+        .sdk-col.sdk-conflict {
+            background-color: var(--cell-conflict) !important;
+            color: white !important;
+        }
+
+        .sdk-ans-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .sdk-btn {
+            background-color: var(--keypad-btn-bg);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 19px;
+            font-weight: 600;
+            padding: 13px 0;
+            cursor: pointer;
+            transition: background-color 0.15s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sdk-btn:hover { background-color: var(--keypad-btn-hover); }
+        .sdk-btn:active { transform: scale(0.97); }
+
+        .actions-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+            transition: background-color 0.15s, transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #verify-btn { background-color: var(--action-btn-bg); }
+        #verify-btn:hover { background-color: #1d4ed8; }
+
+        #reset-btn { background-color: var(--reset-btn-bg); }
+        #reset-btn:hover { background-color: #b91c1c; }
+
+        .action-btn:active { transform: scale(0.99); }
+
+        .status-message {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            text-transform: uppercase;
+            min-height: 1.4em;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div class="title-group">
+            <h1>SUDOKU</h1>
+            <p>SAMU330</p>
+        </div>
+        <div class="timer">
+            <span class="timer-time" id="timer-display">00:00</span>
+            <span class="timer-label">TIEMPO</span>
+        </div>
+    </div>
+
+    <div id="sudoku-game"></div>
+
+    <div class="status-message" id="status-message">SELECCIONA UNA CASILLA VACÍA</div>
+</div>
+
+<script>
+    let synth;
+    let audioInitialized = false;
+    let timerInterval;
+    let seconds = 0;
+    let gameFinished = false;
+
+    function initAudio() {
+        if (!audioInitialized) {
+            synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            synth.set({
+                envelope: { attack: 0.01, decay: 0.05, sustain: 0.05, release: 0.1 },
+                oscillator: { type: "sine" },
+                volume: -14
+            });
+            audioInitialized = true;
+        }
+        if (Tone.context.state !== 'running') {
+            Tone.start();
+        }
+    }
+
+    function playSound(type) {
+        initAudio();
+        const notes = {
+            select: "C6",
+            place: ["E6", "G6"],
+            error: "C4",
+            reset: "G4",
+            check: "A5",
+            win: ["C6", "E6", "G6", "C7"]
+        };
+        if (type === 'place' || type === 'win') {
+            synth.triggerAttackRelease(notes[type], "0.08");
+        } else if (notes[type]) {
+            synth.triggerAttackRelease(notes[type], "0.05");
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        seconds = 0;
+        gameFinished = false;
+        timerInterval = setInterval(() => {
+            if (!gameFinished) {
+                seconds++;
+                let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                let s = (seconds % 60).toString().padStart(2, '0');
+                $('#timer-display').text(`${m}:${s}`);
+            }
+        }, 1000);
+    }
+
+    (function( $ ){
+        var methods = {
+            init : function( options ) {
+                return this.each(function() {  
+                    var defaults = {
+                        solution : [],
+                        puzzle : [],
+                        domMatrix : [],
+                        numOfRows : 9,
+                        numOfCols : 9,
+                        selected : null
+                    };
+
+                    var $this = $(this);
+                    $this.addClass('sdk-game-container');
+
+                    function isValid(board, row, col, num) {
+                        for (let i = 0; i < 9; i++) {
+                            if (board[row][i] === num || board[i][col] === num) return false;
+                        }
+                        let startRow = Math.floor(row / 3) * 3;
+                        let startCol = Math.floor(col / 3) * 3;
+                        for (let r = 0; r < 3; r++) {
+                            for (let c = 0; c < 3; c++) {
+                                if (board[startRow + r][startCol + c] === num) return false;
+                            }
+                        }
+                        return true;
+                    }
+
+                    function solveSudoku(board) {
+                        for (let r = 0; r < 9; r++) {
+                            for (let c = 0; c < 9; c++) {
+                                if (board[r][c] === 0) {
+                                    let nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+                                    for (let num of nums) {
+                                        if (isValid(board, r, c, num)) {
+                                            board[r][c] = num;
+                                            if (solveSudoku(board)) return true;
+                                            board[r][c] = 0;
+                                        }
+                                    }
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+
+                    function generateNewGame() {
+                        let board = Array(9).fill(0).map(() => Array(9).fill(0));
+                        solveSudoku(board);
+                        defaults.solution = board.map(row => [...row]);
+
+                        let puzzle = board.map(row => [...row]);
+                        let removed = 0;
+                        while (removed < 40) {
+                            let r = Math.floor(Math.random() * 9);
+                            let c = Math.floor(Math.random() * 9);
+                            if (puzzle[r][c] !== 0) {
+                                puzzle[r][c] = 0;
+                                removed++;
+                            }
+                        }
+                        defaults.puzzle = puzzle;
+                    }
+                    
+                    $this.createTable = function() {
+                        generateNewGame();
+                        startTimer();
+                        defaults.domMatrix = [];
+                        defaults.table = $("<div class='sdk-table sdk-no-show'></div>");
+                        
+                        for (var row=0; row<defaults.numOfRows; row++) {
+                            defaults.domMatrix[row] = [];
+                            var tempRow = $("<div class='sdk-row'></div>");
+                            if (row == 2 || row == 5) tempRow.addClass("sdk-border-bottom"); 
+                            
+                            for (var col=0; col<defaults.numOfCols; col++) {
+                                var cell = $("<div class='sdk-col' data-row='"+row+"' data-col='"+col+"'></div>");
+                                defaults.domMatrix[row][col] = cell;
+                                tempRow.append(cell);
+                            }
+                            defaults.table.append(tempRow);
+                        }
+                        
+                        $this.append(defaults.table);
+                        
+                        for (let r = 0; r < 9; r++) {
+                            for (let c = 0; c < 9; c++) {
+                                let val = defaults.puzzle[r][c];
+                                if (val !== 0) {
+                                    defaults.domMatrix[r][c].text(val);
+                                    defaults.domMatrix[r][c].addClass('sdk-prefilled');
+                                }
+                            }
+                        }
+
+                        defaults.table.find(".sdk-col").click(function () {
+                            if (gameFinished || $(this).hasClass('sdk-prefilled')) return;
+                            playSound('select');
+
+                            $this.find(".sdk-col").removeClass("sdk-selected sdk-helper");
+                            
+                            var r = parseInt($(this).attr("data-row"));
+                            var c = parseInt($(this).attr("data-col"));
+
+                            $(this).addClass("sdk-selected");
+                            defaults.selected = $(this);
+
+                            for(let i=0; i<9; i++) {
+                                defaults.domMatrix[r][i].addClass('sdk-helper');
+                                defaults.domMatrix[i][c].addClass('sdk-helper');
+                            }
+                            $(this).removeClass('sdk-helper');
+
+                            $('#status-message').text(`CASILLA (${r+1}, ${c+1}) SELECCIONADA`).css('color', 'var(--text-main)');
+                        });
+                        
+                        $this.answerPicker();
+                                        
+                        setTimeout(function () {
+                            defaults.table.removeClass("sdk-no-show");
+                        }, 300);
+                    };
+                    
+                    $this.answerPicker = function() {
+                        var answerContainer = $("<div class='sdk-ans-container'></div>");
+                        for (var i = 1; i <= 9; i++) {
+                            answerContainer.append("<div class='sdk-btn' data-num='"+i+"'>"+i+"</div>");
+                        }
+                        
+                        answerContainer.find(".sdk-btn").click(function () {
+                            if (gameFinished) return;
+                            if (defaults.selected != null) {
+                                var num = $(this).attr("data-num");
+                                defaults.selected.text(num);
+                                defaults.selected.addClass('sdk-user-input');
+                                defaults.selected.removeClass('sdk-conflict');
+                                playSound('place');
+                                $('#status-message').text("NÚMERO COLOCADO").css('color', 'var(--text-main)');
+                            } else {
+                                playSound('error');
+                                $('#status-message').text("SELECCIONA UNA CASILLA PRIMERO").css('color', 'var(--text-secondary)');
+                            }
+                        });
+                        
+                        $this.append(answerContainer);
+
+                        var actionContainer = $("<div class='actions-container' style='margin-top: 6px;'></div>");
+                        var verifyBtn = $("<button class='action-btn' id='verify-btn'>COMPROBAR</button>");
+                        var resetBtn = $("<button class='action-btn' id='reset-btn'>REINICIAR</button>");
+
+                        verifyBtn.click(function() {
+                            if (gameFinished) return;
+                            playSound('check');
+                            let errorsFound = 0;
+                            let emptyCount = 0;
+
+                            for (let r = 0; r < 9; r++) {
+                                for (let c = 0; c < 9; c++) {
+                                    let cell = defaults.domMatrix[r][c];
+                                    cell.removeClass('sdk-conflict');
+
+                                    if (cell.hasClass('sdk-prefilled')) continue;
+
+                                    let txt = cell.text();
+                                    let val = txt === "" ? 0 : parseInt(txt);
+
+                                    if (val === 0) {
+                                        emptyCount++;
+                                    } else if (val !== defaults.solution[r][c]) {
+                                        cell.addClass('sdk-conflict');
+                                        errorsFound++;
+                                    }
+                                }
+                            }
+
+                            if (errorsFound > 0) {
+                                $('#status-message').text(`¡${errorsFound} ERROR(ES) ENCONTRADO(S)!`).css('color', '#ef4444');
+                            } else if (emptyCount > 0) {
+                                $('#status-message').text("¡VAS BIEN, CONTINÚA ASÍ!").css('color', '#60a5fa');
+                            } else {
+                                gameFinished = true;
+                                playSound('win');
+                                $('#status-message').text("🎉 ¡FELICIDADES! SUDOKU COMPLETADO 🎉").css('color', '#4ade80');
+                            }
+                        });
+
+                        resetBtn.click(function() {
+                            playSound('reset');
+                            $this.html("");
+                            $this.createTable();
+                            $('#status-message').text("SELECCIONA UNA CASILLA VACÍA").css('color', 'var(--text-secondary)');
+                        });
+
+                        actionContainer.append(verifyBtn).append(resetBtn);
+                        $this.append(actionContainer);
+                    };
+                    
+                    $this.createTable();
+                });
+            }
+        };   
+
+        $.fn.sudoku = function( method ) {
+            if ( methods[method] ) {
+                return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+            } else if ( typeof method === 'object' || ! method ) {
+                return methods.init.applersv = methods.init.apply( this, arguments );
+            } else {
+                $.error( 'Method ' +  method + ' does not exist on jQuery.sudoku' );
+            }
+        };
+    })( jQuery );
+
+    $(document).ready(function() {
+        $('#sudoku-game').sudoku();
+    });
+</script>
+</body>
+</html>
