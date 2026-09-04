@@ -324,7 +324,9 @@
                         domMatrix : [],
                         numOfRows : 9,
                         numOfCols : 9,
-                        selected : null
+                        selected : null,
+                        currentRow : 0,
+                        currentCol : 0
                     };
 
                     var $this = $(this);
@@ -380,6 +382,27 @@
                         }
                         defaults.puzzle = puzzle;
                     }
+
+                    window.selectCellAt = function(r, c) {
+                        if (r < 0 || r > 8 || c < 0 || c > 8) return;
+                        let cellEl = defaults.domMatrix[r][c];
+                        
+                        playSound('select');
+                        $this.find(".sdk-col").removeClass("sdk-selected sdk-helper");
+
+                        cellEl.addClass("sdk-selected");
+                        defaults.selected = cellEl;
+                        defaults.currentRow = r;
+                        defaults.currentCol = c;
+
+                        for(let i=0; i<9; i++) {
+                            defaults.domMatrix[r][i].addClass('sdk-helper');
+                            defaults.domMatrix[i][c].addClass('sdk-helper');
+                        }
+                        cellEl.removeClass('sdk-helper');
+
+                        $('#status-message').text(`CASILLA (${r+1}, ${c+1}) SELECCIONADA`).css('color', 'var(--text-main)');
+                    };
                     
                     $this.createTable = function() {
                         generateNewGame();
@@ -414,29 +437,15 @@
 
                         defaults.table.find(".sdk-col").click(function () {
                             if (gameFinished || $(this).hasClass('sdk-prefilled')) return;
-                            playSound('select');
                             triggerVibration(25);
-
-                            $this.find(".sdk-col").removeClass("sdk-selected sdk-helper");
-                            
                             var r = parseInt($(this).attr("data-row"));
                             var c = parseInt($(this).attr("data-col"));
-
-                            $(this).addClass("sdk-selected");
-                            defaults.selected = $(this);
-
-                            for(let i=0; i<9; i++) {
-                                defaults.domMatrix[r][i].addClass('sdk-helper');
-                                defaults.domMatrix[i][c].addClass('sdk-helper');
-                            }
-                            $(this).removeClass('sdk-helper');
-
-                            $('#status-message').text(`CASILLA (${r+1}, ${c+1}) SELECCIONADA`).css('color', 'var(--text-main)');
+                            window.selectCellAt(r, c);
                         });
                         
                         window.placeNumberToSelected = function(num) {
                             if (gameFinished) return;
-                            if (defaults.selected != null) {
+                            if (defaults.selected != null && !defaults.selected.hasClass('sdk-prefilled')) {
                                 defaults.selected.text(num === "" ? "" : num);
                                 if(num === "") {
                                     defaults.selected.removeClass('sdk-user-input sdk-conflict');
@@ -449,9 +458,15 @@
                                 $('#status-message').text(num === "" ? "NÚMERO BORRADO" : "NÚMERO COLOCADO").css('color', 'var(--text-main)');
                             } else {
                                 playSound('error');
-                                $('#status-message').text("SELECCIONA UNA CASILLA PRIMERO").css('color', 'var(--text-secondary)');
+                                $('#status-message').text("SELECCIONA UNA CASILLA VACÍA").css('color', 'var(--text-secondary)');
                             }
                         };
+
+                        window.triggerVerifyButton = function() {
+                            $('#verify-btn').click();
+                        };
+
+                        window.getCurrentCoords = () => ({ r: defaults.currentRow, c: defaults.currentCol });
 
                         $this.answerPicker();
                                         
@@ -547,14 +562,16 @@
         $('#sudoku-game').sudoku();
 
         $(document).keydown(function(e) {
-            if (e.key >= '1' && e.key <= '9') {
-                if (typeof window.placeNumberToSelected === 'function') {
-                    window.placeNumberToSelected(e.key);
-                }
-            } else if (e.key === 'Backspace' || e.key === 'Delete') {
-                if (typeof window.placeNumberToSelected === 'function') {
-                    window.placeNumberToSelected("");
-                }
+            if (typeof window.getCurrentCoords === 'function') {
+                let { r, c } = window.getCurrentCoords();
+
+                if (e.key === 'ArrowUp') { r = Math.max(0, r - 1); window.selectCellAt(r, c); e.preventDefault(); }
+                else if (e.key === 'ArrowDown') { r = Math.min(8, r + 1); window.selectCellAt(r, c); e.preventDefault(); }
+                else if (e.key === 'ArrowLeft') { c = Math.max(0, c - 1); window.selectCellAt(r, c); e.preventDefault(); }
+                else if (e.key === 'ArrowRight') { c = Math.min(8, c + 1); window.selectCellAt(r, c); e.preventDefault(); }
+                else if (e.key >= '1' && e.key <= '9') { window.placeNumberToSelected(e.key); }
+                else if (e.key === 'Backspace' || e.key === 'Delete') { window.placeNumberToSelected(""); }
+                else if (e.key === 'Enter') { window.triggerVerifyButton(); e.preventDefault(); }
             }
         });
     });
