@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship: Tactical Commander</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-crosshairs"></i> BATTLESHIP</h1>
+        <div class="subtitle">TACTICAL BATTLE INTERFACE BY SAMU330</div>
+    </header>
+
+    <main>
+        <section id="screen-menu" class="screen active">
+            <div class="menu-container">
+                <div class="menu-logo">
+                    <i class="fa-solid fa-anchor"></i>
+                </div>
+                <h2 class="menu-title">Iniciar Operaciones</h2>
+                <button class="btn" onclick="startSetup('bot')">
+                    <i class="fa-solid fa-robot"></i> Contra el BOT (IA)
+                </button>
+                <button class="btn btn-secondary" onclick="showMultiplayerMenu()">
+                    <i class="fa-solid fa-user-friends"></i> Jugar con Amigo (Online)
+                </button>
+            </div>
+        </section>
+
+        <section id="screen-multiplayer" class="screen">
+            <div class="menu-container">
+                <div class="menu-logo">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <h2 class="menu-title">Multijugador P2P</h2>
+
+                <div id="mp-lobby-controls">
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn" id="create-room-btn" onclick="hostNewGame()">
+                            <i class="fa-solid fa-server"></i> Crear Sala (Anfitrión)
+                        </button>
+                    </div>
+
+                    <div style="border-top: 1px dashed rgba(31, 181, 255, 0.3); padding-top: 20px;">
+                        <p style="margin-bottom: 10px; font-size: 0.9rem; color: var(--text-gray);">¿Tienes un código de
+                            tu amigo?</p>
+                        <input type="text" id="room-code-input" placeholder="Ingresa el código aquí..."
+                            style="width: 100%; padding: 12px; background: rgba(6, 11, 19, 0.8); border: 1px solid var(--border-neon); border-radius: 6px; color: white; text-align: center; font-family: var(--font-tactical); margin-bottom: 10px;">
+                        <button class="btn btn-secondary" id="join-room-btn" onclick="joinExistingGame()">
+                            <i class="fa-solid fa-right-to-bracket"></i> Unirse a Partida
+                        </button>
+                    </div>
+                </div>
+
+                <div id="mp-waiting-box" style="display: none; text-align: center; padding: 10px;">
+                    <i class="fa-solid fa-circle-notch fa-spin"
+                        style="font-size: 2.5rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
+                    <p id="mp-waiting-text"
+                        style="font-family: var(--font-tactical); color: var(--text-light); margin-bottom: 15px; font-size: 1rem;">
+                    </p>
+
+                    <div id="code-share-container" style="display: none; margin-bottom: 15px;">
+                        <input type="text" id="display-room-code" readonly
+                            style="width: 100%; padding: 10px; background: #03060a; border: 1px solid var(--accent-green); color: var(--accent-green); text-align: center; font-family: var(--font-tactical); font-weight: bold; border-radius: 4px; margin-bottom: 8px;">
+                        <button class="action-btn"
+                            style="width: 100%; border-color: var(--accent-green); color: var(--accent-green);"
+                            onclick="copyRoomCode()">
+                            <i class="fa-solid fa-copy"></i> Copiar Código al Portapapeles
+                        </button>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="cancelMultiplayerConnection()">
+                        <i class="fa-solid fa-xmark"></i> Cancelar / Salir
+                    </button>
+                </div>
+
+                <button class="action-btn" id="mp-back-btn" onclick="restartToMainMenu()"
+                    style="width: 100%; margin-top: 20px;">
+                    <i class="fa-solid fa-arrow-left"></i> Volver
+                </button>
+            </div>
+        </section>
+
+        <section id="screen-setup" class="screen">
+            <div class="setup-container">
+                <div class="setup-instructions">
+                    <h3><i class="fa-solid fa-ship"></i> Despliegue de Flota</h3>
+                    <p id="setup-help-text">Selecciona un barco y colócalo en el mapa de coordenadas. Pulsa la tecla
+                        <kbd>R</kbd> o el botón "Rotar" para cambiar la orientación.
+                    </p>
+
+                    <div id="player-setup-board-wrapper" class="board-wrapper">
+                    </div>
+                </div>
+
+                <div class="placement-controls">
+                    <h3>Controles tácticos</h3>
+
+                    <div class="ship-selector" id="ship-selector-container">
+                    </div>
+
+                    <div class="action-grid">
+                        <button class="action-btn" onclick="rotateShip()">
+                            <i class="fa-solid fa-rotate-right"></i> Rotar (H/V)
+                        </button>
+                        <button class="action-btn" onclick="autoPlaceShips()">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Autocolocar
+                        </button>
+                    </div>
+
+                    <button class="btn" style="margin-top: 20px; border-color: var(--accent-green);"
+                        id="start-battle-btn" onclick="launchBattle()" disabled>
+                        <i class="fa-solid fa-play"></i> INICIAR INVASIÓN
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-battle" class="screen">
+            <div class="battle-container">
+
+                <div class="game-status-bar">
+                    <div class="status-message" id="battle-status-msg">ESPERANDO INFORME DE INTELIGENCIA...</div>
+                    <div class="turn-indicator turn-player" id="turn-indicator-box">TURNO: JUGADOR</div>
+                </div>
+
+                <div class="battlefield">
+
+                    <div id="board-fleet-wrapper" class="board-wrapper">
+                        <div class="board-title my-fleet">
+                            <i class="fa-solid fa-shield-halved"></i> Mi Flota Desplegada
+                        </div>
+                        <div class="grid-container" id="grid-fleet">
+                        </div>
+                    </div>
+
+                    <div id="board-radar-wrapper" class="board-wrapper enemy-active">
+                        <div class="board-title radar">
+                            <i class="fa-solid fa-radar fa-pulse"></i> Radar de Ataque (Oponente)
+                        </div>
+                        <div class="grid-container" id="grid-radar">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section id="screen-gameover" class="screen">
+            <div class="gameover-container" id="gameover-box">
+                <div id="gameover-title">JUEGO TERMINADO</div>
+
+                <div class="gameover-details">
+                    <p>Modo de Juego: <span id="stat-mode">BOT</span></p>
+                    <p>Rondas Jugadas: <span id="stat-rounds">0</span></p>
+                    <p>Efectividad: <span id="stat-accuracy">0%</span></p>
+                </div>
+
+                <button class="btn" onclick="restartToMainMenu()">
+                    <i class="fa-solid fa-redo"></i> Volver al Cuartel General
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        BATTLESHIP TACTICAL CONTROL PANEL - MULTIPLAYER LOCAL P2P DISPONIBLE EN FASE 2
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
