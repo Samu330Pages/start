@@ -1,127 +1,51 @@
 <html>
 
 <head>
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/8-ball-classic/">
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
 
   <title>8 Ball Billiards Classic</title>
-  <link rel="icon"
-    href="https://raw.githubusercontent.com/Samu330Pages/start/refs/heads/main/games/more/games/8ballclassic/8-ball-billiards-classic.png">
 
   <style>
     html,
     body {
       background: #000000;
     }
-
-    @keyframes pulseFab {
-      0% {
-        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
-        transform: scale(1);
-      }
-
-      70% {
-        box-shadow: 0 0 0 15px rgba(243, 156, 18, 0);
-        transform: scale(1.1);
-      }
-
-      100% {
-        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
-        transform: scale(1);
-      }
-    }
-
-    .fab-llamativo {
-      animation: pulseFab 2s infinite;
-      transition: all 0.3s ease !important;
-    }
-
-    .fab-llamativo:hover {
-      transform: scale(1.2) !important;
-      background: rgba(243, 156, 18, 0.9) !important;
-      border-color: #fff !important;
-    }
-
-    @keyframes bounceArrow {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      50% {
-        transform: translateX(-8px);
-      }
-    }
-
-    .fab-indicator {
-      position: fixed;
-      top: 22px;
-      left: 78px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      z-index: 10001;
-      animation: bounceArrow 1.2s infinite ease-in-out;
-      pointer-events: none;
-      transition: opacity 0.5s ease-out;
-    }
-
-    .indicator-text {
-      background: #f39c12;
-      color: #000000;
-      font-weight: 900;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      border: 1px solid #fff;
-      font-family: sans-serif;
-      letter-spacing: 0.5px;
-    }
-
-    .indicator-arrow {
-      color: #f39c12;
-      font-size: 24px;
-      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-      line-height: 1;
-    }
   </style>
 
   <script nonce="2XFlLX0mBCyFgnEmy26FZg">
-    if (!window.ytgame) {
-      window.ytgame = {
-        SDK_VERSION: "standalone",
-        IN_PLAYABLES_ENV: false,
-        SdkError: function (t) { this.errorType = t; this.message = ""; },
-        SdkErrorType: { UNDEFINED: 0, GAMEAPI_UNDEFINED: 1 },
-        game: {
-          firstFrameReady: function () { },
-          gameReady: function () { },
-          loadData: function () { return Promise.resolve(localStorage.getItem("8-ball-classic-save") || ""); },
-          saveData: function (data) { localStorage.setItem("8-ball-classic-save", data); return Promise.resolve(); }
-        },
-        engagement: { sendScore: function () { return Promise.resolve(); } },
-        ads: {
-          requestAd: function () { return Promise.resolve(3); },
-          requestInterstitialAd: function () { return Promise.resolve(); },
-          AdResult: { UNKNOWN: 0, SHOWED: 1, REJECTED: 3, DISMISSED: 2 }
-        },
-        health: { logError: function () { }, logWarning: function () { } },
-        system: {
-          getLanguage: function () { return Promise.resolve("en"); },
-          isAudioEnabled: function () { return true; },
-          onAudioEnabledChange: function () { return function () { }; },
-          onPause: function () { return function () { }; },
-          onResume: function () { return function () { }; }
-        }
-      };
-      window.ytgamehelper = { myConsoleLog: function () { } };
+if (!window.ytgame) {
+  window.ytgame = {
+    SDK_VERSION: "standalone",
+    IN_PLAYABLES_ENV: false,
+    SdkError: function (t) { this.errorType = t; this.message = ""; },
+    SdkErrorType: { UNDEFINED: 0, GAMEAPI_UNDEFINED: 1 },
+    game: {
+      firstFrameReady: function () {},
+      gameReady: function () {},
+      loadData: function () { return Promise.resolve(localStorage.getItem("8-ball-classic-save") || ""); },
+      saveData: function (data) { localStorage.setItem("8-ball-classic-save", data); return Promise.resolve(); }
+    },
+    engagement: { sendScore: function () { return Promise.resolve(); } },
+    ads: {
+      requestAd: function () { return Promise.resolve(3); },
+      requestInterstitialAd: function () { return Promise.resolve(); },
+      AdResult: { UNKNOWN: 0, SHOWED: 1, REJECTED: 3, DISMISSED: 2 }
+    },
+    health: { logError: function () {}, logWarning: function () {} },
+    system: {
+      getLanguage: function () { return Promise.resolve("en"); },
+      isAudioEnabled: function () { return true; },
+      onAudioEnabledChange: function () { return function () {}; },
+      onPause: function () { return function () {}; },
+      onResume: function () { return function () {}; }
     }
-  </script>
+  };
+  window.ytgamehelper = { myConsoleLog: function () {} };
+}
+</script>
   <script nonce="2XFlLX0mBCyFgnEmy26FZg">
     ytgame.game.firstFrameReady();
   </script>
@@ -145,11 +69,11 @@
       "assets/src/14setup.js",
       "assets/src/15gameController.js",
       "assets/src/16boot.js",
-      function () {
+      function() {
 
       }
     ];
-    (function (document, url, fgJS, firstJS) {
+    (function(document, url, fgJS, firstJS) {
       fgJS = document.createElement('script');
       firstJS = document.getElementsByTagName('script')[0];
       fgJS.src = url + "";
@@ -159,111 +83,6 @@
 </head>
 
 <body>
-  <div id="mod-fab" class="fab-llamativo" onclick="toggleModMenu(); dismissIndicator();"
-    style="position: fixed; top: 15px; left: 15px; background: rgba(0,0,0,0.7); width: 50px; height: 50px; border-radius: 50%; text-align: center; line-height: 50px; font-size: 26px; cursor: pointer; z-index: 10000; border: 2px solid #f39c12;">
-    🎱
-  </div>
-
-  <div id="fab-indicator" class="fab-indicator">
-    <span class="indicator-arrow">◀</span>
-    <span class="indicator-text">CLICK!</span>
-  </div>
-
-  <div id="mod-overlay" onclick="closeModMenu(event)"
-    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; backdrop-filter: blur(2px);">
-  </div>
-
-  <div id="mod-menu"
-    style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: rgba(20, 20, 20, 0.95); color: white; padding: 20px; border-radius: 12px; font-family: sans-serif; text-align: center; border: 2px solid #f39c12; width: 300px; max-height: 70vh; overflow-y: auto; box-shadow: 0px 10px 30px rgba(0,0,0,0.8);">
-
-    <span onclick="toggleModMenu()"
-      style="position: absolute; top: 10px; right: 15px; font-size: 22px; cursor: pointer; font-weight: bold; color: #ff4d4d;">&times;</span>
-
-    <h3 style="margin: 0 0 20px 0; color: #f39c12;">🎯 Elige tu Taco</h3>
-
-    <div id="cue-list" style="display: flex; flex-direction: column; gap: 15px;">
-    </div>
-  </div>
-
-  <script>
-    const totalModCues = 27;
-
-    let currentModCue = 1;
-    if (localStorage.getItem('selectedCue')) {
-      currentModCue = parseInt(localStorage.getItem('selectedCue'));
-    }
-
-    function toggleModMenu() {
-      const menu = document.getElementById('mod-menu');
-      const overlay = document.getElementById('mod-overlay');
-      if (menu.style.display === 'none') {
-        menu.style.display = 'block';
-        overlay.style.display = 'block';
-        renderCueList();
-      } else {
-        menu.style.display = 'none';
-        overlay.style.display = 'none';
-      }
-    }
-
-    function closeModMenu(e) {
-      if (e.target.id === 'mod-overlay') {
-        toggleModMenu();
-      }
-    }
-
-    function renderCueList() {
-      const list = document.getElementById('cue-list');
-      list.innerHTML = '';
-
-      for (let i = 1; i <= totalModCues; i++) {
-        const isSelected = (i === currentModCue);
-        const bgColor = isSelected ? 'rgba(243, 156, 18, 0.4)' : '#222';
-        const borderStyle = isSelected ? '2px solid #f39c12' : '2px solid transparent';
-
-        list.innerHTML += `
-                  <div onclick="selectCue(${i})" style="background: ${bgColor}; border: ${borderStyle}; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s;">
-                      <span style="margin-bottom: 10px; font-weight: bold; font-size: 14px;">Taco ${i}</span>
-                      <img src="./games/more/games/8ballclassic/assets/img/cue_${i}.png" style="width: 220px; height: 15px; object-fit: fill;" alt="Taco ${i}">
-                  </div>
-              `;
-      }
-    }
-
-    function selectCue(cueId) {
-      currentModCue = cueId;
-
-      localStorage.setItem('selectedCue', currentModCue);
-      try { window.famobi.localStorage.setItem('selectedCue', currentModCue); } catch (e) { }
-
-      if (typeof projectInfo !== 'undefined') {
-        projectInfo.selectedCue = currentModCue;
-      }
-
-      if (typeof gameInfo !== 'undefined' && gameInfo.cue) {
-        gameInfo.cue.loadTexture('cue_' + currentModCue);
-      }
-
-      renderCueList();
-    }
-
-    function dismissIndicator() {
-      const indicator = document.getElementById('fab-indicator');
-      if (indicator) {
-        indicator.style.opacity = '0';
-        setTimeout(() => {
-          if (indicator.parentNode) {
-            indicator.parentNode.removeChild(indicator);
-          }
-        }, 500);
-      }
-    }
-
-    setTimeout(dismissIndicator, 6000);
-
-    document.getElementById('mod-menu').style.display = 'none';
-  </script>
-
   <center>
     <div id="mygame"></div>
   </center>
