@@ -11,6 +11,15 @@ export const youtubePlatform = {
     currentNavigationSource: 'searchView',
     isDownloading: false,
 
+    searchQuery: '',
+    searchPage: 1,
+    searchLimit: 10,
+    searchToken: 0,
+    searchSeen: new Set(),
+    isLoadingMore: false,
+    loadMoreWrapper: null,
+    loadMoreBtn: null,
+
     init(domElements) {
         this.dom = domElements; 
         this.initGlobalListeners();
@@ -47,6 +56,13 @@ export const youtubePlatform = {
     },
 
     async executeSearch(query) {
+        const token = ++this.searchToken;
+        this.searchQuery = query;
+        this.searchPage = 1;
+        this.searchSeen = new Set();
+        this.isLoadingMore = false;
+        this.hideLoadMore();
+
         this.dom.searchView.classList.add('hidden-view');
         this.dom.resultsView.classList.remove('hidden-view');
         this.dom.queryLabel.textContent = `"${query}"`;
@@ -55,35 +71,15 @@ export const youtubePlatform = {
         this.dom.resultsContainer.innerHTML = '';
 
         try {
-            const response = await fetch(`https://api.samu330.com/yt/search?q=${encodeURIComponent(query)}`);
-            const data = await response.json();
+            const data = await this.fetchSearchPage(query, 1);
+            if (token !== this.searchToken) return;
+
             this.dom.loadingIndicator.classList.add('hidden-view');
             this.dom.resultsContainer.classList.remove('hidden-view');
 
             if (data.success && data.results && data.results.length > 0) {
-                data.results.forEach(video => {
-                    const card = document.createElement('div');
-                    card.className = 'yt-card';
-                    const durationText = video.duration ? video.duration : 'N/A';
-                    card.innerHTML = `
-                        <div class="yt-thumbnail-container">
-                            <img class="yt-thumbnail" src="${video.thumbnail}" alt="${this.escapeHtml(video.title)}">
-                            <span class="yt-duration">${durationText}</span>
-                        </div>
-                        <div class="yt-details">
-                            <h3 class="yt-title">${this.escapeHtml(video.title)}</h3>
-                            <p class="yt-uploader"><i class="fa-solid fa-user-tag"></i> ${this.escapeHtml(video.uploader || 'Desconocido')}</p>
-                            <md-filled-tonal-button class="download-item-btn" data-url="${video.url}">
-                                <i class="fa-solid fa-download" slot="icon"></i>
-                                Descargar
-                            </md-filled-tonal-button>
-                        </div>
-                    `;
-                    card.querySelector('.download-item-btn').addEventListener('click', () => {
-                        this.fetchVideoInfo(video.url, 'resultsView');
-                    });
-                    this.dom.resultsContainer.appendChild(card);
-                });
+                this.appendResults(data.results);
+                this.updateLoadMore(data.has_more);
             } else {
                 const errorMessage = data.error || 'No se encontraron resultados para esta búsqueda.';
                 this.dom.resultsContainer.innerHTML = `
@@ -94,6 +90,7 @@ export const youtubePlatform = {
                 `;
             }
         } catch (error) {
+            if (token !== this.searchToken) return;
             this.dom.loadingIndicator.classList.add('hidden-view');
             this.dom.resultsContainer.classList.remove('hidden-view');
             this.dom.resultsContainer.innerHTML = `
@@ -103,6 +100,105 @@ export const youtubePlatform = {
                 </div>
             `;
         }
+    },
+
+    async fetchSearchPage(query, page) {
+        const url = `https://api.samu330.com/yt/search?q=${encodeURIComponent(query)}&limit=${this.searchLimit}&page=${page}`;
+        const response = await fetch(url);
+        return await response.json();
+    },
+
+    async loadMoreResults() {
+        if (this.isLoadingMore) return;
+        this.isLoadingMore = true;
+
+        const token = this.searchToken;
+        const nextPage = this.searchPage + 1;
+        const btn = this.loadMoreBtn;
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin" slot="icon"></i> Cargando...`;
+        }
+
+        try {
+            const data = await this.fetchSearchPage(this.searchQuery, nextPage);
+            if (token !== this.searchToken) return;
+            if (!data.success) throw new Error(data.error || 'Error en la búsqueda');
+
+            this.searchPage = nextPage;
+            this.appendResults(data.results || []);
+            this.updateLoadMore(data.has_more && (data.results || []).length > 0);
+        } catch (error) {
+            if (token === this.searchToken && btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-rotate-right" slot="icon"></i> Error, reintentar`;
+            }
+        } finally {
+            if (token === this.searchToken) this.isLoadingMore = false;
+        }
+    },
+
+    appendResults(results) {
+        results.forEach(video => {
+            if (this.searchSeen.has(video.id)) return;
+            this.searchSeen.add(video.id);
+
+            const card = document.createElement('div');
+            card.className = 'yt-card';
+            const durationText = video.duration ? video.duration : 'N/A';
+            card.innerHTML = `
+                <div class="yt-thumbnail-container">
+                    <img class="yt-thumbnail" src="${video.thumbnail}" alt="${this.escapeHtml(video.title)}" loading="lazy">
+                    <span class="yt-duration">${durationText}</span>
+                </div>
+                <div class="yt-details">
+                    <h3 class="yt-title">${this.escapeHtml(video.title)}</h3>
+                    <p class="yt-uploader"><i class="fa-solid fa-user-tag"></i> ${this.escapeHtml(video.uploader || 'Desconocido')}</p>
+                    <md-filled-tonal-button class="download-item-btn" data-url="${video.url}">
+                        <i class="fa-solid fa-download" slot="icon"></i>
+                        Descargar
+                    </md-filled-tonal-button>
+                </div>
+            `;
+            card.querySelector('.download-item-btn').addEventListener('click', () => {
+                this.fetchVideoInfo(video.url, 'resultsView');
+            });
+            this.dom.resultsContainer.appendChild(card);
+        });
+    },
+
+    ensureLoadMoreButton() {
+        if (this.loadMoreWrapper) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'load-more-container hidden-view';
+        wrapper.style.cssText = 'display:flex;justify-content:center;margin:20px 0;';
+
+        const btn = document.createElement('md-filled-tonal-button');
+        btn.innerHTML = `<i class="fa-solid fa-plus" slot="icon"></i> Cargar más resultados`;
+        btn.addEventListener('click', () => this.loadMoreResults());
+
+        wrapper.appendChild(btn);
+        this.dom.resultsContainer.insertAdjacentElement('afterend', wrapper);
+
+        this.loadMoreWrapper = wrapper;
+        this.loadMoreBtn = btn;
+    },
+
+    updateLoadMore(hasMore) {
+        this.ensureLoadMoreButton();
+        if (hasMore) {
+            this.loadMoreBtn.disabled = false;
+            this.loadMoreBtn.innerHTML = `<i class="fa-solid fa-plus" slot="icon"></i> Cargar más resultados`;
+            this.loadMoreWrapper.classList.remove('hidden-view');
+        } else {
+            this.loadMoreWrapper.classList.add('hidden-view');
+        }
+    },
+
+    hideLoadMore() {
+        if (this.loadMoreWrapper) this.loadMoreWrapper.classList.add('hidden-view');
     },
 
     async fetchVideoInfo(videoUrl, fromSource) {
