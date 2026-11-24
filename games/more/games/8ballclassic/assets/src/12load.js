@@ -216,7 +216,7 @@ loadState.preload = function () {
 
 	this.load.image('more_games', window.famobi.getBrandingButtonImage());
 	//this.load.image('line', 'assets/img/line.png');
-	this.load.image('pockets', 'assets/assets/img/pockets.png');
+	this.load.image('pockets', 'assets/img/pockets.png');
 	this.load.image('cloth', 'assets/img/cloth.png');
 	this.load.image('tableTop', 'assets/img/tableTop.png');
 	this.load.image('shade', 'assets/img/shade.png');
