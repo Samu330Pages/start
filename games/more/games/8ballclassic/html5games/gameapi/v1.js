@@ -2199,7 +2199,7 @@ if (typeof window !== "undefined" && !window.famobi) {
        }
     });
 
-    Promise.all([loadScript("8ballclassic/sdk_interface.js"), isPageReady]).then(function() {
+    Promise.all([loadScript("sdk_interface.js"), isPageReady]).then(function() {
 
         if(typeof SDK_INTERFACE !== "undefined" && SDK_INTERFACE.isSDKInterfaceDone !== "undefined") {
             return new Promise((resolve, reject) => {
